@@ -1,3 +1,4 @@
+</body> 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -232,15 +233,7 @@
         .service-card ul li:last-child {
             border-bottom: none;
         }
-<!-- Calendly badge widget begin -->
-<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
-<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
-<script type="text/javascript">window.onload = function() { Calendly.initBadgeWidget({ url: 'https://calendly.com/violetspetcare/30min', text: 'Schedule a drop-in', color: '#1056e9', textColor: '#ffffff', branding: true }); }</script>
-<!-- Calendly badge widget end -->
-        .service-card ul li::before {
-            content: "🐾";
-            margin-right: 8px;
-        }
+
 
         /* Contact Form Layout */
         .contact-section {
@@ -294,7 +287,17 @@
             opacity: 0.8;
         }
     </style>
+    
 </head>
+<!-- Calendly badge widget begin -->
+<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
+<script type="text/javascript">window.onload = function() { Calendly.initBadgeWidget({ url: 'https://calendly.com/violetspetcare/30min', text: 'Schedule a drop-in', color: '#1056e9', textColor: '#ffffff', branding: true }); }</script>
+<!-- Calendly badge widget end -->
+        .service-card ul li::before {
+            content: "🐾";
+            margin-right: 8px;
+        }
 <body>
 
     <!-- Header & Navigation -->
@@ -316,7 +319,7 @@
         <p>Professional Pet Sitting & Loving Care While You're Away</p>
         <a href="#contact" class="btn">Book Care Today</a>
     </section>
-    [Uploadi
+    [Uploading]
     
     <!DOCTYPE html>
 <html lang="en">
@@ -416,6 +419,7 @@
     .services h2 {
         color: #2c5282;
     }
+    
 </style>
 </head>
 <body>
@@ -500,11 +504,7 @@
 
         <p><strong>Note:</strong> Memberships renew monthly and provide priority scheduling for members.</p>
     </div>
-
-</div>
-
-</body>
-</html>ng preview-5.html…]()
+      </div>
 
 
     <!-- Home Page About Content -->
@@ -529,3 +529,4 @@
         <div class="container" style="padding-top: 0; padding-bottom: 0;">
             <h2 class="section-title">Why Choose Violets Pet Care?</h2>
             <ul class="why-choose-list">
+</html>)
