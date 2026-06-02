@@ -1,532 +1,385 @@
-</body> 
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Violet's Pet Care | Professional Pet Sitting & Loving Care</title>
-    <style>
-        /* Modern Color Palette & Global Variables */
-        :root {
-            --primary-color: #6a4c93; /* Soft violet/purple theme */
-            --secondary-color: #8338ec; 
-            --accent-color: #ff6b6b;
-            --text-dark: #2b2d42;
-            --text-light: #f8f9fa;
-            --bg-light: #f4f6f9;
-            --white: #ffffff;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            color: var(--text-dark);
-            background-color: var(--bg-light);
-            line-height: 1.6;
-        }
-
-        /* Navigation Bar */
-        header {
-            background-color: var(--white);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .navbar {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-
-        .nav-links {
-            list-style: none;
-            display: flex;
-            gap: 20px;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-dark);
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary-color);
-        }
-
-        /* Hero Banner Section */
-        .hero {
-            background: linear-gradient(135deg, #6a4c93 0%, #8338ec 100%);
-            color: var(--text-light);
-            text-align: center;
-            padding: 100px 20px;
-        }
-
-        .hero h1 {
-            font-size: 42px;
-            margin-bottom: 20px;
-        }
-
-        .hero p {
-            font-size: 20px;
-            max-width: 800px;
-            margin: 0 auto 30px auto;
-        }
-
-        .btn {
-            display: inline-block;
-            background-color: var(--accent-color);
-            color: var(--white);
-            padding: 12px 30px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 18px;
-            transition: transform 0.2s, background-color 0.3s;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            background-color: #ff5252;
-        }
-
-        /* Container & Page Content Layout */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 60px 20px;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 32px;
-            color: var(--primary-color);
-            margin-bottom: 40px;
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 4px;
-            background-color: var(--accent-color);
-            margin: 10px auto 0 auto;
-            border-radius: 2px;
-        }
-
-        /* Flex & Grid Systems */
-        .about-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: center;
-            margin-bottom: 60px;
-        }
-
-        @media (max-width: 768px) {
-            .about-grid, .services-grid {
-                grid-template-columns: 1fr !important;
-            }
-            .hero h1 { font-size: 32px; }
-        }
-
-        .experience-highlight {
-            background-color: #eef2f7;
-            padding: 30px;
-            border-left: 5px solid var(--primary-color);
-            border-radius: 4px;
-        }
-
-        /* Bullet lists styled with custom checkmark placeholders */
-        .why-choose-list {
-            list-style: none;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .why-choose-list li {
-            background: var(--white);
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            display: flex;
-            align-items: center;
-            font-weight: 500;
-        }
-
-        .why-choose-list li::before {
-            content: "✓";
-            color: #4caf50;
-            font-weight: bold;
-            margin-right: 12px;
-            font-size: 18px;
-        }
-
-        /* Services Grid Style */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-        }
-
-        .service-card {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .service-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .service-card h3 {
-            color: var(--primary-color);
-            margin-bottom: 10px;
-            font-size: 22px;
-        }
-
-        .service-card p {
-            color: #666;
-            margin-bottom: 20px;
-            font-style: italic;
-        }
-
-        .service-card ul {
-            list-style: none;
-            margin-top: auto;
-        }
-
-        .service-card ul li {
-            padding: 6px 0;
-            border-bottom: 1px solid #f0f0f0;
-            font-size: 15px;
-        }
-
-        .service-card ul li:last-child {
-            border-bottom: none;
-        }
-
-
-        /* Contact Form Layout */
-        .contact-section {
-            background-color: var(--white);
-            padding: 60px 20px;
-            border-top: 1px solid #eef2f7;
-        }
-
-        .contact-form {
-            max-width: 600px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .form-group label {
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        .form-group input, .form-group textarea, .form-group select {
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 16px;
-            background-color: var(--bg-light);
-        }
-
-        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
-            outline: 2px solid var(--primary-color);
-            background-color: var(--white);
-        }
-
-        /* Footer Section */
-        footer {
-            background-color: var(--text-dark);
-            color: var(--text-light);
-            text-align: center;
-            padding: 40px 20px;
-        }
-
-        footer p {
-            font-size: 14px;
-            opacity: 0.8;
-        }
-    </style>
-    
-</head>
-<!-- Calendly badge widget begin -->
-<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
-<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
-<script type="text/javascript">window.onload = function() { Calendly.initBadgeWidget({ url: 'https://calendly.com/violetspetcare/30min', text: 'Schedule a drop-in', color: '#1056e9', textColor: '#ffffff', branding: true }); }</script>
-<!-- Calendly badge widget end -->
-        .service-card ul li::before {
-            content: "🐾";
-            margin-right: 8px;
-        }
-<body>
-
-    <!-- Header & Navigation -->
-    <header>
-        <nav class="navbar">
-            <a href="#home" class="logo">Violets Pet Care</a>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#why-choose">Why Choose Us</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#contact">Contact & Booking</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <!-- Main Home Page Hero -->
-    <section id="home" class="hero">
-        <h1>Welcome to Violets Pet Care</h1>
-        <p>Professional Pet Sitting & Loving Care While You're Away</p>
-        <a href="#contact" class="btn">Book Care Today</a>
-    </section>
-    [Uploading]
-    
-    <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Violet's Pet Care Membership Plans</title>
+
+<title>Violet's Pet Care | Pet Sitting & Dog Walking in Hickory NC</title>
+
+<meta name="description" content="Trusted pet sitting and dog walking in Hickory, Granite Falls, and Hudson NC. 16+ years of professional animal care with loving, reliable service.">
+
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #f8fafc;
-        margin: 0;
-        padding: 40px;
-        color: #333;
-    }
+:root{
+--purple:#6a4c93;
+--teal:#2ec4b6;
+--dark:#2b2d42;
+--bg:#f5f7fb;
+--white:#fff;
+}
 
-    .container {
-        max-width: 1200px;
-        margin: auto;
-        text-align: center;
-    }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI, sans-serif;
+}
 
-    h1 {
-        color: #2c5282;
-        margin-bottom: 10px;
-    }
+body{
+background:var(--bg);
+color:var(--dark);
+line-height:1.6;
+}
 
-    .subtitle {
-        margin-bottom: 40px;
-        color: #666;
-    }
+header{
+position:sticky;
+top:0;
+background:#fff;
+box-shadow:0 2px 10px rgba(0,0,0,.08);
+z-index:1000;
+}
 
-    .pricing-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 25px;
-    }
+.navbar{
+max-width:1200px;
+margin:auto;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:18px 20px;
+}
 
-    .plan {
-        background: white;
-        border-radius: 15px;
-        padding: 30px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        transition: 0.3s;
-    }
+.logo{
+color:var(--purple);
+font-weight:700;
+text-decoration:none;
+font-size:1.4rem;
+}
 
-    .plan:hover {
-        transform: translateY(-5px);
-    }
+.nav-links{
+display:flex;
+gap:20px;
+list-style:none;
+}
 
-    .featured {
-        border: 3px solid #38a169;
-    }
+.nav-links a{
+text-decoration:none;
+color:var(--dark);
+font-weight:600;
+}
 
-    .plan h2 {
-        color: #2d3748;
-    }
+.hero{
+height:85vh;
+background:
+linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.45)),
+url('hero-dog-walk.jpg');
+background-size:cover;
+background-position:center;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+color:#fff;
+padding:20px;
+}
 
-    .price {
-        font-size: 2rem;
-        color: #38a169;
-        margin: 15px 0;
-        font-weight: bold;
-    }
+.hero h1{
+font-size:3rem;
+margin-bottom:15px;
+}
 
-    ul {
-        list-style: none;
-        padding: 0;
-        text-align: left;
-    }
+.hero p{
+font-size:1.2rem;
+margin-bottom:25px;
+}
 
-    ul li {
-        padding: 8px 0;
-        border-bottom: 1px solid #eee;
-    }
+.btn{
+display:inline-block;
+background:var(--teal);
+color:#fff;
+padding:14px 26px;
+border-radius:50px;
+text-decoration:none;
+font-weight:bold;
+transition:.3s;
+border:none;
+cursor:pointer;
+}
 
-    .btn {
-        display: inline-block;
-        margin-top: 20px;
-        background: #38a169;
-        color: white;
-        text-decoration: none;
-        padding: 12px 25px;
-        border-radius: 8px;
-        font-weight: bold;
-    }
+.btn:hover{
+background:#22b39f;
+}
 
-    .services {
-        margin-top: 60px;
-        background: white;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        text-align: left;
-    }
+.container{
+max-width:1100px;
+margin:auto;
+padding:70px 20px;
+}
 
-    .services h2 {
-        color: #2c5282;
-    }
-    
+.section-title{
+text-align:center;
+font-size:2rem;
+color:var(--purple);
+margin-bottom:40px;
+}
+
+.trust-bar{
+background:#fff;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+text-align:center;
+padding:25px;
+font-weight:700;
+color:var(--purple);
+}
+
+.about{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:40px;
+align-items:center;
+}
+
+.about img{
+width:100%;
+border-radius:18px;
+box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+.services-grid,
+.pricing-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+.card{
+background:#fff;
+padding:25px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.card h3{
+color:var(--purple);
+margin-bottom:10px;
+}
+
+.price{
+font-size:1.8rem;
+color:var(--teal);
+font-weight:700;
+margin-bottom:10px;
+}
+
+.service-area{
+background:var(--purple);
+color:#fff;
+text-align:center;
+padding:60px 20px;
+}
+
+.contact{
+background:#fff;
+}
+
+.email-box{
+background:#eefaf8;
+padding:15px;
+border-left:5px solid var(--teal);
+margin-bottom:20px;
+}
+
+.contact-form{
+max-width:650px;
+margin:auto;
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+input,select,textarea{
+padding:12px;
+border:1px solid #ccc;
+border-radius:8px;
+font-size:1rem;
+}
+
+.availability-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+margin-top:20px;
+}
+
+.availability-card{
+background:#fff;
+padding:20px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.available{
+border-left:5px solid var(--teal);
+}
+
+.unavailable{
+border-left:5px solid #ff6b6b;
+}
+
+footer{
+background:var(--dark);
+color:#fff;
+text-align:center;
+padding:25px;
+}
+
+@media(max-width:768px){
+.hero h1{font-size:2rem;}
+.about{grid-template-columns:1fr;}
+.nav-links{display:none;}
+}
+
 </style>
 </head>
+
 <body>
 
-<div class="container">
+<header>
+<nav class="navbar">
+<a class="logo" href="#">Violet's Pet Care</a>
+<ul class="nav-links">
+<li><a href="#about">About</a></li>
+<li><a href="#services">Services</a></li>
+<li><a href="#policies">Policies</a></li>
+<li><a href="#contact">Contact</a></li>
+</ul>
+</nav>
+</header>
 
-    <h1>Violet's Pet Care offers Monthly Pet Care Memberships</h1>
-    <p class="subtitle">
-        Save money with prepaid monthly credits for dog walks and drop-in visits. Just remember [availabilty is limited] Take advantage of the month and use your credits!
-    </p>
+<section class="hero">
+<div>
+<h1>Trusted Pet Sitting & Dog Walking in Hickory NC</h1>
+<p>16+ years of professional animal care with loving, reliable service and daily updates.</p>
+<a href="#contact" class="btn">Schedule a Meet & Greet</a>
+</div>
+</section>
 
-    <div class="pricing-grid">
+<section class="trust-bar">
+<div>✓ 16+ Years Experience</div>
+<div>✓ Professional Groomer</div>
+<div>✓ Medication Care</div>
+<div>✓ Daily Updates</div>
+<div>✓ Locally Trusted</div>
+</section>
 
-        <div class="plan">
-            <h2>Starter</h2>
-            <div class="price">$180/mo</div>
-            <ul>
-                <li>20 Visit Credits(Save $20)</li>
-                <li>Use for any 30-minute drop-in</li>
-                <li>Priority Scheduling</li>
-                <li>Unused credits roll over 30 days</li>
-            </ul>
-            <a href="#" class="btn">Join Now</a>
-        </div>
+<section id="about" class="container">
+<h2 class="section-title">Meet Violet</h2>
 
-        <div class="plan featured">
-            <h2>Frequent Care</h2>
-            <div class="price">$360/mo</div>
-            <ul>
-                <li>40 Visit Credits(Save $40)</li>
-                <li>Best Value</li>
-                <li>Priority Scheduling</li>
-                <li>Unused credits roll over 30 days</li>
-            </ul>
-            <a href="#" class="btn">Join Now</a>
-        </div>
+<div class="about">
+<img src="violet-with-dog.jpg" alt="Violet with dog">
 
-        <div class="plan">
-            <h2>VIP Pet Parent</h2>
-            <div class="price">$540/mo</div>
-            <ul>
-                <li>60 Visit Credits (Save $60)</li>
-                <li>Maximum Savings</li>
-                <li>VIP Scheduling</li>
-                <li>Unused credits roll over 30 days</li>
-            </ul>
-            <a href="#" class="btn">Join Now</a>
-        </div>
+<div>
+<p>Hi, I’m Violet. I have over 16 years of experience working with animals and currently work as a professional groomer.</p>
+<br>
+<p>I understand animal behavior, stress signals, and individual needs to ensure pets feel safe, comfortable, and cared for.</p>
+<br>
+<p>You can count on dependable, loving care every visit.</p>
+</div>
+</div>
+</section>
 
-    </div>
+<section id="services" class="container">
+<h2 class="section-title">Services</h2>
 
-    <div class="services">
-        <h2>Services & Pricing</h2>
+<div class="services-grid">
 
-        <h3>30-Minute Drop-In Visit - $40</h3>
-        <p>
-            Includes potty break, dog walk, feeding, fresh water,
-            litter box cleaning, playtime, and updates.
-        </p>
+<div class="card">
+<h3>30-Min Drop-In</h3>
+<div class="price">$40</div>
+<p>Feeding, potty break, walk, and updates.</p>
+</div>
 
-        <h3>60-Minute Drop-In Visit - $70</h3>
-        <p>
-            Extended walk, feeding, fresh water, litter box cleaning,
-            playtime, enrichment activities, and detailed updates.
-        </p>
+<div class="card">
+<h3>60-Min Drop-In</h3>
+<div class="price">$70</div>
+<p>Extended walk, enrichment, feeding, and detailed care.</p>
+</div>
 
-        <h3>Add-On Services</h3>
-        <ul>
-            <li>Medication Administration: +$5 per visit</li>
-            <li>Additional Dog: +$10 per visit</li>
-            <li>Additional Cat: +$5 per visit</li>
-        </ul>
+<div class="card">
+<h3>Puppy Care</h3>
+<p>Frequent potty breaks, feeding, and routine reinforcement.</p>
+</div>
 
-        <h3>Credit Values</h3>
-        <ul>
-            <li>30-Minute Visit = 4 Credits</li>
-            <li>60-Minute Visit = 8 Credits</li>
-            <li>Medication Administration = 0.5 Credit</li>
-            <li>Additional Dog = 1 Credit</li>
-            <li>Additional Cat = 0.5 Credit</li>
-        </ul>
+<div class="card">
+<h3>Senior Pet Care</h3>
+<p>Gentle care including medication support and comfort monitoring.</p>
+</div>
 
-        <p><strong>Note:</strong> Memberships renew monthly and provide priority scheduling for members.</p>
-    </div>
-      </div>
+</div>
+</section>
 
+<section id="policies" class="container">
+<h2 class="section-title">Service Availability & Policies</h2>
 
-    <!-- Home Page About Content -->
-    <div class="container">
-        <div class="about-grid">
-            <div>
-                <h2 style="font-size: 28px; margin-bottom: 15px; color: var(--primary-color);">Your pets deserve more than just a quick drop-in feed.</h2>
-                <p style="margin-bottom: 15px; font-size: 17px;">They deserve care from an experienced animal professional who understands their needs, routines, and unique personalities.</p>
-                <p>Whether you're taking a vacation, working long hours, or simply need an extra helping hand, Violets Pet Care provides dependable, compassionate care you can trust completely.</p>
-            </div>
-            <div class="experience-highlight">
-                <h3 style="margin-bottom: 10px; color: var(--secondary-color);">Professional Expertise</h3>
-                <p>With over <strong>16 years of experience</strong> in the animal industry and currently working as a professional groomer, I care for animals every single day.</p>
-                <br>
-                <p>My hands-on experience allows me to recognize stress signals, subtle behavioral changes, and individual needs that make all the difference while you're away.</p>
-            </div>
-        </div>
-    </div>
+<div class="availability-grid">
 
-    <!-- Why Choose Us Section -->
-    <section id="why-choose" style="background-color: #ebf0f6; padding: 60px 0;">
-        <div class="container" style="padding-top: 0; padding-bottom: 0;">
-            <h2 class="section-title">Why Choose Violets Pet Care?</h2>
-            <ul class="why-choose-list">
-</html>)
+<div class="availability-card available">
+<h3>Services Offered</h3>
+<ul>
+<li>Dog Walking</li>
+<li>Drop-In Visits</li>
+<li>Feeding & Medication</li>
+<li>Puppy Care</li>
+<li>Cat Visits</li>
+</ul>
+</div>
+
+<div class="availability-card unavailable">
+<h3>Not Available</h3>
+<ul>
+<li>Sunday Services</li>
+<li>Overnight Stays</li>
+<li>24/7 Emergency Care</li>
+<li>Last-Minute Bookings</li>
+</ul>
+</div>
+
+</div>
+</section>
+
+<section class="service-area">
+<h2>Service Area</h2>
+<p>Hickory, Granite Falls, and Hudson NC</p>
+</section>
+
+<section id="contact" class="container contact">
+<h2 class="section-title">Contact</h2>
+
+<div class="email-box">
+<strong>Email:</strong> violetspetcare@yahoo.com
+</div>
+
+<form class="contact-form">
+<input type="text" placeholder="Name">
+<input type="email" placeholder="Email">
+<input type="tel" placeholder="Phone">
+
+<select>
+<option>Choose Service</option>
+<option>30-Min Drop-In</option>
+<option>60-Min Drop-In</option>
+<option>Puppy Care</option>
+<option>Senior Care</option>
+</select>
+
+<textarea rows="5" placeholder="Tell me about your pet"></textarea>
+
+<button class="btn">Send Inquiry</button>
+</form>
+</section>
+
+<footer>
+<p>© 2025 Violet's Pet Care | Hickory NC</p>
+</footer>
+
+</body>
+</html>
