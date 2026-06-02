@@ -232,7 +232,11 @@
         .service-card ul li:last-child {
             border-bottom: none;
         }
-
+<!-- Calendly badge widget begin -->
+<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
+<script type="text/javascript">window.onload = function() { Calendly.initBadgeWidget({ url: 'https://calendly.com/violetspetcare/30min', text: 'Schedule a drop-in', color: '#1056e9', textColor: '#ffffff', branding: true }); }</script>
+<!-- Calendly badge widget end -->
         .service-card ul li::before {
             content: "🐾";
             margin-right: 8px;
