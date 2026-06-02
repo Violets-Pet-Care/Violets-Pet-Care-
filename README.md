@@ -352,6 +352,14 @@ padding:25px;
 </section>
 
 <section id="contact" class="container contact">
+  <div style="text-align:center; margin-top:30px;">
+    <h3 style="color:#6a4c93;">Secure Payment</h3>
+    <p>Pay for services or membership plans below:</p>
+
+    <a href="YOUR_STRIPE_PAYMENT_LINK_HERE" class="btn">
+        Pay Now
+    </a>
+</div>
 <h2 class="section-title">Contact</h2>
 
 <div class="email-box">
