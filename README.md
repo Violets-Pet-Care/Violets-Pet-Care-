@@ -238,6 +238,54 @@ padding:25px;
 .nav-links{display:none;}
 }
 
+```html
+<form action="https://formspree.io/f/mjgdvevq" method="POST">
+  <input type="email" name="email" required />
+  <textarea name="message" required></textarea>
+  <button type="submit">Send</button>
+</form>
+```
+
+
+  <!-- modify this form HTML and place wherever you want your form -->
+<form
+  action="https://formspree.io/f/mjgdvevq"
+  method="POST"
+>
+<!-- modify this form HTML and place wherever you want your form -->
+<form
+  action="https://formspree.io/f/mjgdvevq"
+  method="POST"
+>
+  <label>
+    Your email:
+    <input type="email" name="email">
+  </label>
+  <label>
+    Your message:
+    <textarea name="message"></textarea>
+  </label>
+  <!-- your other form fields go here -->https://formspree.io/f/mpqngpjz
+  <button type="submit">Send</button>
+</form>
+
+  ```html
+<div data-fs-success></div>
+<div data-fs-error></div>
+
+<form id="my-form">
+  <label for="email">Email</label>
+  <input type="email" id="email" name="email" data-fs-field />
+  <span data-fs-error="email"></span>
+
+  <label for="message">Message</label>
+  <textarea id="message" name="message" data-fs-field></textarea>
+  <span data-fs-error="message"></span>
+
+  <button type="submit" data-fs-submit-btn>Send</button>
+</form>
+
+
 </style>
 </head>
 
