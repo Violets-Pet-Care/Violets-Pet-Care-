@@ -1,303 +1,292 @@
-// Admin Authentication
-let adminUser = null;
+const STORAGE_KEY = "violetsPetCareAdminData";
 
-function handleLogin() {
-  const email = document.getElementById('loginEmail').value;
-  const password = document.getElementById('loginPassword').value;
+// Default sample data
+const defaultData = {
+  admin: {
+    name: "Violet",
+    email: "admin@violetspetcare.com"
+  },
+  isLoggedIn: false,
+  bookings: [
+    {
+      date: "2026-10-10",
+      pet: "Milo",
+      client: "Sam Thompson",
+      service: "30-Min Drop-In",
+      price: 45,
+      status: "Confirmed"
+    },
+    {
+      date: "2026-10-11",
+      pet: "Luna",
+      client: "Kelly Martin",
+      service: "60-Min Drop-In",
+      price: 80,
+      status: "Pending"
+    },
+    {
+      date: "2026-10-12",
+      pet: "Buddy",
+      client: "John Doe",
+      service: "Puppy Care",
+      price: 95,
+      status: "Confirmed"
+    }
+  ],
+  customers: [
+    {
+      name: "Sam Thompson",
+      email: "sam@example.com",
+      phone: "(828) 555-0111",
+      pets: 2,
+      visits: 7
+    },
+    {
+      name: "Kelly Martin",
+      email: "kelly@example.com",
+      phone: "(828) 555-0122",
+      pets: 1,
+      visits: 4
+    },
+    {
+      name: "John Doe",
+      email: "john@example.com",
+      phone: "(828) 555-0133",
+      pets: 1,
+      visits: 2
+    }
+  ],
+  routes: [
+    {
+      title: "Morning Hickory Route",
+      town: "Hickory",
+      stops: 4,
+      status: "Optimized"
+    },
+    {
+      title: "Granite Falls Check-In",
+      town: "Granite Falls",
+      stops: 3,
+      status: "Scheduled"
+    }
+  ],
+  quotes: [
+    {
+      date: "2026-10-10",
+      client: "sam@example.com",
+      service: "30-Min Drop-In",
+      amount: 45,
+      status: "Sent"
+    }
+  ],
+  services: [
+    {
+      name: "30-Min Drop-In",
+      price: "$45",
+      description: "Potty break, food/water, and a quick update."
+    },
+    {
+      name: "60-Min Drop-In",
+      price: "$80",
+      description: "Extended visit with enrichment and walking."
+    },
+    {
+      name: "Puppy Care",
+      price: "$95",
+      description: "Extra attention for young pets."
+    }
+  ]
+};
 
-  // Demo credentials (in production, this would hit a backend)
-  if (email === 'admin@violetspetcare.com' && password === 'password123') {
-    adminUser = { email, name: 'Violet' };
-    localStorage.setItem('adminUser', JSON.stringify(adminUser));
-    document.getElementById('loginModal').classList.remove('show');
-    initializeDashboard();
+let appData = loadData();
+
+function loadData() {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (!stored) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultData));
+    return JSON.parse(JSON.stringify(defaultData));
+  }
+  return JSON.parse(stored);
+}
+
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+}
+
+function handleLogin(e) {
+  e.preventDefault();
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  const validEmail = "admin@violetspetcare.com";
+  const validPassword = "password123";
+
+  if (email === validEmail && password === validPassword) {
+    appData.isLoggedIn = true;
+    saveData();
+    showDashboard();
   } else {
-    alert('Invalid credentials. Try the demo login.');
+    alert("Invalid email or password. Try the demo credentials.");
   }
 }
 
-function demoLogin() {
-  document.getElementById('loginEmail').value = 'admin@violetspetcare.com';
-  document.getElementById('loginPassword').value = 'password123';
-  handleLogin();
+function handleDemoLogin() {
+  document.getElementById("email").value = "admin@violetspetcare.com";
+  document.getElementById("password").value = "password123";
+  handleLogin({ preventDefault: () => {} });
+}
+
+function showDashboard() {
+  document.getElementById("loginSection").style.display = "none";
+  document.getElementById("dashboardContent").style.display = "block";
+
+  document.getElementById("adminName").textContent = appData.admin.name;
+  document.getElementById("adminNameInput").value = appData.admin.name;
+  document.getElementById("adminEmailInput").value = appData.admin.email;
+
+  renderOverview();
+  renderBookings();
+  renderCustomers();
+  renderRoutes();
+  renderQuotes();
+  renderServices();
+  renderEarnings();
 }
 
 function logout() {
-  adminUser = null;
-  localStorage.removeItem('adminUser');
-  document.getElementById('loginModal').classList.add('show');
-  document.getElementById('loginEmail').value = '';
-  document.getElementById('loginPassword').value = '';
+  appData.isLoggedIn = false;
+  saveData();
+  document.getElementById("loginSection").style.display = "block";
+  document.getElementById("dashboardContent").style.display = "none";
+  document.getElementById("loginForm").reset();
 }
 
-// Initialize Dashboard
-function initializeDashboard() {
-  document.getElementById('adminEmail').textContent = adminUser.email;
-  loadDashboardData();
-}
-
-function loadDashboardData() {
-  // Load from localStorage
-  const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
-  const routes = JSON.parse(localStorage.getItem('routes') || '[]');
-  const quotes = JSON.parse(localStorage.getItem('quotes') || '[]');
-  const earnings = JSON.parse(localStorage.getItem('earnings') || '[]');
-
-  // Update stats
-  const todayEarnings = earnings
-    .filter(e => new Date(e.date).toDateString() === new Date().toDateString())
-    .reduce((sum, e) => sum + e.amount, 0);
-
-  document.getElementById('todayEarnings').textContent = `$${todayEarnings.toFixed(2)}`;
-  document.getElementById('pendingBookings').textContent = bookings.filter(b => b.status === 'pending').length;
-
-  // Populate recent bookings
-  const recentBookingsEl = document.getElementById('recentBookings');
-  if (bookings.length > 0) {
-    recentBookingsEl.innerHTML = bookings.slice(0, 5).map(b => `
-      <div class="booking-item">
-        <strong>${b.petName}</strong> - ${b.service} ($${b.price})
-        <br><small>${new Date(b.date).toLocaleDateString()}</small>
-      </div>
-    `).join('');
-  }
-}
-
-// Page Navigation
 function switchPage(pageName) {
-  // Hide all pages
-  document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById(`page-${pageName}`).classList.add("active");
 
-  // Show selected page
-  document.getElementById(`page-${pageName}`).classList.remove('hidden');
-  document.querySelector(`[data-page="${pageName}"]`).classList.add('active');
-
-  // Load page data
-  if (pageName === 'bookings') loadBookings();
-  if (pageName === 'customers') loadCustomers();
-  if (pageName === 'quotes') loadQuotes();
-  if (pageName === 'routes') loadRoutes();
-  if (pageName === 'services') loadServices();
-  if (pageName === 'earnings') loadEarnings();
+  document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
+  document.querySelector(`[data-page="${pageName}"]`).classList.add("active");
 }
 
-// Navigation Event Listeners
-document.querySelectorAll('.nav-item').forEach(item => {
-  item.addEventListener('click', (e) => {
-    e.preventDefault();
-    const page = item.dataset.page;
-    switchPage(page);
-  });
-});
+function renderOverview() {
+  const bookings = appData.bookings;
+  const todayEarnings = bookings.reduce((sum, b) => sum + (Number(b.price) || 0), 0);
+  const pending = bookings.filter(b => b.status === "Pending").length;
 
-document.getElementById('logoutBtn').addEventListener('click', logout);
+  document.getElementById("todayEarnings").textContent = `$${todayEarnings.toFixed(2)}`;
+  document.getElementById("pendingBookings").textContent = pending;
+  document.getElementById("totalRoutes").textContent = appData.routes.length;
+  document.getElementById("totalCustomers").textContent = appData.customers.length;
 
-// Bookings
-function loadBookings() {
-  const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
-  const tbody = document.getElementById('bookingsTable');
+  const recentContainer = document.getElementById("recentBookings");
+  recentContainer.innerHTML = bookings.slice(0, 3).map(b => `
+    <div class="booking-card">
+      <h3>${b.pet}</h3>
+      <p><strong>Client:</strong> ${b.client}</p>
+      <p><strong>Service:</strong> ${b.service}</p>
+      <span class="badge badge-success">${b.status}</span>
+    </div>
+  `).join("");
+}
 
-  if (bookings.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #888;">No bookings yet</td></tr>';
-    return;
-  }
-
-  tbody.innerHTML = bookings.map(b => `
+function renderBookings() {
+  const tbody = document.getElementById("bookingsTable");
+  tbody.innerHTML = appData.bookings.map(b => `
     <tr>
-      <td>${new Date(b.date).toLocaleDateString()}</td>
-      <td><strong>${b.petName}</strong></td>
-      <td>${b.clientName}</td>
+      <td>${b.date}</td>
+      <td>${b.pet}</td>
+      <td>${b.client}</td>
       <td>${b.service}</td>
-      <td>$${b.price}</td>
-      <td><span class="status-badge status-${b.status}">${b.status.toUpperCase()}</span></td>
-      <td>
-        <button class="btn btn-small" onclick="editBooking('${b.id}')">Edit</button>
-      </td>
+      <td>$${Number(b.price).toFixed(2)}</td>
+      <td><span class="badge badge-success">${b.status}</span></td>
     </tr>
-  `).join('');
+  `).join("");
 }
 
-function editBooking(id) {
-  alert('Booking #' + id + ' - Edit feature coming soon!');
-}
-
-// Customers
-function loadCustomers() {
-  const customers = JSON.parse(localStorage.getItem('customers') || '[]');
-  const tbody = document.getElementById('customersTable');
-
-  if (customers.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #888;">No customers yet</td></tr>';
-    return;
-  }
-
-  tbody.innerHTML = customers.map(c => `
+function renderCustomers() {
+  const tbody = document.getElementById("customersTable");
+  tbody.innerHTML = appData.customers.map(c => `
     <tr>
-      <td><strong>${c.name}</strong></td>
+      <td>${c.name}</td>
       <td>${c.email}</td>
       <td>${c.phone}</td>
       <td>${c.pets}</td>
       <td>${c.visits}</td>
-      <td><span class="status-badge status-confirmed">ACTIVE</span></td>
-      <td>
-        <button class="btn btn-small" onclick="viewCustomer('${c.id}')">View</button>
-      </td>
     </tr>
-  `).join('');
+  `).join("");
 }
 
-function viewCustomer(id) {
-  alert('Customer #' + id + ' - View details coming soon!');
+function renderRoutes() {
+  const container = document.getElementById("routesList");
+  container.innerHTML = appData.routes.map(r => `
+    <div class="route-card">
+      <h3>${r.title}</h3>
+      <p><strong>Town:</strong> ${r.town}</p>
+      <p><strong>Stops:</strong> ${r.stops}</p>
+      <span class="badge badge-warning">${r.status}</span>
+    </div>
+  `).join("");
 }
 
-// Quotes
-function loadQuotes() {
-  const quotes = JSON.parse(localStorage.getItem('quotes') || '[]');
-  const tbody = document.getElementById('quotesTable');
-
-  if (quotes.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #888;">No quotes yet</td></tr>';
-    return;
-  }
-
-  tbody.innerHTML = quotes.map(q => `
+function renderQuotes() {
+  const tbody = document.getElementById("quotesTable");
+  tbody.innerHTML = appData.quotes.map(q => `
     <tr>
-      <td>${new Date(q.timestamp).toLocaleDateString()}</td>
-      <td>${q.clientEmail || 'Unknown'}</td>
-      <td>${q.service || 'N/A'}</td>
-      <td>${q.total || '$0.00'}</td>
-      <td><span class="status-badge status-pending">PENDING</span></td>
-      <td>
-        <button class="btn btn-small" onclick="viewQuote('${q.id}')">View</button>
-      </td>
+      <td>${q.date}</td>
+      <td>${q.client}</td>
+      <td>${q.service}</td>
+      <td>$${Number(q.amount).toFixed(2)}</td>
+      <td><span class="badge badge-success">${q.status}</span></td>
     </tr>
-  `).join('');
+  `).join("");
 }
 
-function viewQuote(id) {
-  const quote = JSON.parse(localStorage.getItem('quotes') || '[]').find(q => q.id === id);
-  if (quote) {
-    alert(`Quote #${id}\n\nService: ${quote.service}\nTotal: ${quote.total}\nDate: ${new Date(quote.timestamp).toLocaleDateString()}`);
-  }
-}
-
-// Routes
-function loadRoutes() {
-  const routes = JSON.parse(localStorage.getItem('routes') || '[]');
-  const routesList = document.getElementById('routesList');
-
-  if (routes.length === 0) {
-    routesList.innerHTML = '<p style="text-align: center; color: #888;">No routes saved yet</p>';
-    return;
-  }
-
-  routesList.innerHTML = routes.map((r, idx) => `
-    <div class="card">
-      <h4>Route ${idx + 1}</h4>
-      <p><strong>Date:</strong> ${new Date(r.date).toLocaleDateString()}</p>
-      <p><strong>Stops:</strong> ${r.stops?.length || 0}</p>
-      <p><strong>Earnings:</strong> $${r.earnings || '0.00'}</p>
-      <p><strong>Net Profit:</strong> $${r.netProfit || '0.00'}</p>
-      <button class="btn btn-small" onclick="viewRoute(${idx})">View Details</button>
-    </div>
-  `).join('');
-}
-
-function viewRoute(idx) {
-  const routes = JSON.parse(localStorage.getItem('routes') || '[]');
-  if (routes[idx]) {
-    alert('Route ' + (idx + 1) + ' Details:\n\nStops: ' + routes[idx].stops?.length + '\nNet Profit: $' + routes[idx].netProfit);
-  }
-}
-
-function addNewRoute() {
-  alert('Redirect to main app route planner to create a route.');
-  window.location.href = 'index.html#route-planner';
-}
-
-// Services
-function loadServices() {
-  const services = [
-    { name: '30-Min Drop-In', price: 45 },
-    { name: '60-Min Drop-In', price: 80 },
-    { name: 'Puppy Care', price: 95 },
-    { name: 'Senior Pet Care', price: 120 }
-  ];
-
-  const grid = document.getElementById('servicesGrid');
-  grid.innerHTML = services.map((s, idx) => `
+function renderServices() {
+  const container = document.getElementById("servicesList");
+  container.innerHTML = appData.services.map(s => `
     <div class="service-card">
-      <h4>${s.name}</h4>
-      <label>Price</label>
-      <input type="number" value="${s.price}" />
-      <button class="btn btn-small" onclick="saveService(${idx})">Save</button>
+      <h3>${s.name}</h3>
+      <p style="font-size: 1.5rem; color: var(--purple); font-weight: bold;">${s.price}</p>
+      <p>${s.description}</p>
     </div>
-  `).join('');
+  `).join("");
 }
 
-function saveService(idx) {
-  alert('Service #' + idx + ' updated!');
+function renderEarnings() {
+  const totalRevenue = appData.bookings.reduce((sum, b) => sum + (Number(b.price) || 0), 0);
+  const fuelCost = totalRevenue * 0.18;
+  const netProfit = totalRevenue - fuelCost;
+
+  document.getElementById("totalRevenue").textContent = `$${totalRevenue.toFixed(2)}`;
+  document.getElementById("fuelCost").textContent = `$${fuelCost.toFixed(2)}`;
+  document.getElementById("netProfit").textContent = `$${netProfit.toFixed(2)}`;
 }
 
-// Earnings
-function loadEarnings() {
-  const earnings = JSON.parse(localStorage.getItem('earnings') || '[]');
-  const totalEarnings = earnings.reduce((sum, e) => sum + e.amount, 0);
-  const totalFuel = earnings.reduce((sum, e) => sum + (e.fuel || 0), 0);
-
-  document.getElementById('earningsTotal').textContent = `$${totalEarnings.toFixed(2)}`;
-  document.getElementById('earnignsFuel').textContent = `-$${totalFuel.toFixed(2)}`;
-  document.getElementById('earningsNet').textContent = `$${(totalEarnings - totalFuel).toFixed(2)}`;
-
-  // Breakdown
-  const breakdownEl = document.getElementById('earningsBreakdown');
-  if (earnings.length === 0) {
-    breakdownEl.innerHTML = '<p style="text-align: center; color: #888;">No earnings data yet</p>';
-  } else {
-    breakdownEl.innerHTML = '<p>Earnings data will appear here</p>';
-  }
-}
-
-// Settings
 function saveSettings() {
-  const settings = {
-    name: document.getElementById('adminName').value,
-    email: document.getElementById('adminEmailInput').value,
-    fuelEfficiency: document.getElementById('fuelEfficiency').value,
-    fuelPrice: document.getElementById('fuelPrice').value
-  };
-
-  localStorage.setItem('adminSettings', JSON.stringify(settings));
-  alert('✅ Settings saved!');
+  appData.admin.name = document.getElementById("adminNameInput").value.trim() || appData.admin.name;
+  appData.admin.email = document.getElementById("adminEmailInput").value.trim() || appData.admin.email;
+  saveData();
+  alert("Settings saved!");
+  document.getElementById("adminName").textContent = appData.admin.name;
 }
 
-function clearAllData() {
-  if (confirm('Are you sure? This will delete all bookings, routes, and quotes.')) {
-    localStorage.removeItem('bookings');
-    localStorage.removeItem('routes');
-    localStorage.removeItem('quotes');
-    localStorage.removeItem('customers');
-    localStorage.removeItem('earnings');
-    alert('✅ All data cleared!');
-  }
-}
+// Event Listeners
+document.getElementById("loginForm").addEventListener("submit", handleLogin);
+document.getElementById("demoLoginBtn").addEventListener("click", handleDemoLogin);
+document.getElementById("logoutBtn").addEventListener("click", logout);
+document.getElementById("saveSettingsBtn").addEventListener("click", saveSettings);
 
-// Period buttons for earnings
-document.querySelectorAll('.period-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    loadEarnings();
+document.querySelectorAll(".nav-link").forEach(link => {
+  link.addEventListener("click", (e) => {
+    e.preventDefault();
+    const pageName = link.dataset.page;
+    switchPage(pageName);
   });
 });
 
-// Initialize on page load
-window.addEventListener('DOMContentLoaded', () => {
-  const saved = localStorage.getItem('adminUser');
-  if (saved) {
-    adminUser = JSON.parse(saved);
-    document.getElementById('loginModal').classList.remove('show');
-    initializeDashboard();
-  }
-});
+// Initialize
+if (appData.isLoggedIn) {
+  showDashboard();
+}
