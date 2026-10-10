@@ -33,7 +33,7 @@
           </label>
           <label>
             <input id="holidayVisit" type="checkbox" />
-            Holiday visit + $15 each additional
+            Holiday visit + $15 each additional ( will be added automatically if it’s a Holiday )
           </label>
         </div>
 
