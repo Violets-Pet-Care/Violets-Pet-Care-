@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Violet's Pet Care - Cost Calculator</title>
+  <link rel="stylesheet" href="calculator-styles.css" />
+</head>
+<body>
+  <div class="app-wrapper">
+    <header class="calc-header">
+      <div class="header-content">
+        <h1>💰 Cost Calculator</h1>
+        <p class="subtitle">Estimate your pet care visit costs</p>
+        <a href="#" class="btn-back">← Back to Services</a>
+      </div>
+    </header>
+
+    <main class="calculator-container">
+      <div class="calc-panel">
+        <section class="input-section">
+          <h2>Build Your Quote</h2>
+
+          <div class="form-group">
+            <label for="numPets">Number of Pets</label>
+            <div class="input-row">
+              <input type="number" id="numPets" min="1" max="10" value="1" />
+              <span class="hint">Multi-pet discount: 10% off each additional pet</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Service Type</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="service" value="45" checked />
+                <span class="radio-btn">🐕</span>
+                <span class="radio-text">30-Minute Drop-In<br><strong>$45</strong></span>
+              </label>
+
+              <label class="radio-label">
+                <input type="radio" name="service" value="80" />
+                <span class="radio-btn">🐾</span>
+                <span class="radio-text">60-Minute Drop-In<br><strong>$80</strong></span>
+              </label>
+
+              <label class="radio-label">
+                <input type="radio" name="service" value="95" />
+                <span class="radio-btn">🍼</span>
+                <span class="radio-text">Puppy Care<br><strong>$95</strong></span>
+              </label>
+
+              <label class="radio-label">
+                <input type="radio" name="service" value="120" />
+                <span class="radio-btn">💜</span>
+                <span class="radio-text">Senior Care<br><strong>$120</strong></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Pricing Plan</label>
+            <div class="plan-tabs">
+              <button class="plan-tab active" data-plan="one-time">One-Time Visits</button>
+              <button class="plan-tab" data-plan="package">Visit Package</button>
+              <button class="plan-tab" data-plan="monthly">Monthly Retainer</button>
+            </div>
+          </div>
+
+          <div class="plan-input" id="plan-one-time">
+            <label for="visitCount">Number of Visits</label>
+            <input type="number" id="visitCount" min="1" max="30" value="1" />
+          </div>
+
+          <div class="plan-input hidden" id="plan-package">
+            <label for="packageSize">Visit Package</label>
+            <select id="packageSize">
+              <option value="5">5-Visit Package (10% off)</option>
+              <option value="10">10-Visit Package (15% off)</option>
+              <option value="15">15-Visit Package (20% off)</option>
+              <option value="20">20-Visit Package (20% off)</option>
+            </select>
+          </div>
+
+          <div class="plan-input hidden" id="plan-monthly">
+            <label for="monthlyVisits">Visits Per Month</label>
+            <select id="monthlyVisits">
+              <option value="4">1x per week (4 visits)</option>
+              <option value="8">2x per week (8 visits)</option>
+              <option value="12">3x per week (12 visits)</option>
+              <option value="16">4x per week (16 visits)</option>
+              <option value="20">5x per week (20 visits)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Add-Ons (Optional)</label>
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="photoUpdate" data-addon="5" />
+                📷 Photo Update
+                <span class="addon-price">+$5 per visit</span>
+              </label>
+
+              <label class="checkbox-label">
+                <input type="checkbox" id="holidayVisit" data-addon="15" />
+                🎄 Holiday Premium
+                <span class="addon-price">+$15 per visit</span>
+              </label>
+
+              <label class="checkbox-label">
+                <input type="checkbox" id="medicationSupport" data-addon="10" />
+                💊 Medication Support
+                <span class="addon-price">+$10 per visit</span>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <section class="summary-section">
+          <h2>Quote Summary</h2>
+
+          <div class="breakdown">
+            <div class="breakdown-row">
+              <span>Service Cost</span>
+              <strong id="serviceCost">$45.00</strong>
+            </div>
+
+            <div class="breakdown-row">
+              <span>Multi-Pet Discount (10%)</span>
+              <strong id="petDiscount">-$0.00</strong>
+            </div>
+
+            <div class="breakdown-row">
+              <span>Package Discount</span>
+              <strong id="packageDiscount">-$0.00</strong>
+            </div>
+
+            <div class="breakdown-row">
+              <span>Add-Ons</span>
+              <strong id="addOnsCost">$0.00</strong>
+            </div>
+
+            <div class="breakdown-row grand-total">
+              <span>Estimated Total</span>
+              <strong id="totalCost">$45.00</strong>
+            </div>
+          </div>
+
+          <div class="monthly-note" id="monthlyNote"></div>
+
+          <div class="action-buttons">
+            <button id="saveQuote" class="btn btn-save">💾 Save Quote</button>
+            <button id="copyQuote" class="btn btn-copy">📋 Copy Quote</button>
+          </div>
+
+          <div class="cta">
+            <h3>Ready to book?</h3>
+            <a href="#contact" class="btn btn-primary">Request a Meet & Greet</a>
+            <p class="contact-email">Or email: violetspetcare@yahoo.com</p>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="calculator-script.js"></script>
+</body>
+</html>
