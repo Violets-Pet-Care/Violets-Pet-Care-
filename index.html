@@ -1,60 +1,335 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Violet's Pet Care Calculator</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="app-shell">
-      <header class="header">
-        <p class="eyebrow">Violet's Pet Care</p>
-        <h1>Visit Cost Calculator</h1>
-      </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Violet's Pet Care | Pet Sitting & Dog Walking in Hickory NC</title>
+  <link rel="stylesheet" href="app-styles.css" />
+  <script async src="https://js.stripe.com/v3/buy-button.js"></script>
+</head>
+<body>
+  <div class="app-wrapper">
+    <!-- Header/Navigation -->
+    <header class="navbar">
+      <div class="nav-container">
+        <a href="#" class="logo">🐾 Violet's Pet Care</a>
+        <nav class="nav-links">
+          <a href="#services">Services</a>
+          <a href="#calculator" class="nav-calculator">💰 Quick Quote</a>
+          <a href="#route-planner" class="nav-route">🗺️ Route Planner</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+    </header>
 
-      <main class="calculator-card">
-        <label for="service">Service</label>
-        <select id="service">
-          <option value="40">30-Minute Drop-In — $40</option>
-          <option value="70">60-Minute Drop-In — $70</option>
-          <option value="95">Puppy Care — $95</option>
-          <option value="120">Senior Pet Care — $120</option>
-        </select>
+    <!-- Services Section -->
+    <section id="services" class="services-section">
+      <div class="container">
+        <h2>Our Services</h2>
+        <div class="services-grid">
+          <div class="service-card">
+            <h3>🐕 30-Min Drop-In</h3>
+            <p class="price">$45</p>
+            <p>Potty break, fresh water, feeding, play and updates.</p>
+            <button class="btn-service" data-service="30-min">Get Quote</button>
+          </div>
 
-        <label for="visits">Number of visits</label>
-        <input id="visits" type="number" min="1" max="20" value="1" />
+          <div class="service-card">
+            <h3>🐾 60-Min Drop-In</h3>
+            <p class="price">$80</p>
+            <p>Extra time for walks, enrichment and unrushed attention.</p>
+            <button class="btn-service" data-service="60-min">Get Quote</button>
+          </div>
 
-        <div class="checkboxes">
-          <label>
-            <input id="photoUpdate" type="checkbox" />
-            Photo update + $5 each
-          </label>
-          <label>
-            <input id="holidayVisit" type="checkbox" />
-            Holiday visit + $15 each
-          </label>
+          <div class="service-card">
+            <h3>🍼 Puppy Care</h3>
+            <p class="price">$95</p>
+            <p>Support for young pets needing extra check-ins and consistency.</p>
+            <button class="btn-service" data-service="puppy">Get Quote</button>
+          </div>
+
+          <div class="service-card">
+            <h3>💜 Senior Pet Care</h3>
+            <p class="price">$120</p>
+            <p>Gentle, patient visits tailored to your pet's comfort.</p>
+            <button class="btn-service" data-service="senior">Get Quote</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Route Planner Section -->
+    <section id="route-planner" class="route-planner-section">
+      <div class="container">
+        <h2>🗺️ Smart Fuel-Saving Route Planner</h2>
+        <div class="route-planner-wrapper">
+          <div class="route-inputs">
+            <h3>Build Your Route</h3>
+            
+            <div class="form-group">
+              <label for="startingPoint">Starting Point (Your Location)</label>
+              <input type="text" id="startingPoint" placeholder="e.g., Your Home or Office" />
+            </div>
+
+            <div class="form-group">
+              <label>Add Stops</label>
+              <div class="stops-input-row">
+                <input type="text" id="stopAddress" placeholder="Enter address" />
+                <select id="stopTown">
+                  <option value="">Select Town</option>
+                  <option value="hickory">Hickory</option>
+                  <option value="granite-falls">Granite Falls</option>
+                  <option value="hudson">Hudson</option>
+                  <option value="other">Other</option>
+                </select>
+                <input type="number" id="stopEarnings" placeholder="Est. Earnings ($)" min="0" />
+                <button id="addStopBtn" class="btn btn-small">+ Add</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="stops-list" id="stopsList"></div>
+            </div>
+
+            <div class="route-actions">
+              <button id="groupByTownBtn" class="btn">📍 Group by Town</button>
+              <button id="optimizeRouteBtn" class="btn">⚡ Optimize for Profit</button>
+              <button id="openMapsBtn" class="btn btn-primary">🗺️ Open in Google Maps</button>
+              <button id="clearRouteBtn" class="btn btn-secondary">Clear All</button>
+            </div>
+          </div>
+
+          <div class="route-summary">
+            <h3>Route Summary</h3>
+            <div class="summary-stats">
+              <div class="stat-box">
+                <p class="stat-label">Total Stops</p>
+                <p class="stat-value" id="totalStops">0</p>
+              </div>
+              <div class="stat-box">
+                <p class="stat-label">Est. Earnings</p>
+                <p class="stat-value" id="totalEarnings">$0.00</p>
+              </div>
+              <div class="stat-box">
+                <p class="stat-label">Est. Drive Time</p>
+                <p class="stat-value" id="driveTime">0 min</p>
+              </div>
+              <div class="stat-box">
+                <p class="stat-label">Est. Fuel Cost</p>
+                <p class="stat-value" id="fuelCost">$0.00</p>
+              </div>
+              <div class="stat-box highlight">
+                <p class="stat-label">Net Profit</p>
+                <p class="stat-value" id="netProfit">$0.00</p>
+              </div>
+            </div>
+
+            <div class="grouped-stops" id="groupedStops"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact/Booking Section -->
+    <section id="contact" class="contact-section">
+      <div class="container">
+        <h2>Ready to Book?</h2>
+        <div class="contact-methods">
+          <div class="contact-box">
+            <h3>📅 Schedule a Meet & Greet</h3>
+            <p>Book a free 15-min call to discuss your pet's needs.</p>
+            <a href="https://calendly.com/violetspetcare/30min" target="_blank" class="btn btn-primary">Open Calendly</a>
+          </div>
+
+          <div class="contact-box">
+            <h3>💬 Email Violet</h3>
+            <p>Send questions or custom care requests.</p>
+            <a href="mailto:violetspetcare@yahoo.com" class="btn btn-primary">Email Now</a>
+          </div>
+
+          <div class="contact-box">
+            <h3>💳 Pay for Services</h3>
+            <p>Secure checkout for quick bookings.</p>
+            <button id="stripeCheckoutBtn" class="btn btn-primary">Pay Now</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>&copy; 2025 Violet's Pet Care | Hickory, Granite Falls & Hudson, NC</p>
+    </footer>
+  </div>
+
+  <!-- Calculator Modal -->
+  <div id="calculatorModal" class="modal">
+    <div class="modal-content calculator-modal-content">
+      <button class="modal-close">&times;</button>
+      <div class="modal-calculator">
+        <h2>💰 Build Your Quote</h2>
+
+        <div class="form-group">
+          <label for="numPets">Number of Pets</label>
+          <div class="input-row">
+            <input type="number" id="numPets" min="1" max="10" value="1" />
+            <span class="hint">Multi-pet discount: 10% off each additional pet</span>
+          </div>
         </div>
 
-        <div class="totals">
-          <div class="total-row">
-            <span>Visit total</span>
-            <strong id="visitTotal">$40.00</strong>
-          </div>
-          <div class="total-row">
-            <span>Add-ons</span>
-            <strong id="addonTotal">$0.00</strong>
-          </div>
-          <div class="total-row grand-total">
-            <span>Estimated total</span>
-            <strong id="grandTotal">$40.00</strong>
+        <div class="form-group">
+          <label>Service Type</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="service" value="45" checked />
+              <span class="radio-btn">🐕</span>
+              <span class="radio-text">30-Min Drop-In<br><strong>$45</strong></span>
+            </label>
+
+            <label class="radio-label">
+              <input type="radio" name="service" value="80" />
+              <span class="radio-btn">🐾</span>
+              <span class="radio-text">60-Min Drop-In<br><strong>$80</strong></span>
+            </label>
+
+            <label class="radio-label">
+              <input type="radio" name="service" value="95" />
+              <span class="radio-btn">🍼</span>
+              <span class="radio-text">Puppy Care<br><strong>$95</strong></span>
+            </label>
+
+            <label class="radio-label">
+              <input type="radio" name="service" value="120" />
+              <span class="radio-btn">💜</span>
+              <span class="radio-text">Senior Care<br><strong>$120</strong></span>
+            </label>
           </div>
         </div>
 
-        <button id="calculateBtn">Calculate total</button>
-      </main>
+        <div class="form-group">
+          <label>Pricing Plan</label>
+          <div class="plan-tabs">
+            <button class="plan-tab active" data-plan="one-time">One-Time</button>
+            <button class="plan-tab" data-plan="package">Package</button>
+            <button class="plan-tab" data-plan="monthly">Monthly</button>
+          </div>
+        </div>
+
+        <div class="plan-input" id="plan-one-time">
+          <label for="visitCount">Number of Visits</label>
+          <input type="number" id="visitCount" min="1" max="30" value="1" />
+        </div>
+
+        <div class="plan-input hidden" id="plan-package">
+          <label for="packageSize">Visit Package</label>
+          <select id="packageSize">
+            <option value="5">5-Visit Package (10% off)</option>
+            <option value="10">10-Visit Package (15% off)</option>
+            <option value="15">15-Visit Package (20% off)</option>
+            <option value="20">20-Visit Package (20% off)</option>
+          </select>
+        </div>
+
+        <div class="plan-input hidden" id="plan-monthly">
+          <label for="monthlyVisits">Visits Per Month</label>
+          <select id="monthlyVisits">
+            <option value="4">1x per week (4 visits)</option>
+            <option value="8">2x per week (8 visits)</option>
+            <option value="12">3x per week (12 visits)</option>
+            <option value="16">4x per week (16 visits)</option>
+            <option value="20">5x per week (20 visits)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Add-Ons (Optional)</label>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="photoUpdate" data-addon="5" />
+              📷 Photo Update
+              <span class="addon-price">+$5 per visit</span>
+            </label>
+
+            <label class="checkbox-label">
+              <input type="checkbox" id="holidayVisit" data-addon="15" />
+              🎄 Holiday Premium
+              <span class="addon-price">+$15 per visit</span>
+            </label>
+
+            <label class="checkbox-label">
+              <input type="checkbox" id="medicationSupport" data-addon="10" />
+              💊 Medication Support
+              <span class="addon-price">+$10 per visit</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="breakdown">
+          <div class="breakdown-row">
+            <span>Service Cost</span>
+            <strong id="serviceCost">$45.00</strong>
+          </div>
+
+          <div class="breakdown-row">
+            <span>Multi-Pet Discount (10%)</span>
+            <strong id="petDiscount">-$0.00</strong>
+          </div>
+
+          <div class="breakdown-row">
+            <span>Package Discount</span>
+            <strong id="packageDiscount">-$0.00</strong>
+          </div>
+
+          <div class="breakdown-row">
+            <span>Add-Ons</span>
+            <strong id="addOnsCost">$0.00</strong>
+          </div>
+
+          <div class="breakdown-row grand-total">
+            <span>Estimated Total</span>
+            <strong id="totalCost">$45.00</strong>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button id="saveQuote" class="btn btn-save">💾 Save Quote</button>
+          <button id="copyQuote" class="btn btn-copy">📋 Copy</button>
+        </div>
+
+        <div class="stripe-checkout-container" id="stripeCheckoutContainer"></div>
+      </div>
     </div>
+  </div>
 
-    <script src="script.js"></script>
-  </body>
+  <!-- Stripe Checkout Modal -->
+  <div id="stripeModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeStripeModal()">&times;</button>
+      <div class="stripe-payment-container">
+        <h2>💳 Secure Payment</h2>
+        <p>Choose your visit and complete payment below.</p>
+        
+        <div class="stripe-buttons-wrapper">
+          <div class="stripe-button-section">
+            <h3>30-Minute Drop-In - $45</h3>
+            <stripe-buy-button
+              buy-button-id="buy_btn_1UP2vZ3d0cnPZMvSJpi881Qp"
+              publishable-key="pk_test_51Tek4D3d0cnPZMvSof2SKo2xWXgI34moXUWO2DgWCQWBESpkcbWGvvoVHC6bpTAlihk9U9KhoMhtJgwCJ0HYaBwc00wEezAX53">
+            </stripe-buy-button>
+          </div>
+
+          <div class="stripe-button-section">
+            <h3>60-Minute Drop-In - $80</h3>
+            <stripe-buy-button
+              buy-button-id="buy_btn_1UP2NX3d0cnPZMvS86Sr8B7t"
+              publishable-key="pk_test_51Tek4D3d0cnPZMvSof2SKo2xWXgI34moXUWO2DgWCQWBESpkcbWGvvoVHC6bpTAlihk9U9KhoMhtJgwCJ0HYaBwc00wEezAX53">
+            </stripe-buy-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app-script.js"></script>
+</body>
 </html>
