@@ -3,38 +3,57 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Simple Calculator</title>
+    <title>Violet's Pet Care Calculator</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <main class="calculator">
-      <div class="display" id="display" aria-live="polite">0</div>
+    <div class="app-shell">
+      <header class="header">
+        <p class="eyebrow">Violet's Pet Care</p>
+        <h1>Visit Cost Calculator</h1>
+      </header>
 
-      <div class="buttons">
-        <button class="btn secondary" data-action="clear">C</button>
-        <button class="btn secondary" data-action="delete">DEL</button>
-        <button class="btn operator" data-value="/">÷</button>
-        <button class="btn operator" data-value="*">×</button>
+      <main class="calculator-card">
+        <label for="service">Service</label>
+        <select id="service">
+          <option value="40">30-Minute Drop-In — $40</option>
+          <option value="70">60-Minute Drop-In — $70</option>
+          <option value="95">Puppy Care — $95</option>
+          <option value="120">Senior Pet Care — $120</option>
+        </select>
 
-        <button class="btn" data-value="7">7</button>
-        <button class="btn" data-value="8">8</button>
-        <button class="btn" data-value="9">9</button>
-        <button class="btn operator" data-value="-">−</button>
+        <label for="visits">Number of visits</label>
+        <input id="visits" type="number" min="1" max="20" value="1" />
 
-        <button class="btn" data-value="4">4</button>
-        <button class="btn" data-value="5">5</button>
-        <button class="btn" data-value="6">6</button>
-        <button class="btn operator" data-value="+">+</button>
+        <div class="checkboxes">
+          <label>
+            <input id="photoUpdate" type="checkbox" />
+            Photo update + $5 each
+          </label>
+          <label>
+            <input id="holidayVisit" type="checkbox" />
+            Holiday visit + $15 each
+          </label>
+        </div>
 
-        <button class="btn" data-value="1">1</button>
-        <button class="btn" data-value="2">2</button>
-        <button class="btn" data-value="3">3</button>
-        <button class="btn equals" data-action="calculate">=</button>
+        <div class="totals">
+          <div class="total-row">
+            <span>Visit total</span>
+            <strong id="visitTotal">$40.00</strong>
+          </div>
+          <div class="total-row">
+            <span>Add-ons</span>
+            <strong id="addonTotal">$0.00</strong>
+          </div>
+          <div class="total-row grand-total">
+            <span>Estimated total</span>
+            <strong id="grandTotal">$40.00</strong>
+          </div>
+        </div>
 
-        <button class="btn zero" data-value="0">0</button>
-        <button class="btn" data-value=".">.</button>
-      </div>
-    </main>
+        <button id="calculateBtn">Calculate total</button>
+      </main>
+    </div>
 
     <script src="script.js"></script>
   </body>

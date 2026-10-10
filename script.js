@@ -1,95 +1,39 @@
-const display = document.getElementById('display');
-let currentInput = '0';
-let expression = '';
+const serviceSelect = document.getElementById('service');
+const visitsInput = document.getElementById('visits');
+const photoUpdate = document.getElementById('photoUpdate');
+const holidayVisit = document.getElementById('holidayVisit');
+const visitTotalEl = document.getElementById('visitTotal');
+const addonTotalEl = document.getElementById('addonTotal');
+const grandTotalEl = document.getElementById('grandTotal');
+const calculateBtn = document.getElementById('calculateBtn');
 
-function updateDisplay(value) {
-  display.textContent = value;
+function formatMoney(value) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD'
+  }).format(value);
 }
 
-function appendValue(value) {
-  if (value === '.' && currentInput.includes('.')) return;
+function calculateTotal() {
+  const servicePrice = Number(serviceSelect.value);
+  const visitCount = Math.max(1, Number(visitsInput.value) || 1);
 
-  if (currentInput === '0' && value !== '.') {
-    currentInput = value;
-  } else {
-    currentInput += value;
-  }
+  const photoFee = photoUpdate.checked ? 5 * visitCount : 0;
+  const holidayFee = holidayVisit.checked ? 15 * visitCount : 0;
 
-  expression = expression + value;
-  updateDisplay(currentInput);
+  const baseTotal = servicePrice * visitCount;
+  const addOnTotal = photoFee + holidayFee;
+  const grandTotal = baseTotal + addOnTotal;
+
+  visitTotalEl.textContent = formatMoney(baseTotal);
+  addonTotalEl.textContent = formatMoney(addOnTotal);
+  grandTotalEl.textContent = formatMoney(grandTotal);
 }
 
-function handleOperator(operator) {
-  if (!expression || /[+\-*/]$/.test(expression)) {
-    if (operator === '-') {
-      expression += operator;
-      currentInput = '-';
-      updateDisplay(currentInput);
-    }
-    return;
-  }
+serviceSelect.addEventListener('change', calculateTotal);
+visitsInput.addEventListener('input', calculateTotal);
+photoUpdate.addEventListener('change', calculateTotal);
+holidayVisit.addEventListener('change', calculateTotal);
+calculateBtn.addEventListener('click', calculateTotal);
 
-  expression += operator;
-  currentInput = '0';
-  updateDisplay('0');
-}
-
-function clearCalculator() {
-  expression = '';
-  currentInput = '0';
-  updateDisplay('0');
-}
-
-function deleteLast() {
-  if (!expression) return;
-
-  expression = expression.slice(0, -1);
-  currentInput = expression.slice(-1) || '0';
-
-  if (expression === '') {
-    currentInput = '0';
-  }
-
-  updateDisplay(currentInput === '0' && !expression ? '0' : currentInput);
-}
-
-function calculateResult() {
-  if (!expression) return;
-
-  try {
-    const sanitized = expression.replace(/×/g, '*').replace(/÷/g, '/');
-    const result = Function(`"use strict"; return (${sanitized})`)();
-
-    if (!Number.isFinite(result)) {
-      throw new Error('Invalid calculation');
-    }
-
-    const formatted = Number.isInteger(result) ? String(result) : Number(result.toFixed(10)).toString();
-    expression = formatted;
-    currentInput = formatted;
-    updateDisplay(formatted);
-  } catch (error) {
-    updateDisplay('Error');
-    expression = '';
-    currentInput = '0';
-  }
-}
-
-document.querySelectorAll('[data-value]').forEach((button) => {
-  button.addEventListener('click', () => {
-    const value = button.dataset.value;
-
-    if (/[0-9.]/.test(value)) {
-      appendValue(value);
-      return;
-    }
-
-    handleOperator(value);
-  });
-});
-
-document.querySelector('[data-action="clear"]').addEventListener('click', clearCalculator);
-document.querySelector('[data-action="delete"]').addEventListener('click', deleteLast);
-document.querySelector('[data-action="calculate"]').addEventListener('click', calculateResult);
-
-updateDisplay('0');
+calculateTotal();
