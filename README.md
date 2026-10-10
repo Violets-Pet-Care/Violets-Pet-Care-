@@ -18,8 +18,9 @@
         <select id="service">
           <option value="45">30-Minute Drop-In — $45</option>
           <option value="80">60-Minute Drop-In — $80</option>
-          <option value="95">Puppy Care — $95</option>
-          <option value="120">Senior Pet Care — $120</option>
+          <option value="10">Add-on-each additional dog — $10</option>
+          <option value="5">Add-on-each additional cat — $5</option>
+          <option value="2">Add-on-each additional photo(NOTE:only add if you’re needing Photo for more than 1 otherwise you get 1 free photo per visit) — $2</option>
         </select>
 
         <label for="visits">Number of visits</label>
@@ -28,7 +29,7 @@
         <div class="checkboxes">
           <label>
             <input id="photoUpdate" type="checkbox" />
-            Photo update + $5 each 
+            Photo update + $2 each pet
           </label>
           <label>
             <input id="holidayVisit" type="checkbox" />
