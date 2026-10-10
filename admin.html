@@ -11,123 +11,90 @@
     <!-- Sidebar Navigation -->
     <aside class="admin-sidebar">
       <div class="sidebar-header">
-        <h2>🐾 Violet Admin</h2>
-        <p class="admin-email" id="adminEmail">Loading...</p>
+        <h2>🐾 Violet's Admin</h2>
+        <p>Pet Care Dashboard</p>
       </div>
 
-      <nav class="admin-nav">
-        <a href="#" class="nav-item active" data-page="dashboard">
-          <span class="icon">📊</span>
-          <span>Dashboard</span>
-        </a>
-        <a href="#" class="nav-item" data-page="bookings">
-          <span class="icon">📅</span>
-          <span>Bookings</span>
-        </a>
-        <a href="#" class="nav-item" data-page="routes">
-          <span class="icon">🗺️</span>
-          <span>Routes</span>
-        </a>
-        <a href="#" class="nav-item" data-page="customers">
-          <span class="icon">👥</span>
-          <span>Customers</span>
-        </a>
-        <a href="#" class="nav-item" data-page="quotes">
-          <span class="icon">💰</span>
-          <span>Quotes</span>
-        </a>
-        <a href="#" class="nav-item" data-page="services">
-          <span class="icon">🐕</span>
-          <span>Services & Pricing</span>
-        </a>
-        <a href="#" class="nav-item" data-page="earnings">
-          <span class="icon">💵</span>
-          <span>Earnings</span>
-        </a>
-        <a href="#" class="nav-item" data-page="settings">
-          <span class="icon">⚙️</span>
-          <span>Settings</span>
-        </a>
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-link active" data-page="overview">📊 Overview</a>
+        <a href="#" class="nav-link" data-page="bookings">📅 Bookings</a>
+        <a href="#" class="nav-link" data-page="customers">👥 Customers</a>
+        <a href="#" class="nav-link" data-page="routes">🗺️ Routes</a>
+        <a href="#" class="nav-link" data-page="quotes">💬 Quotes</a>
+        <a href="#" class="nav-link" data-page="services">💼 Services</a>
+        <a href="#" class="nav-link" data-page="earnings">💰 Earnings</a>
+        <a href="#" class="nav-link" data-page="settings">⚙️ Settings</a>
       </nav>
 
-      <div class="sidebar-footer">
-        <button id="logoutBtn" class="btn btn-logout">🚪 Logout</button>
-      </div>
+      <button id="logoutBtn" class="btn btn-logout">Logout</button>
     </aside>
 
     <!-- Main Content -->
-    <main class="admin-content">
-      <!-- Dashboard Page -->
-      <div class="page" id="page-dashboard">
-        <div class="page-header">
-          <h1>📊 Dashboard</h1>
-          <p>Welcome back, Violet!</p>
-        </div>
+    <main class="admin-main">
+      <!-- Login Section -->
+      <div id="loginSection" class="login-container">
+        <div class="login-box">
+          <h1>🐾 Violet's Pet Care</h1>
+          <p>Admin Dashboard</p>
 
-        <div class="stats-grid">
-          <div class="stat-card">
-            <p class="stat-label">Today's Earnings</p>
-            <p class="stat-value" id="todayEarnings">$0.00</p>
-            <p class="stat-small">From completed visits</p>
-          </div>
-
-          <div class="stat-card">
-            <p class="stat-label">This Week</p>
-            <p class="stat-value" id="weekEarnings">$0.00</p>
-            <p class="stat-small">7-day total</p>
-          </div>
-
-          <div class="stat-card">
-            <p class="stat-label">This Month</p>
-            <p class="stat-value" id="monthEarnings">$0.00</p>
-            <p class="stat-small">30-day total</p>
-          </div>
-
-          <div class="stat-card">
-            <p class="stat-label">Pending Bookings</p>
-            <p class="stat-value" id="pendingBookings">0</p>
-            <p class="stat-small">Awaiting confirmation</p>
-          </div>
-        </div>
-
-        <div class="dashboard-grid">
-          <div class="card">
-            <h3>Recent Bookings</h3>
-            <div class="booking-list" id="recentBookings">
-              <p style="text-align: center; color: #888;">No bookings yet</p>
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" placeholder="admin@violetspetcare.com" required />
             </div>
-          </div>
 
-          <div class="card">
-            <h3>Quick Actions</h3>
-            <div class="quick-actions">
-              <button class="btn btn-small" onclick="switchPage('bookings')">View All Bookings</button>
-              <button class="btn btn-small" onclick="switchPage('routes')">Manage Routes</button>
-              <button class="btn btn-small" onclick="switchPage('customers')">View Customers</button>
-              <button class="btn btn-small" onclick="switchPage('earnings')">View Earnings</button>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" id="password" placeholder="Enter password" required />
             </div>
-          </div>
+
+            <button type="submit" class="btn btn-primary">Sign In</button>
+            <button type="button" id="demoLoginBtn" class="btn btn-secondary">Demo Login</button>
+          </form>
+
+          <p class="demo-hint">Demo: admin@violetspetcare.com / password123</p>
         </div>
       </div>
 
-      <!-- Bookings Page -->
-      <div class="page hidden" id="page-bookings">
-        <div class="page-header">
-          <h1>📅 Bookings</h1>
-          <p>Manage all client bookings</p>
-        </div>
+      <!-- Dashboard Content (Hidden by default) -->
+      <div id="dashboardContent" class="dashboard-content" style="display: none;">
+        <!-- Overview Page -->
+        <section id="page-overview" class="page active">
+          <div class="page-header">
+            <h1>Dashboard</h1>
+            <p>Welcome back, <strong id="adminName">Admin</strong></p>
+          </div>
 
-        <div class="filter-bar">
-          <input type="text" id="bookingSearch" placeholder="Search by pet name or client..." />
-          <select id="bookingFilter">
-            <option value="all">All Bookings</option>
-            <option value="pending">Pending</option>
-            <option value="confirmed">Confirmed</option>
-            <option value="completed">Completed</option>
-          </select>
-        </div>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <h3>Today's Earnings</h3>
+              <p class="stat-value" id="todayEarnings">$0.00</p>
+            </div>
+            <div class="stat-card">
+              <h3>Pending Bookings</h3>
+              <p class="stat-value" id="pendingBookings">0</p>
+            </div>
+            <div class="stat-card">
+              <h3>Total Routes</h3>
+              <p class="stat-value" id="totalRoutes">0</p>
+            </div>
+            <div class="stat-card">
+              <h3>Active Customers</h3>
+              <p class="stat-value" id="totalCustomers">0</p>
+            </div>
+          </div>
 
-        <div class="table-container">
+          <div class="panel">
+            <h2>Recent Bookings</h2>
+            <div id="recentBookings" class="bookings-list"></div>
+          </div>
+        </section>
+
+        <!-- Bookings Page -->
+        <section id="page-bookings" class="page">
+          <div class="page-header">
+            <h1>Bookings</h1>
+          </div>
           <table class="data-table">
             <thead>
               <tr>
@@ -137,44 +104,17 @@
                 <th>Service</th>
                 <th>Price</th>
                 <th>Status</th>
-                <th>Actions</th>
               </tr>
             </thead>
-            <tbody id="bookingsTable">
-              <tr>
-                <td colspan="7" style="text-align: center; color: #888;">No bookings yet</td>
-              </tr>
-            </tbody>
+            <tbody id="bookingsTable"></tbody>
           </table>
-        </div>
-      </div>
+        </section>
 
-      <!-- Routes Page -->
-      <div class="page hidden" id="page-routes">
-        <div class="page-header">
-          <h1>🗺️ Routes</h1>
-          <p>Manage and optimize your routes</p>
-        </div>
-
-        <button class="btn" onclick="addNewRoute()">+ Create New Route</button>
-
-        <div class="routes-list" id="routesList">
-          <p style="text-align: center; color: #888;">No routes saved yet</p>
-        </div>
-      </div>
-
-      <!-- Customers Page -->
-      <div class="page hidden" id="page-customers">
-        <div class="page-header">
-          <h1>👥 Customers</h1>
-          <p>View and manage all clients</p>
-        </div>
-
-        <div class="filter-bar">
-          <input type="text" id="customerSearch" placeholder="Search customers..." />
-        </div>
-
-        <div class="table-container">
+        <!-- Customers Page -->
+        <section id="page-customers" class="page">
+          <div class="page-header">
+            <h1>Customers</h1>
+          </div>
           <table class="data-table">
             <thead>
               <tr>
@@ -183,174 +123,93 @@
                 <th>Phone</th>
                 <th>Pets</th>
                 <th>Total Visits</th>
-                <th>Status</th>
-                <th>Actions</th>
               </tr>
             </thead>
-            <tbody id="customersTable">
-              <tr>
-                <td colspan="7" style="text-align: center; color: #888;">No customers yet</td>
-              </tr>
-            </tbody>
+            <tbody id="customersTable"></tbody>
           </table>
-        </div>
-      </div>
+        </section>
 
-      <!-- Quotes Page -->
-      <div class="page hidden" id="page-quotes">
-        <div class="page-header">
-          <h1>💰 Quotes</h1>
-          <p>View saved customer quotes</p>
-        </div>
+        <!-- Routes Page -->
+        <section id="page-routes" class="page">
+          <div class="page-header">
+            <h1>Routes</h1>
+            <button class="btn btn-primary" id="addRouteBtn">+ New Route</button>
+          </div>
+          <div id="routesList" class="routes-grid"></div>
+        </section>
 
-        <div class="filter-bar">
-          <input type="text" id="quoteSearch" placeholder="Search quotes..." />
-        </div>
-
-        <div class="table-container">
+        <!-- Quotes Page -->
+        <section id="page-quotes" class="page">
+          <div class="page-header">
+            <h1>Quotes</h1>
+          </div>
           <table class="data-table">
             <thead>
               <tr>
                 <th>Date</th>
-                <th>Client Email</th>
+                <th>Client</th>
                 <th>Service</th>
-                <th>Total</th>
+                <th>Amount</th>
                 <th>Status</th>
-                <th>Actions</th>
               </tr>
             </thead>
-            <tbody id="quotesTable">
-              <tr>
-                <td colspan="6" style="text-align: center; color: #888;">No quotes yet</td>
-              </tr>
-            </tbody>
+            <tbody id="quotesTable"></tbody>
           </table>
-        </div>
-      </div>
+        </section>
 
-      <!-- Services Page -->
-      <div class="page hidden" id="page-services">
-        <div class="page-header">
-          <h1>🐕 Services & Pricing</h1>
-          <p>Manage your service offerings and prices</p>
-        </div>
-
-        <div class="services-grid" id="servicesGrid">
-          <!-- Services will be populated here -->
-        </div>
-      </div>
-
-      <!-- Earnings Page -->
-      <div class="page hidden" id="page-earnings">
-        <div class="page-header">
-          <h1>💵 Earnings Report</h1>
-          <p>Track your income and fuel costs</p>
-        </div>
-
-        <div class="earnings-period">
-          <button class="period-btn active" data-period="today">Today</button>
-          <button class="period-btn" data-period="week">This Week</button>
-          <button class="period-btn" data-period="month">This Month</button>
-          <button class="period-btn" data-period="year">This Year</button>
-        </div>
-
-        <div class="earnings-grid">
-          <div class="earnings-card">
-            <p class="label">Total Earnings</p>
-            <p class="value" id="earningsTotal">$0.00</p>
+        <!-- Services Page -->
+        <section id="page-services" class="page">
+          <div class="page-header">
+            <h1>Services & Pricing</h1>
           </div>
-          <div class="earnings-card">
-            <p class="label">Fuel Costs</p>
-            <p class="value" id="earnignsFuel">-$0.00</p>
-          </div>
-          <div class="earnings-card highlight">
-            <p class="label">Net Profit</p>
-            <p class="value" id="earningsNet">$0.00</p>
-          </div>
-        </div>
+          <div id="servicesList" class="services-grid"></div>
+        </section>
 
-        <div class="earnings-breakdown">
-          <h3>Earnings Breakdown by Service</h3>
-          <div id="earningsBreakdown">
-            <p style="text-align: center; color: #888;">No earnings data yet</p>
+        <!-- Earnings Page -->
+        <section id="page-earnings" class="page">
+          <div class="page-header">
+            <h1>Earnings & Profit</h1>
           </div>
-        </div>
-      </div>
 
-      <!-- Settings Page -->
-      <div class="page hidden" id="page-settings">
-        <div class="page-header">
-          <h1>⚙️ Settings</h1>
-          <p>Manage your account and preferences</p>
-        </div>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <h3>Total Revenue</h3>
+              <p class="stat-value" id="totalRevenue">$0.00</p>
+            </div>
+            <div class="stat-card">
+              <h3>Fuel Cost</h3>
+              <p class="stat-value" id="fuelCost">$0.00</p>
+            </div>
+            <div class="stat-card highlight">
+              <h3>Net Profit</h3>
+              <p class="stat-value" id="netProfit">$0.00</p>
+            </div>
+          </div>
+        </section>
 
-        <div class="settings-section">
-          <h3>Account Information</h3>
-          <div class="form-group">
-            <label>Admin Name</label>
-            <input type="text" id="adminName" placeholder="Your name" />
+        <!-- Settings Page -->
+        <section id="page-settings" class="page">
+          <div class="page-header">
+            <h1>Settings</h1>
           </div>
-          <div class="form-group">
-            <label>Email</label>
-            <input type="email" id="adminEmailInput" placeholder="admin@violetspetcare.com" />
-          </div>
-          <div class="form-group">
-            <label>Password</label>
-            <input type="password" id="adminPassword" placeholder="Change password" />
-          </div>
-          <button class="btn" onclick="saveSettings()">Save Settings</button>
-        </div>
 
-        <div class="settings-section">
-          <h3>Business Settings</h3>
-          <div class="form-group">
-            <label>Fuel Efficiency (MPG)</label>
-            <input type="number" id="fuelEfficiency" value="22" />
-          </div>
-          <div class="form-group">
-            <label>Fuel Price (per gallon)</label>
-            <input type="number" id="fuelPrice" value="3.50" step="0.01" />
-          </div>
-          <button class="btn" onclick="saveSettings()">Save Settings</button>
-        </div>
+          <div class="panel">
+            <h2>Profile</h2>
+            <div class="form-group">
+              <label for="adminNameInput">Admin Name</label>
+              <input type="text" id="adminNameInput" placeholder="Violet" />
+            </div>
 
-        <div class="settings-section danger">
-          <h3>Danger Zone</h3>
-          <p>Clear all local data and start fresh</p>
-          <button class="btn btn-danger" onclick="clearAllData()">Clear All Data</button>
-        </div>
+            <div class="form-group">
+              <label for="adminEmailInput">Email</label>
+              <input type="email" id="adminEmailInput" placeholder="admin@violetspetcare.com" />
+            </div>
+
+            <button class="btn btn-primary" id="saveSettingsBtn">Save Settings</button>
+          </div>
+        </section>
       </div>
     </main>
-  </div>
-
-  <!-- Login Modal -->
-  <div id="loginModal" class="modal show">
-    <div class="modal-content login-modal">
-      <div class="login-box">
-        <h1>🐾 Violet's Pet Care</h1>
-        <h2>Admin Login</h2>
-        <p>Sign in to manage your business</p>
-
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" id="loginEmail" placeholder="admin@violetspetcare.com" />
-        </div>
-
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" id="loginPassword" placeholder="Enter your password" />
-        </div>
-
-        <button class="btn btn-primary" onclick="handleLogin()">Sign In</button>
-
-        <div class="demo-login">
-          <p>Demo credentials:</p>
-          <p><strong>Email:</strong> admin@violetspetcare.com</p>
-          <p><strong>Password:</strong> password123</p>
-          <button class="btn btn-secondary" onclick="demoLogin()">Use Demo Login</button>
-        </div>
-      </div>
-    </div>
   </div>
 
   <script src="admin-script.js"></script>
