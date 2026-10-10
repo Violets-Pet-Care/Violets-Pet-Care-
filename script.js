@@ -1,39 +1,68 @@
-const serviceSelect = document.getElementById('service');
-const visitsInput = document.getElementById('visits');
-const photoUpdate = document.getElementById('photoUpdate');
-const holidayVisit = document.getElementById('holidayVisit');
-const visitTotalEl = document.getElementById('visitTotal');
-const addonTotalEl = document.getElementById('addonTotal');
-const grandTotalEl = document.getElementById('grandTotal');
-const calculateBtn = document.getElementById('calculateBtn');
+const display = document.getElementById("display");
+const buttons = document.querySelectorAll(".btn");
 
-function formatMoney(value) {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD'
-  }).format(value);
+let expression = "";
+
+function updateDisplay() {
+  display.textContent = expression || "0";
 }
 
-function calculateTotal() {
-  const servicePrice = Number(serviceSelect.value);
-  const visitCount = Math.max(1, Number(visitsInput.value) || 1);
+function appendValue(value) {
+  const lastChar = expression.slice(-1);
 
-  const photoFee = photoUpdate.checked ? 5 * visitCount : 0;
-  const holidayFee = holidayVisit.checked ? 15 * visitCount : 0;
+  if (["+", "-", "*", "/"].includes(value)) {
+    if (!expression || ["+", "-", "*", "/"].includes(lastChar)) {
+      return;
+    }
+    expression += value;
+  } else if (value === ".") {
+    const parts = expression.split(/[+\-*/]/);
+    const currentPart = parts[parts.length - 1];
+    if (currentPart.includes(".")) return;
+    expression += value;
+  } else {
+    expression += value;
+  }
 
-  const baseTotal = servicePrice * visitCount;
-  const addOnTotal = photoFee + holidayFee;
-  const grandTotal = baseTotal + addOnTotal;
-
-  visitTotalEl.textContent = formatMoney(baseTotal);
-  addonTotalEl.textContent = formatMoney(addOnTotal);
-  grandTotalEl.textContent = formatMoney(grandTotal);
+  updateDisplay();
 }
 
-serviceSelect.addEventListener('change', calculateTotal);
-visitsInput.addEventListener('input', calculateTotal);
-photoUpdate.addEventListener('change', calculateTotal);
-holidayVisit.addEventListener('change', calculateTotal);
-calculateBtn.addEventListener('click', calculateTotal);
+function clearDisplay() {
+  expression = "";
+  updateDisplay();
+}
 
-calculateTotal();
+function deleteLast() {
+  expression = expression.slice(0, -1);
+  updateDisplay();
+}
+
+function calculate() {
+  if (!expression) return;
+
+  try {
+    const result = Function(`"use strict"; return (${expression})`)();
+    expression = Number.isInteger(result) ? String(result) : String(parseFloat(result.toFixed(10)));
+    updateDisplay();
+  } catch {
+    expression = "";
+    display.textContent = "Error";
+  }
+}
+
+buttons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const action = button.dataset.action;
+    const value = button.dataset.value;
+
+    if (action === "clear") {
+      clearDisplay();
+    } else if (action === "delete") {
+      deleteLast();
+    } else if (action === "calculate") {
+      calculate();
+    } else if (value) {
+      appendValue(value);
+    }
+  });
+});
