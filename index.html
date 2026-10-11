@@ -15,6 +15,7 @@
         <a href="#" class="logo">🐾 Violet's Pet Care</a>
         <nav class="nav-links">
           <a href="#services">Services</a>
+          <a href="#specialized-grooming">Specialized Grooming</a>
           <a href="#calculator" class="nav-calculator">💰 Quick Quote</a>
           <a href="#route-planner" class="nav-route">🗺️ Route Planner</a>
           <a href="#contact">Contact</a>
@@ -57,6 +58,19 @@
         </div>
       </div>
     </section>
+
+
+    <section id="specialized-grooming" class="specialized-grooming-section"><div class="container grooming-content">
+      <p class="grooming-eyebrow">Veterinary-team coordinated care</p>
+      <h2>Specialized Grooming for Difficult, Senior &amp; Medically Complicated Pets</h2>
+      <p class="grooming-lead">Need a sedated dog shaved or help with a pet who cannot tolerate a conventional grooming salon? Ask about Violet's specialized grooming and veterinary referral program.</p>
+      <div class="grooming-grid">
+        <div class="grooming-card"><h3>16 Years of Hands-On Experience</h3><p>Patient, individualized handling informed by grooming experience and work in a veterinary-hospital environment.</p></div>
+        <div class="grooming-card"><h3>Complex Coat &amp; Hygiene Needs</h3><p>Severe matting, pelted coats, hygiene clips and comfort-focused grooming when appropriate.</p></div>
+        <div class="grooming-card"><h3>Gentle Support for Vulnerable Pets</h3><p>Support for senior or fragile pets, fearful or difficult-to-handle dogs and cats, and medically complicated patients.</p></div>
+        <div class="grooming-card"><h3>Coordinated With Your Vet</h3><p>Grooming can be coordinated with the veterinary team, including sharing observations. Sedation and medical decisions are handled only by the veterinarian and veterinary team.</p></div>
+      </div><a class="btn btn-primary grooming-contact" href="mailto:violetspetcare@yahoo.com?subject=Specialized%20Grooming%20Inquiry">Ask About Specialized Grooming</a>
+    </div></section>
 
     <!-- Route Planner Section -->
     <section id="route-planner" class="route-planner-section">
@@ -169,13 +183,10 @@
       <div class="modal-calculator">
         <h2>💰 Build Your Quote</h2>
 
-        <div class="form-group">
-          <label for="numPets">Number of Pets</label>
-          <div class="input-row">
-            <input type="number" id="numPets" min="1" max="10" value="1" />
-            <span class="hint">Multi-pet discount: 10% off each additional pet</span>
+        <div class="form-group pet-count-grid">
+            <div><label for="numDogs">Number of Dogs</label><input type="number" id="numDogs" min="0" max="20" value="1" /><span class="hint">5% off with 3+ dogs</span></div>
+            <div><label for="numCats">Number of Cats</label><input type="number" id="numCats" min="0" max="20" value="0" /><span class="hint">3% off with 3+ cats</span></div>
           </div>
-        </div>
 
         <div class="form-group">
           <label>Service Type</label>
@@ -263,6 +274,8 @@
             </label>
           </div>
         </div>
+          <div class="form-group"><label for="litterBoxes">Litter Boxes to Clean</label><input type="number" id="litterBoxes" min="0" max="20" value="0" /><span class="hint">$15 per litter box, per visit</span></div>
+          <div class="form-group"><label for="tipPercent">Optional Tip</label><select id="tipPercent"><option value="0">No tip</option><option value="0.10">10% tip</option><option value="0.15">15% tip</option><option value="0.20">20% tip</option></select><span class="hint">Included in this estimate only; online checkout needs separate setup.</span></div>
 
         <div class="breakdown">
           <div class="breakdown-row">
@@ -270,10 +283,8 @@
             <strong id="serviceCost">$45.00</strong>
           </div>
 
-          <div class="breakdown-row">
-            <span>Multi-Pet Discount (10%)</span>
-            <strong id="petDiscount">-$0.00</strong>
-          </div>
+          <div class="breakdown-row"><span>Dog Discount (5% with 3+ dogs)</span><strong id="dogDiscount">-$0.00</strong></div>
+            <div class="breakdown-row"><span>Cat Discount (3% with 3+ cats)</span><strong id="catDiscount">-$0.00</strong></div>
 
           <div class="breakdown-row">
             <span>Package Discount</span>
@@ -284,6 +295,8 @@
             <span>Add-Ons</span>
             <strong id="addOnsCost">$0.00</strong>
           </div>
+<div class="breakdown-row"><span>Litter Box Cleaning</span><strong id="litterCost">$0.00</strong></div>
+            <div class="breakdown-row"><span>Optional Tip</span><strong id="tipCost">$0.00</strong></div>
 
           <div class="breakdown-row grand-total">
             <span>Estimated Total</span>
