@@ -10,12 +10,13 @@
   <div class="admin-wrapper">
     <!-- Sidebar Navigation -->
     <aside class="admin-sidebar">
+      <div class="mobile-admin-bar"><a class="mobile-brand" href="index.html">🐾 Violet's Pet Care</a><button type="button" id="adminMenuToggle" class="admin-menu-toggle" aria-expanded="false" aria-controls="adminNavigation">☰ Menu</button></div>
       <div class="sidebar-header">
         <h2>🐾 Violet's Admin</h2>
         <p>Pet Care Dashboard</p>
       </div>
 
-      <nav class="sidebar-nav">
+      <nav class="sidebar-nav" id="adminNavigation">
         <a href="#" class="nav-link active" data-page="overview">📊 Overview</a>
         <a href="#" class="nav-link" data-page="bookings">📅 Bookings</a>
         <a href="#" class="nav-link" data-page="customers">👥 Customers</a>
@@ -240,5 +241,25 @@
   </div>
 
   <script src="admin-script.js"></script>
+  <script>
+  (() => {
+    const toggle = document.getElementById("adminMenuToggle");
+    const sidebar = document.querySelector(".admin-sidebar");
+    if (!toggle || !sidebar) return;
+    const closeMenu = () => {
+      sidebar.classList.remove("menu-open");
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.textContent = "☰ Menu";
+    };
+    toggle.addEventListener("click", () => {
+      const open = sidebar.classList.toggle("menu-open");
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.textContent = open ? "✕ Close menu" : "☰ Menu";
+    });
+    sidebar.querySelectorAll(".nav-link").forEach(link => link.addEventListener("click", () => {
+      if (window.matchMedia("(max-width: 900px)").matches) closeMenu();
+    }));
+  })();
+  </script>
 </body>
 </html>
