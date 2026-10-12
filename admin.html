@@ -129,13 +129,40 @@
           </table>
         </section>
 
-        <!-- Routes Page -->
+        <!-- Private Admin Route Planner -->
         <section id="page-routes" class="page">
-          <div class="page-header">
-            <h1>Routes</h1>
-            <button class="btn btn-primary" id="addRouteBtn">+ New Route</button>
+          <div class="page-header"><h1>🗺️ Daily Route Planner</h1></div>
+          <p>Plan your day, organize visits, and open turn-by-turn directions. Travel time and fuel figures are rough planning estimates, not live traffic data.</p>
+          <div class="panel route-planner-admin">
+            <div class="route-toolbar">
+              <div class="form-group"><label for="routeDate">Route date</label><input type="date" id="routeDate"></div>
+              <div class="form-group"><label for="routeStart">Starting point</label><input type="text" id="routeStart" placeholder="Home or starting address"></div>
+              <div class="form-group"><label for="routeEnd">End point (optional)</label><input type="text" id="routeEnd" placeholder="Home or final destination"></div>
+            </div>
+            <h2>Add appointment / stop</h2>
+            <div class="route-form-grid">
+              <div class="form-group"><label for="routeClient">Client name</label><input id="routeClient" type="text" placeholder="Client name"></div>
+              <div class="form-group"><label for="routePet">Pet name</label><input id="routePet" type="text" placeholder="Pet name"></div>
+              <div class="form-group"><label for="routeService">Service</label><select id="routeService"><option>30-Min Drop-In</option><option>60-Min Drop-In</option><option>Puppy Care</option><option>Senior Pet Care</option><option>Specialized Grooming</option></select></div>
+              <div class="form-group"><label for="routeTime">Appointment time</label><input id="routeTime" type="time"></div>
+              <div class="form-group"><label for="routeAddress">Full service address</label><input id="routeAddress" type="text" placeholder="Street address, city, NC"></div>
+              <div class="form-group"><label for="routeTown">Town</label><select id="routeTown"><option value="Hickory">Hickory</option><option value="Granite Falls">Granite Falls</option><option value="Hudson">Hudson</option><option value="Other">Other</option></select></div>
+              <div class="form-group"><label for="routePrice">Expected earnings ($)</label><input id="routePrice" type="number" min="0" step="0.01" placeholder="45.00"></div>
+              <div class="form-group"><label for="routePhone">Client phone (optional)</label><input id="routePhone" type="tel" placeholder="Phone number"></div>
+              <div class="form-group"><label for="routeEmail">Client email (optional)</label><input id="routeEmail" type="email" placeholder="Email address"></div>
+            </div>
+            <button class="btn btn-primary" id="routeAddStop">+ Add to Daily Route</button>
+            <div class="route-actions-admin">
+              <button class="btn" id="routeOptimize">⚡ Organize Route</button><button class="btn" id="routeGroupTown">📍 Group by Town</button><button class="btn" id="routeNearby">🔎 Nearby Stops</button>
+              <button class="btn btn-primary" id="routeGoogleMaps">Open in Google Maps</button><button class="btn" id="routeAppleMaps">Open in Apple Maps</button><button class="btn btn-secondary" id="routeClear">Clear Selected Day</button>
+            </div>
+            <div class="route-stats-grid">
+              <div class="stat-card"><h3>Total Stops</h3><p class="stat-value" id="routeTotalStops">0</p></div><div class="stat-card"><h3>Expected Earnings</h3><p class="stat-value" id="routeTotalEarnings">$0.00</p></div><div class="stat-card"><h3>Estimated Drive</h3><p class="stat-value" id="routeDriveTime">0 min</p></div><div class="stat-card"><h3>Estimated Fuel</h3><p class="stat-value" id="routeFuelCost">$0.00</p></div><div class="stat-card highlight"><h3>Estimated Net</h3><p class="stat-value" id="routeNetProfit">$0.00</p></div>
+            </div>
+            <div class="route-stops-list" id="routeStopsList"></div>
+            <p class="route-estimate-note">Route organization sorts by town and appointment time; it does not calculate the mathematically fastest route. Use Google Maps or Apple Maps for current navigation.</p>
           </div>
-          <div id="routesList" class="routes-grid"></div>
+          <div class="panel"><h2>Saved Route Summaries</h2><div id="routesList" class="routes-grid"></div></div>
         </section>
 
         <!-- Quotes Page -->
