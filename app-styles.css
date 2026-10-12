@@ -773,3 +773,6 @@ stripe-buy-button {
 #requestCheckout { grid-column:1 / -1; min-height:48px; width:100%; }
 .breakdown-row strong { text-align:right; }
 @media(max-width:600px){ .modal-actions { display:grid; grid-template-columns:1fr; gap:10px; } #requestCheckout { grid-column:auto; } .stripe-buttons-wrapper { grid-template-columns:1fr; } }
+
+/* Show/hide optional quote fields on all screen sizes */
+.hidden { display: none !important; }
