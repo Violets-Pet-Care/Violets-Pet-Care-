@@ -153,14 +153,14 @@
             </div>
             <button class="btn btn-primary" id="routeAddStop">+ Add to Daily Route</button>
             <div class="route-actions-admin">
-              <button class="btn" id="routeOptimize">⚡ Organize Route</button><button class="btn" id="routeGroupTown">📍 Group by Town</button><button class="btn" id="routeNearby">Filter by Town</button>
+              <button class="btn" id="routeOptimize">⚡ Organize Route</button><button class="btn" id="routeGroupTown">📍 Group by Town</button><button class="btn" id="routeNearby">Filter by Town</button><button class="btn btn-primary" id="routeCalculate">🚗 Calculate Best Driving Route</button>
               <button class="btn btn-primary" id="routeGoogleMaps">Open in Google Maps</button><button class="btn" id="routeAppleMaps">Open in Apple Maps</button><button class="btn btn-secondary" id="routeClear">Clear Selected Day</button>
             </div>
             <div class="route-stats-grid">
               <div class="stat-card"><h3>Total Stops</h3><p class="stat-value" id="routeTotalStops">0</p></div><div class="stat-card"><h3>Expected Earnings</h3><p class="stat-value" id="routeTotalEarnings">$0.00</p></div><div class="stat-card"><h3>Estimated Drive</h3><p class="stat-value" id="routeDriveTime">0 min</p></div><div class="stat-card"><h3>Estimated Fuel</h3><p class="stat-value" id="routeFuelCost">$0.00</p></div><div class="stat-card highlight"><h3>Estimated Net</h3><p class="stat-value" id="routeNetProfit">$0.00</p></div>
             </div>
             <div class="route-stops-list" id="routeStopsList"></div>
-            <p class="route-estimate-note">Route organization sorts by town and appointment time; it does not calculate the mathematically fastest route. Use Google Maps or Apple Maps for current navigation.</p>
+            <div class="route-live-panel" aria-live="polite"><h2>Driving Route Results</h2><p id="routeServiceStatus">Enter complete street addresses, then select “Calculate Best Driving Route.”</p><div id="routeServiceResults"></div><p class="route-estimate-note">Uses OpenStreetMap address search and the OSRM driving-route service. Results are estimates and may differ from Google/Apple navigation or live traffic. Public services are free to try but have usage limits and no uptime guarantee.</p></div>
           </div>
           <div class="panel"><h2>Saved Route Summaries</h2><div id="routesList" class="routes-grid"></div></div>
         </section>
