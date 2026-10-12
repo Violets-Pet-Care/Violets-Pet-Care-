@@ -303,10 +303,101 @@ function dailyDirections(which){
  if(which==="google"){const p=new URLSearchParams({api:"1",travelmode:"driving"});if(start)p.set("origin",start);p.set("destination",end||addresses.pop());if(addresses.length)p.set("waypoints",addresses.join("|"));window.open("https://www.google.com/maps/dir/?"+p.toString(),"_blank","noopener");}
  else{const dest=end||addresses.pop();window.open("https://maps.apple.com/?daddr="+encodeURIComponent([start,...addresses,dest].filter(Boolean).join(" to "))+"&dirflg=d","_blank","noopener");}
 }
+
+/* Real road routing through public OpenStreetMap/Nominatim + OSRM services.
+   Public endpoints need no API key, but are community services with rate limits/no SLA. */
+const routeGeocodeCache = new Map();
+const routePause = ms => new Promise(resolve => setTimeout(resolve, ms));
+let lastGeocodeAt = 0;
+async function geocodeRouteAddress(address) {
+  const key = address.trim().toLowerCase();
+  if (routeGeocodeCache.has(key)) return routeGeocodeCache.get(key);
+  const wait = Math.max(0, 1100 - (Date.now() - lastGeocodeAt));
+  if (wait) await routePause(wait);
+  lastGeocodeAt = Date.now();
+  const url = "https://nominatim.openstreetmap.org/search?" + new URLSearchParams({
+    q: address, format: "jsonv2", limit: "1", countrycodes: "us", addressdetails: "1"
+  });
+  const response = await fetch(url, { headers: { "Accept-Language": "en-US,en;q=0.8" } });
+  if (!response.ok) throw new Error("Address lookup is temporarily unavailable. Try again later.");
+  const results = await response.json();
+  if (!results.length) throw new Error("Could not find this address: " + address + ". Check that it includes street, town, and state.");
+  const point = { lon: Number(results[0].lon), lat: Number(results[0].lat), label: results[0].display_name };
+  routeGeocodeCache.set(key, point);
+  return point;
+}
+function routeStatus(message, isError=false) {
+  const node = re("routeServiceStatus");
+  if (node) { node.textContent = message; node.classList.toggle("route-error", isError); }
+}
+async function calculateDrivingRoute() {
+  const stops = todaysStops();
+  if (!stops.length) { routeStatus("Add at least one appointment before calculating a route.", true); return; }
+  const start = re("routeStart").value.trim();
+  const end = re("routeEnd").value.trim();
+  if (stops.length + (start ? 1 : 0) + (end ? 1 : 0) < 2) {
+    routeStatus("Add a second stop, or enter a starting point or end point, so driving time can be calculated.", true);
+    return;
+  }
+  const button = re("routeCalculate");
+  button.disabled = true;
+  const oldLabel = button.textContent;
+  button.textContent = "Calculating…";
+  re("routeServiceResults").innerHTML = "";
+  routeStatus("Looking up addresses and calculating road distances. This can take a little time for several stops.");
+  try {
+    const points = [];
+    if (start) points.push({ kind: "start", label: "Starting point", address: start });
+    stops.forEach(s => points.push({ kind: "stop", id: s.id, label: (s.time ? s.time + " — " : "") + (s.client || s.pet || "Appointment"), address: s.address }));
+    if (end) points.push({ kind: "end", label: "End point", address: end });
+    const geocoded = [];
+    for (const point of points) {
+      const coords = await geocodeRouteAddress(point.address);
+      geocoded.push({ ...point, ...coords });
+    }
+    const coordString = geocoded.map(p => p.lon + "," + p.lat).join(";");
+    const routeUrl = "https://router.project-osrm.org/trip/v1/driving/" + coordString +
+      "?roundtrip=false&source=first&destination=last&overview=false&steps=false";
+    const response = await fetch(routeUrl);
+    if (!response.ok) throw new Error("The driving-route service could not calculate this route. Please try again.");
+    const data = await response.json();
+    if (data.code !== "Ok" || !data.trips || !data.trips.length || !data.waypoints) {
+      throw new Error("The routing service could not connect all of these addresses. Check the addresses or try fewer stops.");
+    }
+    const ordered = geocoded.map((p, originalIndex) => ({ ...p, routeIndex: data.waypoints[originalIndex].waypoint_index }))
+      .sort((a,b) => a.routeIndex - b.routeIndex);
+    const orderedStopIds = ordered.filter(p => p.kind === "stop").map(p => p.id);
+    const orderMap = new Map(orderedStopIds.map((id,index) => [id,index]));
+    dailyStops = dailyStops.map(s => orderMap.has(s.id) ? { ...s, _routeOrder: orderMap.get(s.id) } : s);
+    const todays = dailyStops.filter(s => s.date === rdate()).sort((a,b) => (a._routeOrder ?? 9999) - (b._routeOrder ?? 9999));
+    const todayIds = new Set(todays.map(s => s.id));
+    dailyStops = dailyStops.filter(s => !todayIds.has(s.id)).concat(todays.map(({_routeOrder,...s})=>s));
+    saveDailyStops();
+    nearbyOnly = false;
+    drawDailyRoute();
+    const trip = data.trips[0];
+    const miles = trip.distance / 1609.344;
+    const minutes = trip.duration / 60;
+    re("routeServiceResults").innerHTML =
+      '<div class="route-live-metrics"><strong>' + miles.toFixed(1) + ' miles</strong><strong>' + Math.round(minutes) + ' min estimated driving</strong></div>' +
+      '<ol class="route-live-list">' + ordered.map(p => '<li><strong>' + escRoute(p.label) + '</strong><span>' + escRoute(p.address) + '</span></li>').join("") + '</ol>' +
+      '<p><a target="_blank" rel="noopener noreferrer" href="' + (function(){ const u=new URL("https://www.google.com/maps/dir/"); u.searchParams.set("api","1"); u.searchParams.set("travelmode","driving"); if(start)u.searchParams.set("origin",start); if(end)u.searchParams.set("destination",end); else u.searchParams.set("destination",ordered.filter(p=>p.kind==="stop").slice(-1)[0]?.address||ordered[ordered.length-1].address); const mids=ordered.filter(p=>p.kind==="stop"); if(mids.length>1)u.searchParams.set("waypoints",mids.slice(0,-1).map(p=>p.address).join("|")); return u.toString(); })() + '">Open this stop order in Google Maps</a></p>';
+    re("routeDriveTime").textContent = Math.round(minutes) + " min";
+    re("routeFuelCost").textContent = rmoney((miles / 22) * 3.5);
+    re("routeNetProfit").textContent = rmoney(stops.reduce((sum,s)=>sum+(Number(s.price)||0),0) - (miles / 22) * 3.5);
+    routeStatus("Driving route calculated and appointments reordered using estimated road travel time.");
+  } catch (error) {
+    routeStatus(error.message || "Unable to calculate this route right now.", true);
+  } finally {
+    button.disabled = false;
+    button.textContent = oldLabel;
+  }
+}
+
 function initRoutePlanner(){
  if(!re("routeDate"))return;re("routeDate").value=new Date().toISOString().slice(0,10);
  re("routeDate").addEventListener("change",()=>{nearbyOnly=false;drawDailyRoute();});
- re("routeAddStop").addEventListener("click",addDailyStop);re("routeOptimize").addEventListener("click",sortDailyStops);
+ re("routeAddStop").addEventListener("click",addDailyStop);re("routeOptimize").addEventListener("click",sortDailyStops);re("routeCalculate").addEventListener("click",calculateDrivingRoute);
  re("routeGroupTown").addEventListener("click",()=>{sortDailyStops();alert("Stops grouped by town and appointment time.");});
  re("routeNearby").addEventListener("click",()=>{nearbyOnly=!nearbyOnly;drawDailyRoute();});
  re("routeGoogleMaps").addEventListener("click",()=>dailyDirections("google"));re("routeAppleMaps").addEventListener("click",()=>dailyDirections("apple"));
