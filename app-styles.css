@@ -769,3 +769,7 @@ stripe-buy-button {
  .radio-group, .modal-actions { grid-template-columns:repeat(2,minmax(0,1fr)); }
  .radio-label { min-width:0; }
 }
+/* Clear pet-fee and secure-checkout request layout */
+#requestCheckout { grid-column:1 / -1; min-height:48px; width:100%; }
+.breakdown-row strong { text-align:right; }
+@media(max-width:600px){ .modal-actions { display:grid; grid-template-columns:1fr; gap:10px; } #requestCheckout { grid-column:auto; } .stripe-buttons-wrapper { grid-template-columns:1fr; } }
