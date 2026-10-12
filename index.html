@@ -11,8 +11,9 @@
     <!-- Header/Navigation -->
     <header class="navbar">
       <div class="nav-container">
-        <a href="#" class="logo">🐾 Violet's Pet Care</a>
-        <nav class="nav-links">
+        <a href="#" class="logo"><img src="assets/violets-pet-care-logo.svg" alt="Violet's Pet Care logo" /></a>
+        <button type="button" class="site-menu-toggle" id="siteMenuToggle" aria-expanded="false" aria-controls="siteNavigation">☰ Menu</button>
+        <nav class="nav-links" id="siteNavigation">
           <a href="#services">Services</a>
           <a href="#specialized-grooming">Specialized Grooming</a>
           <a href="#calculator" class="nav-calculator">💰 Quick Quote</a>
@@ -20,6 +21,7 @@
         </nav>
       </div>
     </header>
+    <section class="brand-banner" aria-label="Violet's Pet Care branding"><img src="assets/violets-pet-care-logo.svg" alt="Violet's Pet Care — trusted pet care from a professional groomer" /></section>
 
     <!-- Services Section -->
     <section id="services" class="services-section">
@@ -102,6 +104,23 @@
     </footer>
   </div>
 
+  <script>
+  (() => {
+    const toggle = document.getElementById("siteMenuToggle");
+    const nav = document.getElementById("siteNavigation");
+    if (!toggle || !nav) return;
+    toggle.addEventListener("click", () => {
+      const open = nav.classList.toggle("is-open");
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.textContent = open ? "✕ Close" : "☰ Menu";
+    });
+    nav.querySelectorAll("a").forEach(link => link.addEventListener("click", () => {
+      nav.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.textContent = "☰ Menu";
+    }));
+  })();
+  </script>
   <!-- Calculator Modal -->
   <div id="calculatorModal" class="modal">
     <div class="modal-content calculator-modal-content">
