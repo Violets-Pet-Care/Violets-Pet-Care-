@@ -272,6 +272,50 @@ function saveSettings() {
   document.getElementById("adminName").textContent = appData.admin.name;
 }
 
+
+/* Private admin daily route planner */
+const ROUTE_KEY="violetsPetCareDailyRouteStops";
+let dailyStops=JSON.parse(localStorage.getItem(ROUTE_KEY)||"[]");
+let nearbyOnly=false;
+const re=id=>document.getElementById(id);
+const rmoney=n=>"$"+(Number(n)||0).toFixed(2);
+const rdate=()=>re("routeDate").value||new Date().toISOString().slice(0,10);
+const saveDailyStops=()=>localStorage.setItem(ROUTE_KEY,JSON.stringify(dailyStops));
+const todaysStops=()=>dailyStops.filter(s=>s.date===rdate());
+function escRoute(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function drawDailyRoute(){
+ const today=todaysStops(), visible=nearbyOnly&&today.length?today.filter(s=>s.town===today[0].town):today;
+ re("routeStopsList").innerHTML=visible.length?visible.map((s,n)=>'<article class="route-stop-card"><div class="route-stop-heading"><strong>'+(n+1)+'. '+escRoute(s.time||"Time not set")+' — '+escRoute(s.client||"Client not named")+'</strong><span class="badge '+(s.status==="Checked In"?"badge-success":"badge-warning")+'">'+escRoute(s.status)+'</span></div><p><strong>Pet:</strong> '+escRoute(s.pet||"Not specified")+' · <strong>Service:</strong> '+escRoute(s.service)+' · <strong>Expected:</strong> '+rmoney(s.price)+'</p><p><strong>Address:</strong> '+escRoute(s.address)+' ('+escRoute(s.town)+')</p><div class="route-stop-actions">'+(s.phone?'<a href="tel:'+escRoute(s.phone)+'">Call</a> <a href="sms:'+escRoute(s.phone)+'">Text</a> ':'')+(s.email?'<a href="mailto:'+escRoute(s.email)+'">Email</a> ':'')+'<button class="btn btn-small" data-rstatus="En Route" data-rid="'+s.id+'">En Route</button><button class="btn btn-small" data-rstatus="Checked In" data-rid="'+s.id+'">Check In</button><button class="btn btn-small btn-secondary" data-rremove="'+s.id+'">Remove</button></div></article>').join(""):"<p>No stops saved for this date yet.</p>";
+ const earnings=today.reduce((a,b)=>a+(Number(b.price)||0),0), towns=[...new Set(today.map(s=>s.town))];
+ let miles=0;for(let n=1;n<towns.length;n++){const d={"Hickory|Granite Falls":18,"Granite Falls|Hickory":18,"Hickory|Hudson":10,"Hudson|Hickory":10,"Granite Falls|Hudson":20,"Hudson|Granite Falls":20};miles+=d[towns[n-1]+"|"+towns[n]]||15;}
+ const mins=today.length?Math.max(0,(today.length-1)*18+Math.max(0,towns.length-1)*8):0,fuel=miles/22*3.5;
+ re("routeTotalStops").textContent=today.length;re("routeTotalEarnings").textContent=rmoney(earnings);re("routeDriveTime").textContent=mins+" min";re("routeFuelCost").textContent=rmoney(fuel);re("routeNetProfit").textContent=rmoney(earnings-fuel);
+}
+function addDailyStop(){
+ const address=re("routeAddress").value.trim();if(!address){alert("Please enter the full service address.");return;}
+ dailyStops.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),date:rdate(),client:re("routeClient").value.trim(),pet:re("routePet").value.trim(),service:re("routeService").value,time:re("routeTime").value,address,town:re("routeTown").value,price:Number(re("routePrice").value)||0,phone:re("routePhone").value.trim(),email:re("routeEmail").value.trim(),status:"Scheduled"});
+ saveDailyStops();["routeClient","routePet","routeTime","routeAddress","routePrice","routePhone","routeEmail"].forEach(id=>re(id).value="");nearbyOnly=false;drawDailyRoute();
+}
+function sortDailyStops(){const today=todaysStops().slice().sort((a,b)=>a.town.localeCompare(b.town)||(a.time||"").localeCompare(b.time||"")),ids=new Set(today.map(s=>s.id));dailyStops=dailyStops.filter(s=>!ids.has(s.id)).concat(today);saveDailyStops();nearbyOnly=false;drawDailyRoute();}
+function dailyDirections(which){
+ const list=todaysStops();if(!list.length){alert("Add at least one stop first.");return;}
+ const start=re("routeStart").value.trim(),end=re("routeEnd").value.trim(),addresses=list.map(s=>s.address);
+ if(which==="google"){const p=new URLSearchParams({api:"1",travelmode:"driving"});if(start)p.set("origin",start);p.set("destination",end||addresses.pop());if(addresses.length)p.set("waypoints",addresses.join("|"));window.open("https://www.google.com/maps/dir/?"+p.toString(),"_blank","noopener");}
+ else{const dest=end||addresses.pop();window.open("https://maps.apple.com/?daddr="+encodeURIComponent([start,...addresses,dest].filter(Boolean).join(" to "))+"&dirflg=d","_blank","noopener");}
+}
+function initRoutePlanner(){
+ if(!re("routeDate"))return;re("routeDate").value=new Date().toISOString().slice(0,10);
+ re("routeDate").addEventListener("change",()=>{nearbyOnly=false;drawDailyRoute();});
+ re("routeAddStop").addEventListener("click",addDailyStop);re("routeOptimize").addEventListener("click",sortDailyStops);
+ re("routeGroupTown").addEventListener("click",()=>{sortDailyStops();alert("Stops grouped by town and appointment time.");});
+ re("routeNearby").addEventListener("click",()=>{nearbyOnly=!nearbyOnly;drawDailyRoute();});
+ re("routeGoogleMaps").addEventListener("click",()=>dailyDirections("google"));re("routeAppleMaps").addEventListener("click",()=>dailyDirections("apple"));
+ re("routeClear").addEventListener("click",()=>{if(confirm("Remove all stops saved for "+rdate()+"?")){const d=rdate();dailyStops=dailyStops.filter(s=>s.date!==d);saveDailyStops();drawDailyRoute();}});
+ re("routeAddress").addEventListener("keydown",e=>{if(e.key==="Enter")addDailyStop();});
+ re("routeStopsList").addEventListener("click",e=>{const b=e.target.closest("[data-rstatus]"),d=e.target.closest("[data-rremove]");if(b){const s=dailyStops.find(x=>x.id===b.dataset.rid);if(s){s.status=b.dataset.rstatus;saveDailyStops();drawDailyRoute();}}if(d){dailyStops=dailyStops.filter(x=>x.id!==d.dataset.rremove);saveDailyStops();drawDailyRoute();}});
+ drawDailyRoute();
+}
+
 // Event Listeners
 document.getElementById("loginForm").addEventListener("submit", handleLogin);
 document.getElementById("demoLoginBtn").addEventListener("click", handleDemoLogin);
@@ -287,6 +331,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
 });
 
 // Initialize
+initRoutePlanner();
 if (appData.isLoggedIn) {
   showDashboard();
 }
