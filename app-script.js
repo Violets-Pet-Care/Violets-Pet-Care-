@@ -72,7 +72,7 @@ function calculateTotal() {
   if(currentPlan==='one-time') visitCount=Math.max(1,Number(visitCountInput.value)||1);
   else if(currentPlan==='package'){visitCount=Number(packageSizeSelect.value);packageRate=visitCount>=15?.20:visitCount>=10?.15:.10;}
   else if(currentPlan==='monthly'){visitCount=Number(monthlyVisitsSelect.value);packageRate=.15;}
-  const base=servicePrice*visitCount, petFees=(dogs*10+cats*5)*visitCount, dogDiscount=dogs>=3?base*.05:0, catDiscount=cats>=3?base*.03:0;
+  const base=servicePrice*visitCount, extraDogs=Math.max(0,dogs-1), extraCats=Math.max(0,cats-(dogs>0?0:1)), petFees=(extraDogs*10+extraCats*5)*visitCount, dogDiscount=dogs>=3?base*.05:0, catDiscount=cats>=3?base*.03:0;
   const packageDiscount=(currentPlan==='package'||currentPlan==='monthly')?base*packageRate:0;
   const addons=addonCost*visitCount, litter=litterBoxes*15*visitCount;
   const beforeTip=Math.max(0,base+petFees-dogDiscount-catDiscount-packageDiscount+addons+litter), tip=beforeTip*tipRate, total=beforeTip+tip;
