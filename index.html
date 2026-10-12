@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Violet's Pet Care | Pet Sitting & Dog Walking in Hickory NC</title>
   <link rel="stylesheet" href="app-styles.css" />
-  <script async src="https://js.stripe.com/v3/buy-button.js"></script>
-</head>
+  </head>
 <body>
   <div class="app-wrapper">
     <!-- Header/Navigation -->
@@ -17,7 +16,6 @@
           <a href="#services">Services</a>
           <a href="#specialized-grooming">Specialized Grooming</a>
           <a href="#calculator" class="nav-calculator">💰 Quick Quote</a>
-          <a href="#route-planner" class="nav-route">🗺️ Route Planner</a>
           <a href="#contact">Contact</a>
         </nav>
       </div>
@@ -71,78 +69,6 @@
         <div class="grooming-card"><h3>Coordinated With Your Vet</h3><p>Grooming can be coordinated with the veterinary team, including sharing observations. Sedation and medical decisions are handled only by the veterinarian and veterinary team.</p></div>
       </div><a class="btn btn-primary grooming-contact" href="mailto:violetspetcare@yahoo.com?subject=Specialized%20Grooming%20Inquiry">Ask About Specialized Grooming</a>
     </div></section>
-
-    <!-- Route Planner Section -->
-    <section id="route-planner" class="route-planner-section">
-      <div class="container">
-        <h2>🗺️ Smart Fuel-Saving Route Planner</h2>
-        <div class="route-planner-wrapper">
-          <div class="route-inputs">
-            <h3>Build Your Route</h3>
-            
-            <div class="form-group">
-              <label for="startingPoint">Starting Point (Your Location)</label>
-              <input type="text" id="startingPoint" placeholder="e.g., Your Home or Office" />
-            </div>
-
-            <div class="form-group">
-              <label>Add Stops</label>
-              <div class="stops-input-row">
-                <input type="text" id="stopAddress" placeholder="Enter address" />
-                <select id="stopTown">
-                  <option value="">Select Town</option>
-                  <option value="hickory">Hickory</option>
-                  <option value="granite-falls">Granite Falls</option>
-                  <option value="hudson">Hudson</option>
-                  <option value="other">Other</option>
-                </select>
-                <input type="number" id="stopEarnings" placeholder="Est. Earnings ($)" min="0" />
-                <button id="addStopBtn" class="btn btn-small">+ Add</button>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <div class="stops-list" id="stopsList"></div>
-            </div>
-
-            <div class="route-actions">
-              <button id="groupByTownBtn" class="btn">📍 Group by Town</button>
-              <button id="optimizeRouteBtn" class="btn">⚡ Optimize for Profit</button>
-              <button id="openMapsBtn" class="btn btn-primary">🗺️ Open in Google Maps</button>
-              <button id="clearRouteBtn" class="btn btn-secondary">Clear All</button>
-            </div>
-          </div>
-
-          <div class="route-summary">
-            <h3>Route Summary</h3>
-            <div class="summary-stats">
-              <div class="stat-box">
-                <p class="stat-label">Total Stops</p>
-                <p class="stat-value" id="totalStops">0</p>
-              </div>
-              <div class="stat-box">
-                <p class="stat-label">Est. Earnings</p>
-                <p class="stat-value" id="totalEarnings">$0.00</p>
-              </div>
-              <div class="stat-box">
-                <p class="stat-label">Est. Drive Time</p>
-                <p class="stat-value" id="driveTime">0 min</p>
-              </div>
-              <div class="stat-box">
-                <p class="stat-label">Est. Fuel Cost</p>
-                <p class="stat-value" id="fuelCost">$0.00</p>
-              </div>
-              <div class="stat-box highlight">
-                <p class="stat-label">Net Profit</p>
-                <p class="stat-value" id="netProfit">$0.00</p>
-              </div>
-            </div>
-
-            <div class="grouped-stops" id="groupedStops"></div>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- Contact/Booking Section -->
     <section id="contact" class="contact-section">
@@ -323,22 +249,9 @@
         <p>Choose your visit and complete payment below.</p>
         
         <div class="stripe-buttons-wrapper">
-          <div class="stripe-button-section">
-            <h3>30-Minute Drop-In - $45</h3>
-            <stripe-buy-button
-              buy-button-id="buy_btn_1UP2vZ3d0cnPZMvSJpi881Qp"
-              publishable-key="pk_test_51Tek4D3d0cnPZMvSof2SKo2xWXgI34moXUWO2DgWCQWBESpkcbWGvvoVHC6bpTAlihk9U9KhoMhtJgwCJ0HYaBwc00wEezAX53">
-            </stripe-buy-button>
-          </div>
-
-          <div class="stripe-button-section">
-            <h3>60-Minute Drop-In - $80</h3>
-            <stripe-buy-button
-              buy-button-id="buy_btn_1UP2NX3d0cnPZMvS86Sr8B7t"
-              publishable-key="pk_test_51Tek4D3d0cnPZMvSof2SKo2xWXgI34moXUWO2DgWCQWBESpkcbWGvvoVHC6bpTAlihk9U9KhoMhtJgwCJ0HYaBwc00wEezAX53">
-            </stripe-buy-button>
-          </div>
-        </div>
+          <div class="stripe-button-section"><h3>30-Minute Drop-In - $45</h3><p>Checkout for one 30-minute drop-in visit.</p><a class="btn btn-primary" href="https://buy.stripe.com/test_5kQdR23sK6Wk2IEdUHeUU00" target="_blank" rel="noopener noreferrer">Pay $45 for 30 Minutes</a></div>
+          <div class="stripe-button-section"><h3>60-Minute Drop-In - $80</h3><p>Checkout for one 60-minute drop-in visit.</p><a class="btn btn-primary" href="https://buy.stripe.com/test_9B68wI4wOdkI4QM5obeUU01" target="_blank" rel="noopener noreferrer">Pay $80 for 60 Minutes</a></div>
+        </div></div>
       </div>
     </div>
   </div>
