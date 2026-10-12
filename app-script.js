@@ -44,9 +44,8 @@ function calculateTotal() {
   const photoPets = photoUpdateInput.checked ? dogs + cats : 0;
   const medicationPets = medicationNeededSelect.value === 'yes' ? Math.max(1, Number(medicationPetCountInput.value) || 1) : 0;
   const base = getSelectedService() * visits;
-  const extraDogs = Math.max(0, dogs - 1);
-  const extraCats = Math.max(0, cats - (dogs > 0 ? 0 : 1));
-  const petFees = (extraDogs * 10 + extraCats * 5) * visits;
+  const additionalPets = Math.max(0, dogs + cats - 1);
+  const petFees = additionalPets * 5 * visits;
   const dogDiscount = dogs >= 3 ? base * 0.05 : 0;
   const catDiscount = cats >= 3 ? base * 0.03 : 0;
   const litter = boxes * 15 * visits;
