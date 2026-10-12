@@ -11,6 +11,8 @@ const monthlyVisitsSelect = document.getElementById('monthlyVisits');
 const addonCheckboxes = document.querySelectorAll('.checkbox-label input[type="checkbox"]');
 
 const serviceCostEl = document.getElementById('serviceCost');
+const dogCostEl = document.getElementById('dogCost');
+const catCostEl = document.getElementById('catCost');
 const dogDiscountEl=document.getElementById('dogDiscount');
 const catDiscountEl=document.getElementById('catDiscount');
 const litterCostEl=document.getElementById('litterCost');
@@ -44,11 +46,13 @@ function calculateTotal() {
   if(currentPlan==='one-time') visitCount=Math.max(1,Number(visitCountInput.value)||1);
   else if(currentPlan==='package'){visitCount=Number(packageSizeSelect.value);packageRate=visitCount>=15?.20:visitCount>=10?.15:.10;}
   else if(currentPlan==='monthly'){visitCount=Number(monthlyVisitsSelect.value);packageRate=.15;}
-  const base=servicePrice*visitCount, dogDiscount=dogs>=3?base*.05:0, catDiscount=cats>=3?base*.03:0;
+  const base=servicePrice*visitCount;
+  const dogCharges=dogs*10*visitCount, catCharges=cats*5*visitCount;
+  const dogDiscount=dogs>=3?dogCharges*.05:0, catDiscount=cats>=3?catCharges*.03:0;
   const packageDiscount=(currentPlan==='package'||currentPlan==='monthly')?base*packageRate:0;
   const addons=addonCost*visitCount, litter=litterBoxes*15*visitCount;
-  const beforeTip=Math.max(0,base-dogDiscount-catDiscount-packageDiscount+addons+litter), tip=beforeTip*tipRate, total=beforeTip+tip;
-  serviceCostEl.textContent=formatMoney(base);dogDiscountEl.textContent=formatMoney(-dogDiscount);catDiscountEl.textContent=formatMoney(-catDiscount);
+  const beforeTip=Math.max(0,base+dogCharges+catCharges-dogDiscount-catDiscount-packageDiscount+addons+litter), tip=beforeTip*tipRate, total=beforeTip+tip;
+  serviceCostEl.textContent=formatMoney(base);dogCostEl.textContent=formatMoney(dogCharges);catCostEl.textContent=formatMoney(catCharges);dogDiscountEl.textContent=formatMoney(-dogDiscount);catDiscountEl.textContent=formatMoney(-catDiscount);
   packageDiscountEl.textContent=formatMoney(-packageDiscount);addOnsCostEl.textContent=formatMoney(addons);litterCostEl.textContent=formatMoney(litter);
   tipCostEl.textContent=formatMoney(tip);totalCostEl.textContent=formatMoney(total);
   if(typeof monthlyNoteEl!=='undefined'&&monthlyNoteEl){monthlyNoteEl.classList.remove('show');if(currentPlan==='monthly'){monthlyNoteEl.classList.add('show');monthlyNoteEl.innerHTML='<strong>Monthly Plan:</strong> '+visitCount+' visits per month = '+formatMoney(total)+'/month. First month may vary based on start date.';}}
@@ -89,7 +93,7 @@ saveQuoteBtn.addEventListener('click', () => {
 });
 
 copyQuoteBtn.addEventListener('click', () => {
-  const quoteText = `Violet's Pet Care Quote\nService Cost: ${serviceCostEl.textContent}\nDog Discount: ${dogDiscountEl.textContent}\nCat Discount: ${catDiscountEl.textContent}\nPackage Discount: ${packageDiscountEl.textContent}\nAdd-Ons: ${addOnsCostEl.textContent}\nLitter Box Cleaning: ${litterCostEl.textContent}\nOptional Tip: ${tipCostEl.textContent}\nEstimated Total: ${totalCostEl.textContent}`;
+  const quoteText = `Violet's Pet Care Quote\nService Cost: ${serviceCostEl.textContent}\nDog Charges: ${dogCostEl.textContent}\nCat Charges: ${catCostEl.textContent}\nDog Discount: ${dogDiscountEl.textContent}\nCat Discount: ${catDiscountEl.textContent}\nPackage Discount: ${packageDiscountEl.textContent}\nAdd-Ons: ${addOnsCostEl.textContent}\nLitter Box Cleaning: ${litterCostEl.textContent}\nOptional Tip: ${tipCostEl.textContent}\nEstimated Total: ${totalCostEl.textContent}`;
 
   navigator.clipboard.writeText(quoteText)
     .then(() => {
