@@ -137,28 +137,20 @@
         </div>
 
 <div class="form-group">
-          <label>Add-Ons (Optional)</label>
-          <div class="checkbox-group">
-            <label class="checkbox-label">
-              <input type="checkbox" id="photoUpdate" data-addon="5" />
-              📷 Photo Update
-              <span class="addon-price">+$5 per visit</span>
-            </label>
-
-            <label class="checkbox-label">
-              <input type="checkbox" id="holidayVisit" data-addon="15" />
-              🎄 Holiday Premium
-              <span class="addon-price">+$15 per visit</span>
-            </label>
-
-            <label class="checkbox-label">
-              <input type="checkbox" id="medicationSupport" data-addon="10" />
-              💊 Medication Support
-              <span class="addon-price">+$10 per visit</span>
-            </label>
+          <label>Photo Updates</label>
+          <p class="hint">Would you like photo updates included during this visit? It is $5 per dog or cat, per visit.</p>
+          <label class="checkbox-label"><input type="checkbox" id="photoUpdate" /> Yes, include photo updates</label>
+        </div>
+        <div class="form-group">
+          <label for="medicationNeeded">Does your pet need meds given during drop-in?</label>
+          <select id="medicationNeeded"><option value="no">No</option><option value="yes">Yes</option></select>
+          <div class="form-group hidden" id="medicationPetCountGroup">
+            <label for="medicationPetCount">Meds for how many pets?</label>
+            <input type="number" id="medicationPetCount" min="1" max="40" value="1" />
+            <span class="hint">$10 per pet receiving medication, per visit.</span>
           </div>
         </div>
-          <div class="form-group"><label for="litterBoxes">Litter Boxes to Clean</label><input type="number" id="litterBoxes" min="0" max="20" value="0" /><span class="hint">$15 per litter box, per visit</span></div>
+        <div class="form-group"><label for="litterBoxes">Litter Boxes to Clean</label><input type="number" id="litterBoxes" min="0" max="20" value="0" /><span class="hint">$15 per litter box, per visit</span></div>
           <div class="form-group"><label for="tipPercent">Optional Tip</label><select id="tipPercent"><option value="0">No tip</option><option value="0.10">10% tip</option><option value="0.15">15% tip</option><option value="0.20">20% tip</option></select><span class="hint">Your tip is included in the quote and payment-link request.</span></div>
 
         <div class="breakdown">
@@ -171,8 +163,8 @@
           <div class="breakdown-row"><span>Dog Discount (5% with 3+ dogs)</span><strong id="dogDiscount">-$0.00</strong></div>
             <div class="breakdown-row"><span>Cat Discount (3% with 3+ cats)</span><strong id="catDiscount">-$0.00</strong></div>
 
-          <div class="breakdown-row"><span>Photo Updates</span><strong id="photoCost">$0.00</strong></div>
-          <div class="breakdown-row"><span>Medication Support</span><strong id="medicationCost">$0.00</strong></div>
+          <div class="breakdown-row"><span>Photo Updates ($5 per pet per visit)</span><strong id="photoCost">$0.00</strong></div>
+          <div class="breakdown-row"><span>Medication ($10 per pet per visit)</span><strong id="medicationCost">$0.00</strong></div>
 <div class="breakdown-row"><span>Litter Box Cleaning</span><strong id="litterCost">$0.00</strong></div>
             <div class="breakdown-row"><span>Optional Tip</span><strong id="tipCost">$0.00</strong></div>
 
