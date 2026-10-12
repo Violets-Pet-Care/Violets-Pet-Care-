@@ -12,6 +12,8 @@ const monthlyVisitsSelect = document.getElementById('monthlyVisits');
 const addonCheckboxes = document.querySelectorAll('.checkbox-label input[type="checkbox"]');
 
 const serviceCostEl = document.getElementById('serviceCost');
+const petFeesEl = document.getElementById('petFees');
+const requestCheckoutBtn = document.getElementById('requestCheckout');
 const dogDiscountEl=document.getElementById('dogDiscount');
 const catDiscountEl=document.getElementById('catDiscount');
 const litterCostEl=document.getElementById('litterCost');
@@ -70,11 +72,11 @@ function calculateTotal() {
   if(currentPlan==='one-time') visitCount=Math.max(1,Number(visitCountInput.value)||1);
   else if(currentPlan==='package'){visitCount=Number(packageSizeSelect.value);packageRate=visitCount>=15?.20:visitCount>=10?.15:.10;}
   else if(currentPlan==='monthly'){visitCount=Number(monthlyVisitsSelect.value);packageRate=.15;}
-  const base=servicePrice*visitCount, dogDiscount=dogs>=3?base*.05:0, catDiscount=cats>=3?base*.03:0;
+  const base=servicePrice*visitCount, extraDogs=Math.max(0,dogs-1), extraCats=Math.max(0,cats-(dogs>0?0:1)), petFees=(extraDogs*10+extraCats*5)*visitCount, dogDiscount=dogs>=3?base*.05:0, catDiscount=cats>=3?base*.03:0;
   const packageDiscount=(currentPlan==='package'||currentPlan==='monthly')?base*packageRate:0;
   const addons=addonCost*visitCount, litter=litterBoxes*15*visitCount;
-  const beforeTip=Math.max(0,base-dogDiscount-catDiscount-packageDiscount+addons+litter), tip=beforeTip*tipRate, total=beforeTip+tip;
-  serviceCostEl.textContent=formatMoney(base);dogDiscountEl.textContent=formatMoney(-dogDiscount);catDiscountEl.textContent=formatMoney(-catDiscount);
+  const beforeTip=Math.max(0,base+petFees-dogDiscount-catDiscount-packageDiscount+addons+litter), tip=beforeTip*tipRate, total=beforeTip+tip;
+  serviceCostEl.textContent=formatMoney(base);if(petFeesEl)petFeesEl.textContent=formatMoney(petFees);dogDiscountEl.textContent=formatMoney(-dogDiscount);catDiscountEl.textContent=formatMoney(-catDiscount);
   packageDiscountEl.textContent=formatMoney(-packageDiscount);addOnsCostEl.textContent=formatMoney(addons);litterCostEl.textContent=formatMoney(litter);
   tipCostEl.textContent=formatMoney(tip);totalCostEl.textContent=formatMoney(total);
   if(typeof monthlyNoteEl!=='undefined'&&monthlyNoteEl){monthlyNoteEl.classList.remove('show');if(currentPlan==='monthly'){monthlyNoteEl.classList.add('show');monthlyNoteEl.innerHTML='<strong>Monthly Plan:</strong> '+visitCount+' visits per month = '+formatMoney(total)+'/month. First month may vary based on start date.';}}
@@ -123,6 +125,13 @@ copyQuoteBtn.addEventListener('click', () => {
 
 stripeCheckoutBtn.addEventListener('click', () => {
   openStripeModal();
+});
+
+if (requestCheckoutBtn) requestCheckoutBtn.addEventListener('click', () => {
+  const dogs=Math.max(0,Number(numDogsInput.value)||0), cats=Math.max(0,Number(numCatsInput.value)||0);
+  const service=getSelectedService()===45?'30-minute drop-in ($45 base)':'60-minute drop-in ($80 base)';
+  const quoteDetails = `Violet's Pet Care - Secure Checkout Request%0D%0AService: ${encodeURIComponent(service)}%0D%0ADogs: ${dogs} ($10 each per visit)%0D%0ACats: ${cats} ($5 each per visit)%0D%0ANumber of visits: ${encodeURIComponent(visitCountInput.value)}%0D%0ALitter boxes: ${encodeURIComponent(litterBoxesInput.value)} ($15 each per visit)%0D%0AOptional tip: ${encodeURIComponent(tipCostEl.textContent)}%0D%0AEstimated total: ${encodeURIComponent(totalCostEl.textContent)}%0D%0A%0D%0APlease send me a secure payment link for this quote.`;
+  window.location.href = `mailto:violetspetcare@yahoo.com?subject=Secure%20Checkout%20Request&body=${quoteDetails}`;
 });
 
 // =========================
