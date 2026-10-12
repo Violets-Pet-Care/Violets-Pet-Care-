@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1350 520" role="img" aria-labelledby="title desc">
+<title id="title">Violet's Pet Care</title><desc id="desc">Purple to teal pet care banner with paw prints and veterinary cross.</desc>
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8550f5"/><stop offset=".48" stop-color="#477fc4"/><stop offset="1" stop-color="#00bd78"/></linearGradient><linearGradient id="paw" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#182c59" stop-opacity=".55"/><stop offset="1" stop-color="#d8f6ed" stop-opacity=".32"/></linearGradient></defs>
+<rect width="1350" height="520" fill="url(#bg)"/>
+<g fill="none" stroke="#173d67" stroke-opacity=".34" stroke-width="9">
+<path d="M0 90 Q70 100 85 15 M0 150 Q65 150 115 55 M1270 55 Q1320 20 1350 80 M1250 130 Q1310 110 1350 150"/>
+<path d="M35 320 Q110 295 150 355 L150 420 Q90 455 25 415 Z M1200 330 L1310 270 L1340 300 L1230 370 Z"/>
+</g>
+<g transform="translate(675 118)" fill="url(#paw)" stroke="#1d4775" stroke-opacity=".32" stroke-width="6"><ellipse cx="-73" cy="-35" rx="27" ry="39" transform="rotate(-25 -73 -35)"/><ellipse cx="-20" cy="-64" rx="27" ry="39" transform="rotate(-8 -20 -64)"/><ellipse cx="36" cy="-62" rx="27" ry="39" transform="rotate(12 36 -62)"/><ellipse cx="83" cy="-25" rx="27" ry="39" transform="rotate(32 83 -25)"/><path d="M-103 44 Q-105 -5 -60 4 Q-20 -25 6 8 Q50 -2 78 37 Q99 76 57 97 Q20 120 -19 91 Q-65 110 -94 80 Q-110 65 -103 44Z"/></g>
+<g fill="#fff" font-family="Arial,Helvetica,sans-serif" text-anchor="middle"><text x="675" y="300" font-size="79" letter-spacing="2">VIOLET'S PET CARE</text><text x="675" y="351" font-size="27" letter-spacing="2">Trusted Pet Care from a</text><text x="675" y="386" font-size="27" letter-spacing="2">Professional Groomer</text></g>
+<g transform="translate(675 455)" fill="none" stroke="#173d67" stroke-opacity=".45" stroke-width="8"><circle r="42"/><path d="M-10 -27 H10 V-10 H27 V10 H10 V27 H-10 V10 H-27 V-10 H-10Z"/></g>
+</svg>
