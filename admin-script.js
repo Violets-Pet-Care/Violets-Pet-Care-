@@ -356,8 +356,10 @@ async function calculateDrivingRoute() {
       geocoded.push({ ...point, ...coords });
     }
     const coordString = geocoded.map(p => p.lon + "," + p.lat).join(";");
+    const sourceMode = start ? "first" : "any";
+    const destinationMode = end ? "last" : "any";
     const routeUrl = "https://router.project-osrm.org/trip/v1/driving/" + coordString +
-      "?roundtrip=false&source=first&destination=last&overview=false&steps=false";
+      "?roundtrip=false&source=" + sourceMode + "&destination=" + destinationMode + "&overview=false&steps=false";
     const response = await fetch(routeUrl);
     if (!response.ok) throw new Error("The driving-route service could not calculate this route. Please try again.");
     const data = await response.json();
@@ -381,7 +383,7 @@ async function calculateDrivingRoute() {
     re("routeServiceResults").innerHTML =
       '<div class="route-live-metrics"><strong>' + miles.toFixed(1) + ' miles</strong><strong>' + Math.round(minutes) + ' min estimated driving</strong></div>' +
       '<ol class="route-live-list">' + ordered.map(p => '<li><strong>' + escRoute(p.label) + '</strong><span>' + escRoute(p.address) + '</span></li>').join("") + '</ol>' +
-      '<p><a target="_blank" rel="noopener noreferrer" href="' + (function(){ const u=new URL("https://www.google.com/maps/dir/"); u.searchParams.set("api","1"); u.searchParams.set("travelmode","driving"); if(start)u.searchParams.set("origin",start); if(end)u.searchParams.set("destination",end); else u.searchParams.set("destination",ordered.filter(p=>p.kind==="stop").slice(-1)[0]?.address||ordered[ordered.length-1].address); const mids=ordered.filter(p=>p.kind==="stop"); if(mids.length>1)u.searchParams.set("waypoints",mids.slice(0,-1).map(p=>p.address).join("|")); return u.toString(); })() + '">Open this stop order in Google Maps</a></p>';
+      '<p><a target="_blank" rel="noopener noreferrer" href="' + (function(){ const u=new URL("https://www.google.com/maps/dir/"); u.searchParams.set("api","1"); u.searchParams.set("travelmode","driving"); if(start)u.searchParams.set("origin",start); if(end)u.searchParams.set("destination",end); else u.searchParams.set("destination",ordered.filter(p=>p.kind==="stop").slice(-1)[0]?.address||ordered[ordered.length-1].address); const mids=ordered.filter(p=>p.kind==="stop"); const waypointStops=end?mids:mids.slice(0,-1); if(waypointStops.length)u.searchParams.set("waypoints",waypointStops.map(p=>p.address).join("|")); return u.toString(); })() + '">Open this stop order in Google Maps</a></p>';
     re("routeDriveTime").textContent = Math.round(minutes) + " min";
     re("routeFuelCost").textContent = rmoney((miles / 22) * 3.5);
     re("routeNetProfit").textContent = rmoney(stops.reduce((sum,s)=>sum+(Number(s.price)||0),0) - (miles / 22) * 3.5);
