@@ -405,3 +405,6 @@ body {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* Admin daily route planner */
+.route-planner-admin{margin-top:1rem}.route-toolbar,.route-form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem}.route-actions-admin{display:flex;flex-wrap:wrap;gap:.55rem;margin:1rem 0}.route-stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:.8rem;margin:1.2rem 0}.route-stop-card{border:1px solid #e5e7eb;border-radius:12px;padding:1rem;margin:.8rem 0;background:#fff}.route-stop-heading{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem}.route-stop-actions{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin-top:.7rem}.route-stop-actions a{color:var(--purple,#6a4c93);font-weight:600}.route-estimate-note{color:#666;font-size:.9rem;margin-top:1rem}@media(max-width:600px){.route-actions-admin .btn{width:100%}.route-stop-card{padding:.8rem}}
