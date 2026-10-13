@@ -15,14 +15,16 @@
         <button type="button" class="site-menu-toggle" id="siteMenuToggle" aria-expanded="false" aria-controls="siteNavigation">☰ Menu</button>
         <nav class="nav-links" id="siteNavigation">
           <a href="#home">Home</a>
-          <a href="#services">Book a Visit</a>
+          <a href="https://app.squareup.com/appointments/book/qh0xuxt3vxzjxz/LAQGSCJHZ6BSX/start" target="_blank" rel="noopener noreferrer">Book a Visit</a>
           <a href="#calculator" class="nav-calculator">Get a Quote</a>
           <a href="specialized-grooming.html">Specialized Grooming</a>
           <a href="#about">About Us</a>
           <a href="#contact">Contact</a>
         </nav>
       </div>
-    </header>\n\n<section class="welcome-hero" id="home">
+    </header>
+
+<section class="welcome-hero" id="home">
       <div class="welcome-copy">
         <span class="eyebrow">Loving, experienced, dependable care</span>
         <h1>Trusted care for the pets who feel like family.</h1>
@@ -78,7 +80,8 @@
         <div class="about-copy"><span class="section-kicker">A little about us</span><h2>Professional experience. A gentle, personal touch.</h2><p>Violet’s Pet Care is built around patience, safety, and the understanding that every animal is different. With years of hands-on grooming experience, Violet brings an experienced eye and a caring approach to every visit.</p><ul><li>Personalized drop-in visits</li><li>Clear pricing and optional care extras</li><li>Specialized grooming support for pets who need extra care</li></ul><a href="specialized-grooming.html" class="text-link">Explore specialized grooming →</a></div>
       </div>
     </section>
-\n    <!-- Contact/Booking Section -->
+
+    <!-- Contact/Booking Section -->
     <section id="contact" class="contact-section">
       <div class="container">
         <h2>Ready to Book?</h2>
@@ -106,7 +109,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-      <p>&copy; 2025 Violet's Pet Care | Hickory, Granite Falls & Hudson, NC</p>
+      <p>&copy; 2026 Violet's Pet Care | Hickory, Granite Falls & Hudson, NC</p><p class="footer-tagline">Trusted pet care from a professional groomer.</p>
     </footer>
   </div>
 
@@ -132,8 +135,9 @@
     <div class="modal-content calculator-modal-content">
       <button class="modal-close">&times;</button>
       <div class="modal-calculator">
-        <h2>💰 Build Your Quote</h2>
-
+        <h2>💜 Build Your Quote</h2>
+        <div class="quote-stepper" aria-label="Quote progress"><div class="quote-step-indicator is-active" data-step-indicator="1"><span>1</span><small>Visit &amp; Pets</small></div><div class="quote-step-line"></div><div class="quote-step-indicator" data-step-indicator="2"><span>2</span><small>Add Extras</small></div><div class="quote-step-line"></div><div class="quote-step-indicator" data-step-indicator="3"><span>3</span><small>Review</small></div></div>
+        <div class="quote-step-panel is-active" data-quote-step="1"><h3 class="quote-step-title">Choose your visit</h3>
         <div class="form-group pet-count-grid">
             <div><label for="numDogs">Number of Dogs</label><input type="number" id="numDogs" min="0" max="20" value="1" /><span class="hint">$10 per additional dog · 5% discount with 3+ dogs</span></div>
             <div><label for="numCats">Number of Cats</label><input type="number" id="numCats" min="0" max="20" value="0" /><span class="hint">$5 per additional cat · 3% discount with 3+ cats</span></div>
@@ -164,7 +168,9 @@
           <span class="hint">Each visit is priced separately; dog/cat discounts apply only when eligible.</span>
         </div>
 
-<div class="form-group">
+<div class="quote-step-actions"><button type="button" class="btn btn-primary" data-next-step="2">Next: Add Extras →</button></div></div>
+        <div class="quote-step-panel" data-quote-step="2"><h3 class="quote-step-title">Personalize your visit</h3>
+        <div class="form-group">
           <label>Photo Updates</label>
           <p class="hint">Would you like photo updates included during this visit? It is $5 per dog or cat, per visit.</p>
           <label class="checkbox-label"><input type="checkbox" id="photoUpdate" /> Yes, include photo updates</label>
@@ -181,6 +187,8 @@
         <div class="form-group"><label for="litterBoxes">Litter Boxes to Clean</label><input type="number" id="litterBoxes" min="0" max="20" value="0" /><span class="hint">$15 per litter box, per visit</span></div>
           <div class="form-group"><label for="tipPercent">Optional Tip</label><select id="tipPercent"><option value="0">No tip</option><option value="0.10">10% tip</option><option value="0.15">15% tip</option><option value="0.20">20% tip</option></select><span class="hint">Your tip is included in this estimate.</span></div>
 
+        <div class="quote-step-actions quote-step-actions-split"><button type="button" class="btn btn-copy" data-prev-step="1">← Back</button><button type="button" class="btn btn-primary" data-next-step="3">Review Your Quote →</button></div></div>
+        <div class="quote-step-panel" data-quote-step="3"><h3 class="quote-step-title">Review your quote</h3>
         <div class="breakdown">
           <div class="breakdown-row">
             <span>Service Cost</span>
@@ -202,13 +210,7 @@
           </div>
         </div>
 
-        <div class="modal-actions">
-          <button id="saveQuote" class="btn btn-save">💾 Save Quote</button>
-          <button id="copyQuote" class="btn btn-copy">📋 Copy</button>
-          <button id="requestCheckout" class="btn btn-primary">Continue to Square Booking</button>
-        </div>
-
-        <p class="checkout-note">Square will open in a new page. This estimate is not automatically transferred to Square yet; custom payment totals require a secure Square checkout connection.</p>
+        <div class="quote-step-actions quote-step-actions-split"><button type="button" class="btn btn-copy" data-prev-step="2">← Edit Extras</button><button id="saveQuote" class="btn btn-save">Save Quote</button><button id="copyQuote" class="btn btn-copy">Copy</button></div><div class="modal-actions"><button id="requestCheckout" class="btn btn-primary">Continue to Square Booking →</button></div><p class="checkout-note">This is an estimate, not a payment receipt. Square opens for booking; your custom estimate is not automatically charged there yet.</p></div>
       </div>
     </div>
   </div>
