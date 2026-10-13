@@ -44,8 +44,9 @@ function calculateTotal() {
   const photoPets = photoUpdateInput.checked ? dogs + cats : 0;
   const medicationPets = medicationNeededSelect.value === 'yes' ? Math.max(1, Number(medicationPetCountInput.value) || 1) : 0;
   const base = getSelectedService() * visits;
-  const additionalPets = Math.max(0, dogs + cats - 1);
-  const petFees = additionalPets * 5 * visits;
+  const additionalDogs = Math.max(0, dogs - 1);
+  const additionalCats = Math.max(0, cats - 1);
+  const petFees = (additionalDogs * 10 + additionalCats * 5) * visits;
   const dogDiscount = dogs >= 3 ? base * 0.05 : 0;
   const catDiscount = cats >= 3 ? base * 0.03 : 0;
   const litter = boxes * 15 * visits;
@@ -76,7 +77,8 @@ function buildQuoteText(q) {
     'Visits: ' + q.visits,
     'Dogs: ' + q.dogs,
     'Cats: ' + q.cats,
-    'Additional pet fees: ' + formatMoney(q.petFees),
+    'Additional dog fees: ' + formatMoney(Math.max(0, q.dogs - 1) * 10 * q.visits),
+    'Additional cat fees: ' + formatMoney(Math.max(0, q.cats - 1) * 5 * q.visits),
     'Photo updates: ' + (photoUpdateInput.checked ? q.photoPets + ' pets at $5 per pet per visit (' + formatMoney(q.photos) + ')' : 'No'),
     'Medication: ' + (medicationNeededSelect.value === 'yes' ? q.medicationPets + ' pets at $10 per pet per visit (' + formatMoney(q.medication) + ')' : 'No'),
     'Litter boxes: ' + q.boxes + ' at $15 per box per visit (' + formatMoney(q.litter) + ')',
