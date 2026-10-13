@@ -842,3 +842,43 @@ stripe-buy-button {
  .logo img{max-width:48vw;width:168px;height:44px}
  .site-menu-toggle{font-size:.9rem}
 }
+
+
+/* Mobile app quote wizard */
+.quote-stepper{display:flex;align-items:center;gap:8px;margin:18px 0 24px;padding:0 2px}
+.quote-step-indicator{display:flex;align-items:center;flex-direction:column;gap:6px;min-width:62px;color:#8b8796;font-size:.75rem;font-weight:700;text-align:center}
+.quote-step-indicator>span{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#eeebf4;color:#6a4c93;font-weight:850}
+.quote-step-indicator.is-active>span,.quote-step-indicator.is-complete>span{background:linear-gradient(130deg,#6a4c93,#2ec4b6);color:#fff}
+.quote-step-indicator.is-active{color:#4d3676}.quote-step-indicator small{font-size:.72rem;white-space:nowrap}
+.quote-step-line{height:2px;flex:1;background:#e5deef;margin-top:-20px}
+.quote-step-panel{display:none}.quote-step-panel.is-active{display:block;animation:quoteStepIn .18s ease-out}
+.quote-step-title{margin:0 0 18px;color:#30254a;font-size:1.2rem}
+.quote-step-actions{display:flex;gap:10px;justify-content:flex-end;margin:20px 0 8px}
+.quote-step-actions-split{justify-content:space-between;flex-wrap:wrap}
+.quote-step-actions button,.modal-actions button{min-height:46px;border-radius:11px;padding:11px 16px;font-weight:800;cursor:pointer}
+.quote-step-actions .btn-primary,.modal-actions .btn-primary{background:linear-gradient(110deg,#6a4c93,#536eb5);color:white;border:0}
+#calculatorModal .modal-content{max-width:600px;max-height:90vh;overflow:auto}
+#calculatorModal .modal-calculator{padding:4px 0}
+#calculatorModal .modal-calculator h2{font-size:1.55rem}
+#calculatorModal .form-group{margin-bottom:16px}
+#calculatorModal .radio-group{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#calculatorModal .radio-label{border:1px solid #e1d8ef;border-radius:13px;padding:14px;display:flex;align-items:center;gap:10px;background:#fff}
+#calculatorModal .radio-label:has(input:checked){border-color:#6a4c93;background:#f7f2ff;box-shadow:0 0 0 2px #6a4c9315}
+#calculatorModal .pet-count-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#calculatorModal .checkbox-label{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid #e5dcef;border-radius:12px;background:#fbf9ff}
+#calculatorModal .checkbox-label input{width:20px;height:20px;min-height:0}
+#calculatorModal .breakdown{display:grid;gap:0}
+#calculatorModal .breakdown-row{display:flex;align-items:center;justify-content:space-between;padding:11px 2px;border-bottom:1px solid #ece7f2}
+#calculatorModal .breakdown-row:last-child{border-bottom:0}
+#calculatorModal .grand-total{font-size:1.12rem;color:#4e3479;padding-top:16px}
+#calculatorModal .modal-actions{display:flex;margin-top:12px}
+#calculatorModal #requestCheckout{width:100%;min-height:50px}
+@keyframes quoteStepIn{from{opacity:.55;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:560px){
+ #calculatorModal .modal-content{width:calc(100% - 20px);max-height:92vh;padding:20px 16px;border-radius:20px}
+ #calculatorModal .radio-group,#calculatorModal .pet-count-grid{grid-template-columns:1fr}
+ .quote-step-indicator{min-width:54px}.quote-step-indicator small{font-size:.66rem}
+ .quote-step-actions-split{justify-content:stretch}.quote-step-actions-split button{flex:1}
+ #calculatorModal .breakdown-row{font-size:.88rem;gap:10px}
+ #calculatorModal .breakdown-row strong{white-space:nowrap}
+}
