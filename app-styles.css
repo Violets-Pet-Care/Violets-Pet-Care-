@@ -891,3 +891,20 @@ stripe-buy-button {
 .square-pay-option span:first-child{display:flex;flex-direction:column;gap:4px}
 .square-pay-option small{font-size:.8rem;color:#696374;line-height:1.4}
 .square-pay-option>span:last-child{font-size:1.1rem;color:#6a4c93;font-weight:800}
+
+/* Personal About section and one-total checkout */
+.about-layout{display:grid;grid-template-columns:minmax(250px,.85fr) minmax(0,1.15fr);gap:clamp(24px,5vw,56px);align-items:center}
+.about-photo-card{position:relative;overflow:hidden;border-radius:24px;background:linear-gradient(145deg,#6a4c93,#2ec4b6);padding:12px;box-shadow:0 18px 42px #2b2d4218}
+.about-photo-card>img{display:block;width:100%;max-height:650px;object-fit:cover;object-position:center 35%;border-radius:16px}
+.about-photo-fallback{display:none;min-height:300px;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;color:#fff}
+.about-photo-card.photo-pending .about-photo-fallback{display:flex}
+.about-photo-fallback span{font-size:3rem}.about-photo-fallback strong{font-size:1.5rem}.about-photo-fallback small{font-size:.95rem}
+.about-photo-caption{color:#fff;font-size:.95rem;text-align:center;padding:12px 8px 4px;margin:0}
+.about-copy h2{color:var(--purple);font-size:clamp(1.8rem,3vw,2.5rem);line-height:1.15;margin:10px 0 18px}
+.about-copy p{line-height:1.75;color:#555;margin:0 0 14px}
+.about-copy ul{padding-left:20px;margin:18px 0 24px;color:#464554}.about-copy li{margin:8px 0}
+.about-copy .text-link{display:inline-block;margin:12px 0 0 12px}
+#requestCheckout:disabled{opacity:.7;cursor:wait}
+.square-pay-option{display:flex;align-items:center;justify-content:space-between;gap:16px;text-decoration:none;color:var(--purple);background:#fff;border:1px solid #dcd2ea;border-radius:12px;padding:16px;margin:12px 0}
+.square-pay-option strong,.square-pay-option small{display:block}.square-pay-option small{margin-top:4px;color:#626171;line-height:1.4}
+@media(max-width:760px){.about-layout{grid-template-columns:1fr}.about-photo-card{max-width:520px;margin:0 auto;width:100%}.about-photo-card>img{max-height:560px;object-position:center 30%}.about-copy .text-link{margin-left:0;display:block}}
