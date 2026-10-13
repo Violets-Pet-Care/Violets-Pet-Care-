@@ -23,6 +23,18 @@
     </header>
     <section class="brand-banner" aria-label="Violet's Pet Care branding"><img src="assets/violets-pet-care-logo.svg" alt="Violet's Pet Care — trusted pet care from a professional groomer" /></section>
 
+
+    <section class="welcome-hero">
+      <div class="welcome-copy">
+        <span class="eyebrow">Loving, experienced, dependable care</span>
+        <h1>More peace of mind for you. More tail wags for them.</h1>
+        <p>Thoughtful drop-in pet care from a professional groomer, serving Hickory, Granite Falls and Hudson, North Carolina.</p>
+        <div class="hero-actions"><a class="btn btn-primary" href="https://app.squareup.com/appointments/book/qh0xuxt3vxzjxz/LAQGSCJHZ6BSX/start" target="_blank" rel="noopener noreferrer">Book with Square</a><a class="btn btn-outline" href="#services">Explore Services</a></div>
+        <div class="hero-trust"><span>✓ 16+ years of hands-on grooming experience</span><span>✓ Personalized care for every pet</span></div>
+      </div>
+      <div class="welcome-art" aria-label="Pet care illustration"><div class="art-paw">🐾</div><div class="art-pets">🐕 🐈</div><p>Trusted pet care<br/>from a professional groomer</p></div>
+    </section>
+
     <!-- Services Section -->
     <section id="services" class="services-section">
       <div class="container">
@@ -69,7 +81,7 @@
 
           <div class="contact-box">
             <h3>💳 Pay for Services</h3>
-            <p>Calculate your visit total and request secure Square checkout.</p>
+            <p>Build your estimate, then continue to Square booking.</p>
             <button id="stripeCheckoutBtn" class="btn btn-primary">Get a Quote & Pay</button>
           </div>
         </div>
@@ -107,8 +119,8 @@
         <h2>💰 Build Your Quote</h2>
 
         <div class="form-group pet-count-grid">
-            <div><label for="numDogs">Number of Dogs</label><input type="number" id="numDogs" min="0" max="20" value="1" /><span class="hint">$5 per additional pet · 5% discount with 3+ dogs</span></div>
-            <div><label for="numCats">Number of Cats</label><input type="number" id="numCats" min="0" max="20" value="0" /><span class="hint">$5 per additional pet · 3% discount with 3+ cats</span></div>
+            <div><label for="numDogs">Number of Dogs</label><input type="number" id="numDogs" min="0" max="20" value="1" /><span class="hint">$10 per additional dog · 5% discount with 3+ dogs</span></div>
+            <div><label for="numCats">Number of Cats</label><input type="number" id="numCats" min="0" max="20" value="0" /><span class="hint">$5 per additional cat · 3% discount with 3+ cats</span></div>
           </div>
 
         <div class="form-group">
@@ -151,7 +163,7 @@
           </div>
         </div>
         <div class="form-group"><label for="litterBoxes">Litter Boxes to Clean</label><input type="number" id="litterBoxes" min="0" max="20" value="0" /><span class="hint">$15 per litter box, per visit</span></div>
-          <div class="form-group"><label for="tipPercent">Optional Tip</label><select id="tipPercent"><option value="0">No tip</option><option value="0.10">10% tip</option><option value="0.15">15% tip</option><option value="0.20">20% tip</option></select><span class="hint">Your tip is included in the quote and payment-link request.</span></div>
+          <div class="form-group"><label for="tipPercent">Optional Tip</label><select id="tipPercent"><option value="0">No tip</option><option value="0.10">10% tip</option><option value="0.15">15% tip</option><option value="0.20">20% tip</option></select><span class="hint">Your tip is included in this estimate.</span></div>
 
         <div class="breakdown">
           <div class="breakdown-row">
@@ -177,10 +189,10 @@
         <div class="modal-actions">
           <button id="saveQuote" class="btn btn-save">💾 Save Quote</button>
           <button id="copyQuote" class="btn btn-copy">📋 Copy</button>
-          <button id="requestCheckout" class="btn btn-primary">Continue to Secure Checkout</button>
+          <button id="requestCheckout" class="btn btn-primary">Continue to Square Booking</button>
         </div>
 
-        <div class="stripe-checkout-container" id="stripeCheckoutContainer"></div>
+        <p class="checkout-note">Square will open in a new page. This estimate is not automatically transferred to Square yet; custom payment totals require a secure Square checkout connection.</p>
       </div>
     </div>
   </div>
@@ -193,7 +205,7 @@
         <h2>💳 Secure Payment</h2>
         <p>Choose your visit and complete payment below.</p>
         
-        <p>Use the quote calculator to calculate your visit total, then request a secure Square payment link for that exact amount. Fixed test checkout links have been removed.</p>
+        <p>Use the quote calculator to estimate your visit, then continue to Square to book. Custom quote totals are not automatically added to Square checkout yet.</p>
       </div>
     </div>
   </div>
