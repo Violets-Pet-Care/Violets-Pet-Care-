@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Client Forms & Appointment Confirmation | Violet's Pet Care</title>
+<meta name="description" content="Easy client intake and reusable appointment confirmation tools for Violet's Pet Care.">
+<link rel="stylesheet" href="app-styles.css">
+<style>
+.tools-hero{padding:32px 16px;background:linear-gradient(135deg,#f5f0ff,#eefbf9)}
+.tools-wrap{max-width:850px;margin:0 auto;padding:26px 14px 52px}
+.tools-hero h1{font-size:clamp(1.8rem,6vw,2.5rem);color:#4b2b81;line-height:1.15}
+.tools-hero p{margin-top:8px;color:#5e5a6c}
+.tools-tabs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 18px}
+.tools-tab{padding:13px 10px;border:1px solid #ded4ed;background:#fff;color:#4b2b81;border-radius:12px;font:inherit;font-weight:800;cursor:pointer}
+.tools-tab[aria-selected=true]{background:linear-gradient(105deg,#6a4c93,#526bb2);color:#fff;border-color:transparent}
+.tool-panel{display:none;background:#fff;border:1px solid #e6e0ef;border-radius:18px;padding:clamp(16px,4vw,26px);box-shadow:0 10px 30px #30254a0b}
+.tool-panel.active{display:block}
+.tool-panel h2{color:#4b2b81;font-size:1.4rem;margin-bottom:6px}
+.tool-intro{color:#646273;font-size:.93rem;margin-bottom:18px}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.tool-field{margin:0}
+.tool-field.full{grid-column:1/-1}
+.tool-field label{display:block;font-weight:750;font-size:.88rem;color:#30254a;margin:0 0 6px}
+.tool-field input,.tool-field select,.tool-field textarea{width:100%;min-height:44px;border:1px solid #dbe2ef;border-radius:10px;padding:10px 11px;background:#fff;font:inherit;color:#30254a}
+.tool-field textarea{min-height:82px;resize:vertical}
+.tool-checks{display:flex;flex-wrap:wrap;gap:10px 16px;margin:6px 0 15px}
+.tool-checks label{display:flex;align-items:center;gap:7px;font-size:.9rem;color:#30254a}
+.tool-checks input{width:17px;height:17px;accent-color:#6a4c93}
+.tool-note{padding:12px 14px;border-radius:11px;background:#effaf9;color:#365a60;font-size:.86rem;line-height:1.5;margin:16px 0}
+.tool-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.tool-actions button{flex:1;min-width:140px;min-height:46px;border:0;border-radius:11px;padding:12px 15px;font:inherit;font-weight:800;cursor:pointer}
+.action-main{background:linear-gradient(105deg,#6a4c93,#526bb2);color:#fff}
+.action-secondary{background:#f0eafa;color:#4b2b81}
+.output-box{width:100%;min-height:210px;border:1px solid #dbe2ef;border-radius:12px;padding:13px;font:inherit;line-height:1.6;color:#30254a;background:#fbfcff;white-space:pre-wrap}
+.small-print{font-size:.8rem;color:#747181;line-height:1.5;margin-top:12px}
+@media(max-width:560px){.field-grid{grid-template-columns:1fr}.tool-field.full{grid-column:auto}.tools-tabs{position:sticky;top:60px;z-index:5;background:#f1f4fa;padding:6px 0}.tool-actions{flex-direction:column}.tool-actions button{width:100%}}
+</style>
+</head>
+<body>
+<div class="app-wrapper">
+<header class="navbar"><div class="nav-container">
+<a href="index.html" class="logo"><img src="assets/violets-pet-care-logo.svg" alt="Violet's Pet Care logo"></a>
+<button type="button" class="site-menu-toggle" id="siteMenuToggle" aria-expanded="false" aria-controls="siteNavigation">☰ Menu</button>
+<nav class="nav-links" id="siteNavigation">
+<a href="index.html#home">Home</a>
+<a href="https://app.squareup.com/appointments/book/qh0xuxt3vxzjxz/LAQGSCJHZ6BSX/start" target="_blank" rel="noopener noreferrer">Book a Visit</a>
+<a href="index.html#calculator">Get a Quote</a>
+<a href="specialized-grooming.html">Specialized Grooming</a>
+<a href="index.html#about">About Us</a>
+<a href="#intake">Client Intake</a>
+</nav></div></header>
+<section class="tools-hero"><div class="tools-wrap" style="padding-top:4px;padding-bottom:0">
+<span class="section-kicker">Simple, friendly, mobile-ready</span><h1>Client Forms & Appointment Details</h1>
+<p>Share your pet-care needs or prepare a clear appointment confirmation. Both tools are easy to use on your phone.</p>
+</div></section>
+<main class="tools-wrap">
+<div class="tools-tabs" role="tablist" aria-label="Client tools">
+<button class="tools-tab" id="intakeTab" role="tab" aria-selected="true" aria-controls="intake">🐾 Client Intake</button>
+<button class="tools-tab" id="confirmTab" role="tab" aria-selected="false" aria-controls="confirmation">✓ Appointment Confirmation</button>
+</div>
+<section class="tool-panel active" id="intake" role="tabpanel" aria-labelledby="intakeTab">
+<h2>Tell us about you and your pets</h2><p class="tool-intro">Fill in what you can. We’ll confirm availability, care details, and pricing together.</p>
+<form id="intakeForm">
+<div class="field-grid">
+<div class="tool-field"><label for="clientName">Your name *</label><input id="clientName" name="clientName" required autocomplete="name" placeholder="First and last name"></div>
+<div class="tool-field"><label for="clientPhone">Phone number *</label><input id="clientPhone" name="clientPhone" required type="tel" autocomplete="tel" placeholder="Best number to reach you"></div>
+<div class="tool-field full"><label for="clientEmail">Email (optional)</label><input id="clientEmail" name="clientEmail" type="email" autocomplete="email" placeholder="you@example.com"></div>
+<div class="tool-field"><label for="requestedService">Requested service *</label><select id="requestedService" name="requestedService" required><option value="">Choose one</option><option>30-minute drop-in</option><option>60-minute drop-in</option><option>Meet-and-greet</option><option>Specialized grooming inquiry</option><option>Other / not sure yet</option></select></div>
+<div class="tool-field"><label for="preferredDate">Preferred date</label><input id="preferredDate" name="preferredDate" type="date"></div>
+<div class="tool-field"><label for="preferredTime">Preferred start time</label><input id="preferredTime" name="preferredTime" type="time"></div>
+<div class="tool-field"><label for="meetingFormat">Meet-and-greet format (if applicable)</label><select id="meetingFormat" name="meetingFormat"><option value="">Not applicable / undecided</option><option>Phone</option><option>In person</option><option>Video call</option></select></div>
+<div class="tool-field full"><label for="visitAddress">Visit address or meeting location</label><input id="visitAddress" name="visitAddress" autocomplete="street-address" placeholder="Address or preferred meeting place"></div>
+<div class="tool-field full"><label for="arrivalNotes">Parking / arrival notes (no access codes)</label><input id="arrivalNotes" name="arrivalNotes" placeholder="Parking, gate visibility, or arrival guidance"></div>
+<div class="tool-field full"><label for="petDetails">Pet names, species, and number of pets *</label><textarea id="petDetails" name="petDetails" required placeholder="Example: Luna — dog, 1; Milo — cat, 1"></textarea></div>
+<div class="tool-field full"><label for="healthNeeds">Health concerns, allergies, behavior, or handling needs</label><textarea id="healthNeeds" name="healthNeeds" placeholder="Anything that helps us care for your pets safely"></textarea></div>
+<div class="tool-field full"><label for="careTasks">Requested care tasks / instructions</label><textarea id="careTasks" name="careTasks" placeholder="Feeding, walks, routines, favorite toys, etc."></textarea></div>
+<div class="tool-field full"><label>Extras you’d like to discuss</label><div class="tool-checks">
+<label><input type="checkbox" name="extras" value="Additional pets"> Additional pets</label>
+<label><input type="checkbox" name="extras" value="Photo updates"> Photo updates</label>
+<label><input type="checkbox" name="extras" value="Medication administration"> Medication</label>
+<label><input type="checkbox" name="extras" value="Litter-box cleaning"> Litter-box cleaning</label>
+<label><input type="checkbox" name="extras" value="Other extras"> Other</label></div></div>
+<div class="tool-field full"><label for="extraDetails">Details about extras (optional)</label><textarea id="extraDetails" name="extraDetails" placeholder="Pet count for medication, number of litter boxes, or other requests"></textarea></div>
+<div class="tool-field"><label for="backupName">Emergency / backup contact name</label><input id="backupName" name="backupName" placeholder="Name"></div>
+<div class="tool-field"><label for="backupPhone">Emergency / backup contact phone</label><input id="backupPhone" name="backupPhone" type="tel" placeholder="Phone number"></div>
+<div class="tool-field"><label for="vetName">Veterinarian / clinic</label><input id="vetName" name="vetName" placeholder="Clinic or veterinarian name"></div>
+<div class="tool-field"><label for="vetPhone">Veterinarian phone (optional)</label><input id="vetPhone" name="vetPhone" type="tel" placeholder="Clinic phone number"></div>
+<div class="tool-field full"><label for="unreachable">If we cannot reach you, what should we do?</label><textarea id="unreachable" name="unreachable" placeholder="Your preferred instructions"></textarea></div>
+<div class="tool-field full"><label for="anythingElse">Anything else we should know?</label><textarea id="anythingElse" name="anythingElse" placeholder="Optional"></textarea></div>
+</div>
+<div class="tool-note"><strong>Privacy & booking:</strong> Please do not enter door or alarm codes, passwords, or key locations. We’ll arrange access separately. This form is a request only; your appointment, requested care, and extras are not confirmed until we agree on the details.</div>
+<div class="tool-actions"><button type="submit" class="action-main">Prepare My Intake Message</button><button type="reset" class="action-secondary">Clear Form</button></div>
+</form>
+<div id="intakeResult" hidden style="margin-top:22px"><h2>Your intake message is ready</h2><p class="tool-intro">Review it, then copy it and send it to Violet using your preferred contact method.</p><textarea id="intakeOutput" class="output-box" readonly></textarea><div class="tool-actions"><button type="button" id="copyIntake" class="action-main">Copy Intake Message</button><a class="btn" href="mailto:violetspetcare@yahoo.com?subject=Violet%27s%20Pet%20Care%20Intake" style="display:flex;align-items:center;justify-content:center;flex:1;min-height:46px;background:#f0eafa;color:#4b2b81;font-weight:800;border-radius:11px;text-decoration:none">Email Violet</a></div><p class="small-print">Your answers are prepared in this page; they are not saved to a database. Emailing opens your email app and will not send anything until you review and press Send.</p></div>
+</section>
+<section class="tool-panel" id="confirmation" role="tabpanel" aria-labelledby="confirmTab">
+<h2>Prepare an appointment confirmation</h2><p class="tool-intro">Complete the agreed details below. The message updates as you type and can be copied to text or email.</p>
+<div class="field-grid">
+<div class="tool-field"><label for="confirmName">Customer name *</label><input id="confirmName" placeholder="Customer name"></div>
+<div class="tool-field"><label for="confirmService">Agreed service and duration *</label><input id="confirmService" placeholder="30-minute drop-in"></div>
+<div class="tool-field"><label for="confirmDate">Date *</label><input id="confirmDate" type="date"></div>
+<div class="tool-field"><label for="confirmTime">Start time and time zone *</label><input id="confirmTime" placeholder="10:00 AM Eastern Time"></div>
+<div class="tool-field full"><label for="confirmLocation">Location / meeting format *</label><input id="confirmLocation" placeholder="Agreed address, phone, or meeting details"></div>
+<div class="tool-field full"><label for="confirmCare">Agreed care tasks and approved extras *</label><textarea id="confirmCare" placeholder="Feeding, photos, medication, litter-box cleaning, etc."></textarea></div>
+<div class="tool-field"><label for="confirmPrice">Total price *</label><input id="confirmPrice" placeholder="$45.00, including approved extras/tax if applicable"></div>
+<div class="tool-field"><label for="confirmCancel">Cancellation terms *</label><textarea id="confirmCancel" placeholder="Agreed deadline, notice, and any fee"></textarea></div>
+</div>
+<div class="tool-note">Use this only after the appointment details and cancellation terms are agreed. Replace every field; nothing is sent automatically.</div>
+<div class="tool-actions"><button type="button" class="action-main" id="copyConfirm">Copy Confirmation Message</button><button type="button" class="action-secondary" id="resetConfirm">Clear Details</button></div>
+<label for="confirmOutput" style="display:block;font-weight:800;margin:20px 0 8px">Message preview</label>
+<textarea id="confirmOutput" class="output-box" readonly></textarea>
+<p class="small-print">The preview includes placeholders for any required details you leave blank. Review the message carefully before sending it.</p>
+</section>
+</main>
+<footer class="footer"><p><strong>Violet’s Pet Care</strong></p><p class="footer-tagline">Trusted Pet Care from a Professional Groomer</p></footer>
+</div>
+<script>
+const menuButton=document.getElementById('siteMenuToggle'),nav=document.getElementById('siteNavigation');
+menuButton?.addEventListener('click',()=>{const open=nav.classList.toggle('is-open');menuButton.setAttribute('aria-expanded',String(open));});
+nav?.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('is-open');menuButton?.setAttribute('aria-expanded','false');}));
+const tabs=[document.getElementById('intakeTab'),document.getElementById('confirmTab')];
+tabs.forEach((tab,i)=>tab.addEventListener('click',()=>{tabs.forEach((t,j)=>t.setAttribute('aria-selected',String(i===j)));document.querySelectorAll('.tool-panel').forEach((p,j)=>p.classList.toggle('active',i===j));}));
+const val=id=>document.getElementById(id)?.value.trim()||'';
+const dateText=id=>{const v=val(id);if(!v)return '';const d=new Date(v+'T12:00:00');return d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});};
+document.getElementById('intakeForm').addEventListener('submit',e=>{
+ e.preventDefault();if(!e.currentTarget.reportValidity())return;
+ const extras=[...document.querySelectorAll('input[name="extras"]:checked')].map(x=>x.value);
+ const lines=[
+ "Violet's Pet Care — Client Intake Request",
+ "Customer: "+val('clientName'),"Phone: "+val('clientPhone'),"Email: "+(val('clientEmail')||'Not provided'),
+ "Requested service: "+val('requestedService'),"Preferred date: "+(dateText('preferredDate')||'Flexible / not specified'),
+ "Preferred start time: "+(val('preferredTime')||'Flexible / not specified'),"Meet-and-greet format: "+(val('meetingFormat')||'Not specified'),
+ "Location: "+(val('visitAddress')||'To be discussed'),"Arrival notes (no access codes): "+(val('arrivalNotes')||'None provided'),
+ "Pets: "+val('petDetails'),"Health / behavior / handling: "+(val('healthNeeds')||'None provided'),
+ "Care tasks: "+(val('careTasks')||'To be discussed'),"Requested extras: "+(extras.join(', ')||'None selected'),
+ "Extra details: "+(val('extraDetails')||'None provided'),"Backup contact: "+([val('backupName'),val('backupPhone')].filter(Boolean).join(' — ')||'Not provided'),
+ "Veterinarian: "+([val('vetName'),val('vetPhone')].filter(Boolean).join(' — ')||'Not provided'),
+ "If customer unreachable: "+(val('unreachable')||'To be discussed'),"Other: "+(val('anythingElse')||'None provided'),
+ "Please confirm availability, agreed details, and price. No access codes or key locations are included."
+ ];
+ document.getElementById('intakeOutput').value=lines.join('\n');document.getElementById('intakeResult').hidden=false;document.getElementById('intakeResult').scrollIntoView({behavior:'smooth',block:'start'});
+});
+document.getElementById('copyIntake').addEventListener('click',async()=>{const t=document.getElementById('intakeOutput');try{await navigator.clipboard.writeText(t.value);document.getElementById('copyIntake').textContent='Copied!';}catch(e){t.focus();t.select();document.execCommand('copy');document.getElementById('copyIntake').textContent='Select and copy if needed';}});
+const confirmationFields=['confirmName','confirmService','confirmDate','confirmTime','confirmLocation','confirmCare','confirmPrice','confirmCancel'];
+function makeConfirmation(){
+ const d=dateText('confirmDate')||'[Day, month, date, year]';
+ return 'Hi '+(val('confirmName')||'[Customer name]')+'! Your appointment with Violet’s Pet Care is confirmed:\n\n'+
+ '- Service: '+(val('confirmService')||'[Agreed service and duration]')+'\n'+
+ '- Date: '+d+'\n'+
+ '- Time: '+(val('confirmTime')||'[Start time and time zone]')+'\n'+
+ '- Location / meeting format: '+(val('confirmLocation')||'[Agreed address, phone, or other meeting details]')+'\n'+
+ '- Care and extras: '+(val('confirmCare')||'[Agreed care tasks and approved extras]')+'\n'+
+ '- Total price: '+(val('confirmPrice')||'[Agreed total, including extras and any applicable tax]')+'\n'+
+ '- Cancellation terms: '+(val('confirmCancel')||'[Agreed cancellation/rescheduling terms, deadline, and any fee]')+'\n\n'+
+ 'Please check these details and let us know if anything needs correcting. For in-person visits, we’ll arrange access separately—please don’t include access codes or key locations in your reply.\n\n'+
+ 'We look forward to caring for your pets!\nViolet’s Pet Care';
+}
+const confirmOutput=document.getElementById('confirmOutput');
+confirmationFields.forEach(id=>document.getElementById(id).addEventListener('input',()=>confirmOutput.value=makeConfirmation()));
+confirmOutput.value=makeConfirmation();
+document.getElementById('copyConfirm').addEventListener('click',async()=>{confirmOutput.value=makeConfirmation();try{await navigator.clipboard.writeText(confirmOutput.value);document.getElementById('copyConfirm').textContent='Copied!';}catch(e){confirmOutput.focus();confirmOutput.select();document.execCommand('copy');document.getElementById('copyConfirm').textContent='Select and copy if needed';}});
+document.getElementById('resetConfirm').addEventListener('click',()=>{confirmationFields.forEach(id=>document.getElementById(id).value='');confirmOutput.value=makeConfirmation();document.getElementById('copyConfirm').textContent='Copy Confirmation Message';});
+document.getElementById('intakeForm').addEventListener('reset',()=>{document.getElementById('intakeResult').hidden=true;});
+</script>
+</body></html>
