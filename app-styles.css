@@ -882,3 +882,12 @@ stripe-buy-button {
  #calculatorModal .breakdown-row{font-size:.88rem;gap:10px}
  #calculatorModal .breakdown-row strong{white-space:nowrap}
 }
+
+.square-checkout-options{margin-top:18px;padding:16px;border:1px solid #d9cbea;border-radius:16px;background:linear-gradient(145deg,#faf7ff,#f0fbf9)}
+.square-checkout-options h3{margin:0 0 8px;color:#4d3676;font-size:1.12rem}
+.square-checkout-options p{font-size:.9rem;line-height:1.55;color:#514b5e;margin:0 0 12px}
+.square-pay-option{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px;margin-top:8px;border:1px solid #e3d9ef;border-radius:11px;background:#fff;color:#34264e;text-decoration:none}
+.square-pay-option:hover{border-color:#6a4c93;background:#fbf8ff}
+.square-pay-option span:first-child{display:flex;flex-direction:column;gap:4px}
+.square-pay-option small{font-size:.8rem;color:#696374;line-height:1.4}
+.square-pay-option>span:last-child{font-size:1.1rem;color:#6a4c93;font-weight:800}
