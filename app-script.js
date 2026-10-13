@@ -106,11 +106,36 @@ if (copyQuoteBtn) copyQuoteBtn.addEventListener('click', () => {
   const q = calculateTotal();
   navigator.clipboard.writeText(buildQuoteText(q)).then(() => alert('Quote copied.'));
 });
+const SQUARE_PAYMENT_LINKS = {
+  service30: 'https://square.link/u/ldikVBKy',
+  service60: 'https://square.link/u/HLLmiCnS',
+  dog: 'https://square.link/u/A9UN0EOD',
+  cat: 'https://square.link/u/3tbEasUn',
+  litter: 'https://square.link/u/zGAtKBOu',
+  medication: 'https://square.link/u/8ZiTmEZr',
+  photo: 'https://square.link/u/YMzJncy4',
+  meetGreet: 'https://square.link/u/1e4jo5bK'
+};
+function renderSquareCheckoutOptions(q) {
+  const panel = document.getElementById('squareCheckoutOptions');
+  if (!panel) return;
+  const serviceUrl = getSelectedService() === 45 ? SQUARE_PAYMENT_LINKS.service30 : SQUARE_PAYMENT_LINKS.service60;
+  const serviceLabel = getSelectedService() === 45 ? 'Pay for 30-minute drop-in' : 'Pay for 60-minute drop-in';
+  const items = [{ label: serviceLabel, url: serviceUrl, detail: q.visits > 1 ? 'Selected visits: ' + q.visits + '. Choose the matching quantity at Square if offered.' : 'Base visit payment' }];
+  const additionalDogs = Math.max(0, q.dogs - (q.dogs > 0 ? 1 : 0));
+  const additionalCats = Math.max(0, q.cats - (q.dogs > 0 ? 0 : (q.cats > 0 ? 1 : 0)));
+  if (additionalDogs) items.push({label: 'Additional dog fee', url: SQUARE_PAYMENT_LINKS.dog, detail: additionalDogs + ' additional dog(s) · $10 each'});
+  if (additionalCats) items.push({label: 'Additional cat fee', url: SQUARE_PAYMENT_LINKS.cat, detail: additionalCats + ' additional cat(s) · $5 each'});
+  if (q.boxes) items.push({label: 'Litter-box cleaning', url: SQUARE_PAYMENT_LINKS.litter, detail: q.boxes + ' box(es) · $15 each'});
+  if (q.medicationPets) items.push({label: 'Medication administration', url: SQUARE_PAYMENT_LINKS.medication, detail: q.medicationPets + ' pet(s) · $10 each'});
+  if (q.photoPets) items.push({label: 'Additional photo updates', url: SQUARE_PAYMENT_LINKS.photo, detail: q.photoPets + ' pet(s) selected. Confirm link price and quantity at Square.'});
+  panel.innerHTML = '<h3>Secure Square payment links</h3><p>Estimated quote: <strong>' + formatMoney(q.total) + '</strong>. For now, these are separate Square payments, so the quote total is not charged as one combined order. Check each amount and quantity before paying.</p>' + items.map(item => '<a class="square-pay-option" href="' + item.url + '" target="_blank" rel="noopener noreferrer"><span><strong>' + item.label + '</strong><small>' + item.detail + '</small></span><span aria-hidden="true">↗</span></a>').join('');
+  panel.classList.remove('hidden');
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
 if (requestCheckoutBtn) requestCheckoutBtn.addEventListener('click', () => {
-  calculateTotal();
-  // Static GitHub Pages cannot safely create a custom Square payment link.
-  // Open Square booking rather than unexpectedly launching an email draft.
-  window.open('https://app.squareup.com/appointments/book/qh0xuxt3vxzjxz/LAQGSCJHZ6BSX/start', '_blank', 'noopener,noreferrer');
+  const q = calculateTotal();
+  renderSquareCheckoutOptions(q);
 });
 
 function openCalculator() {
