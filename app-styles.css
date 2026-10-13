@@ -951,7 +951,7 @@ body{background:#f1f4fa;color:var(--app-ink)}
  .nav-container{min-height:58px;padding:7px 12px}
  .logo img{width:clamp(145px,58vw,220px);max-height:42px}
  .site-menu-toggle{font-size:0;width:40px;height:40px;min-width:40px;padding:0;position:relative}
- .site-menu-toggle::before{content:"☰";font-size:1.25rem}
+ .site-menu-toggle::before{content:"☰";font-size:1.25rem;color:#fff}
  .site-menu-toggle{color:transparent}
  .site-menu-toggle[aria-expanded="true"]::before{content:"×";font-size:1.6rem;color:#fff}
  .nav-links{display:none;position:fixed;z-index:1000;top:58px;right:10px;left:10px;flex-direction:column;gap:0;padding:14px;border-radius:18px;background:linear-gradient(160deg,#4a2c6b,#6a4c93 65%,#51408c);box-shadow:0 18px 45px #20133450}
