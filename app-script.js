@@ -113,6 +113,7 @@ if (requestCheckoutBtn) requestCheckoutBtn.addEventListener('click', () => {
 function openCalculator() {
   calculatorModal.classList.add('show');
   calculateTotal();
+  if (typeof showQuoteStep === 'function') showQuoteStep(1);
 }
 function closeCalculator() { calculatorModal.classList.remove('show'); }
 function openStripeModal() { stripeModal.classList.add('show'); }
@@ -132,3 +133,21 @@ if (stripeCheckoutBtn) stripeCheckoutBtn.addEventListener('click', () => {
   openCalculator();
 });
 calculateTotal();
+
+let currentQuoteStep = 1;
+function showQuoteStep(step) {
+  currentQuoteStep = Math.max(1, Math.min(3, Number(step) || 1));
+  document.querySelectorAll('#calculatorModal [data-quote-step]').forEach(panel => {
+    panel.classList.toggle('is-active', Number(panel.dataset.quoteStep) === currentQuoteStep);
+  });
+  document.querySelectorAll('#calculatorModal [data-step-indicator]').forEach(indicator => {
+    const n = Number(indicator.dataset.stepIndicator);
+    indicator.classList.toggle('is-active', n === currentQuoteStep);
+    indicator.classList.toggle('is-complete', n < currentQuoteStep);
+  });
+  if (currentQuoteStep === 3) calculateTotal();
+  const content = document.querySelector('#calculatorModal .modal-content');
+  if (content) content.scrollTop = 0;
+}
+document.querySelectorAll('#calculatorModal [data-next-step]').forEach(button => button.addEventListener('click', () => showQuoteStep(button.dataset.nextStep)));
+document.querySelectorAll('#calculatorModal [data-prev-step]').forEach(button => button.addEventListener('click', () => showQuoteStep(button.dataset.prevStep)));
