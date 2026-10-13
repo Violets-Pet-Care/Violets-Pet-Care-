@@ -151,3 +151,7 @@ function showQuoteStep(step) {
 }
 document.querySelectorAll('#calculatorModal [data-next-step]').forEach(button => button.addEventListener('click', () => showQuoteStep(button.dataset.nextStep)));
 document.querySelectorAll('#calculatorModal [data-prev-step]').forEach(button => button.addEventListener('click', () => showQuoteStep(button.dataset.prevStep)));
+
+if (new URLSearchParams(window.location.search).get('quote') === '1') {
+  openCalculator();
+}
