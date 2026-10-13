@@ -69,8 +69,8 @@
 
           <div class="contact-box">
             <h3>💳 Pay for Services</h3>
-            <p>Secure checkout for quick bookings.</p>
-            <button id="stripeCheckoutBtn" class="btn btn-primary">Pay Now</button>
+            <p>Calculate your visit total and request secure Square checkout.</p>
+            <button id="stripeCheckoutBtn" class="btn btn-primary">Get a Quote & Pay</button>
           </div>
         </div>
       </div>
@@ -107,8 +107,8 @@
         <h2>💰 Build Your Quote</h2>
 
         <div class="form-group pet-count-grid">
-            <div><label for="numDogs">Number of Dogs</label><input type="number" id="numDogs" min="0" max="20" value="1" /><span class="hint">$10 per dog · 5% discount with 3+ dogs</span></div>
-            <div><label for="numCats">Number of Cats</label><input type="number" id="numCats" min="0" max="20" value="0" /><span class="hint">$5 per cat · 3% discount with 3+ cats</span></div>
+            <div><label for="numDogs">Number of Dogs</label><input type="number" id="numDogs" min="0" max="20" value="1" /><span class="hint">$5 per additional pet · 5% discount with 3+ dogs</span></div>
+            <div><label for="numCats">Number of Cats</label><input type="number" id="numCats" min="0" max="20" value="0" /><span class="hint">$5 per additional pet · 3% discount with 3+ cats</span></div>
           </div>
 
         <div class="form-group">
@@ -131,63 +131,26 @@
         </div>
 
         <div class="form-group">
-          <label>Pricing Plan</label>
-          <div class="plan-tabs">
-            <button class="plan-tab active" data-plan="one-time">One-Time</button>
-            <button class="plan-tab" data-plan="package">Package</button>
-            <button class="plan-tab" data-plan="monthly">Monthly</button>
-          </div>
-        </div>
-
-        <div class="plan-input" id="plan-one-time">
           <label for="visitCount">Number of Visits</label>
           <input type="number" id="visitCount" min="1" max="30" value="1" />
+          <span class="hint">Each visit is priced separately; dog/cat discounts apply only when eligible.</span>
         </div>
 
-        <div class="plan-input hidden" id="plan-package">
-          <label for="packageSize">Visit Package</label>
-          <select id="packageSize">
-            <option value="5">5-Visit Package (10% off)</option>
-            <option value="10">10-Visit Package (15% off)</option>
-            <option value="15">15-Visit Package (20% off)</option>
-            <option value="20">20-Visit Package (20% off)</option>
-          </select>
+<div class="form-group">
+          <label>Photo Updates</label>
+          <p class="hint">Would you like photo updates included during this visit? It is $5 per dog or cat, per visit.</p>
+          <label class="checkbox-label"><input type="checkbox" id="photoUpdate" /> Yes, include photo updates</label>
         </div>
-
-        <div class="plan-input hidden" id="plan-monthly">
-          <label for="monthlyVisits">Visits Per Month</label>
-          <select id="monthlyVisits">
-            <option value="4">1x per week (4 visits)</option>
-            <option value="8">2x per week (8 visits)</option>
-            <option value="12">3x per week (12 visits)</option>
-            <option value="16">4x per week (16 visits)</option>
-            <option value="20">5x per week (20 visits)</option>
-          </select>
-        </div>
-
         <div class="form-group">
-          <label>Add-Ons (Optional)</label>
-          <div class="checkbox-group">
-            <label class="checkbox-label">
-              <input type="checkbox" id="photoUpdate" data-addon="5" />
-              📷 Photo Update
-              <span class="addon-price">+$5 per visit</span>
-            </label>
-
-            <label class="checkbox-label">
-              <input type="checkbox" id="holidayVisit" data-addon="15" />
-              🎄 Holiday Premium
-              <span class="addon-price">+$15 per visit</span>
-            </label>
-
-            <label class="checkbox-label">
-              <input type="checkbox" id="medicationSupport" data-addon="10" />
-              💊 Medication Support
-              <span class="addon-price">+$10 per visit</span>
-            </label>
+          <label for="medicationNeeded">Does your pet need meds given during drop-in?</label>
+          <select id="medicationNeeded"><option value="no">No</option><option value="yes">Yes</option></select>
+          <div class="form-group hidden" id="medicationPetCountGroup">
+            <label for="medicationPetCount">Meds for how many pets?</label>
+            <input type="number" id="medicationPetCount" min="1" max="40" value="1" />
+            <span class="hint">$10 per pet receiving medication, per visit.</span>
           </div>
         </div>
-          <div class="form-group"><label for="litterBoxes">Litter Boxes to Clean</label><input type="number" id="litterBoxes" min="0" max="20" value="0" /><span class="hint">$15 per litter box, per visit</span></div>
+        <div class="form-group"><label for="litterBoxes">Litter Boxes to Clean</label><input type="number" id="litterBoxes" min="0" max="20" value="0" /><span class="hint">$15 per litter box, per visit</span></div>
           <div class="form-group"><label for="tipPercent">Optional Tip</label><select id="tipPercent"><option value="0">No tip</option><option value="0.10">10% tip</option><option value="0.15">15% tip</option><option value="0.20">20% tip</option></select><span class="hint">Your tip is included in the quote and payment-link request.</span></div>
 
         <div class="breakdown">
@@ -200,15 +163,8 @@
           <div class="breakdown-row"><span>Dog Discount (5% with 3+ dogs)</span><strong id="dogDiscount">-$0.00</strong></div>
             <div class="breakdown-row"><span>Cat Discount (3% with 3+ cats)</span><strong id="catDiscount">-$0.00</strong></div>
 
-          <div class="breakdown-row">
-            <span>Package Discount</span>
-            <strong id="packageDiscount">-$0.00</strong>
-          </div>
-
-          <div class="breakdown-row">
-            <span>Add-Ons</span>
-            <strong id="addOnsCost">$0.00</strong>
-          </div>
+          <div class="breakdown-row"><span>Photo Updates ($5 per pet per visit)</span><strong id="photoCost">$0.00</strong></div>
+          <div class="breakdown-row"><span>Medication ($10 per pet per visit)</span><strong id="medicationCost">$0.00</strong></div>
 <div class="breakdown-row"><span>Litter Box Cleaning</span><strong id="litterCost">$0.00</strong></div>
             <div class="breakdown-row"><span>Optional Tip</span><strong id="tipCost">$0.00</strong></div>
 
@@ -221,7 +177,7 @@
         <div class="modal-actions">
           <button id="saveQuote" class="btn btn-save">💾 Save Quote</button>
           <button id="copyQuote" class="btn btn-copy">📋 Copy</button>
-          <button id="requestCheckout" class="btn btn-primary">Request Secure Checkout</button>
+          <button id="requestCheckout" class="btn btn-primary">Continue to Secure Checkout</button>
         </div>
 
         <div class="stripe-checkout-container" id="stripeCheckoutContainer"></div>
@@ -237,10 +193,7 @@
         <h2>💳 Secure Payment</h2>
         <p>Choose your visit and complete payment below.</p>
         
-        <div class="stripe-buttons-wrapper">
-          <div class="stripe-button-section"><h3>30-Minute Drop-In - $45</h3><p>Checkout for one 30-minute drop-in visit.</p><a class="btn btn-primary" href="https://buy.stripe.com/test_9B68wI4wOdkI4QM5obeUU01" target="_blank" rel="noopener noreferrer">Pay $45 for 30 Minutes</a></div>
-          <div class="stripe-button-section"><h3>60-Minute Drop-In - $80</h3><p>Checkout for one 60-minute drop-in visit.</p><a class="btn btn-primary" href="https://buy.stripe.com/test_5kQdR23sK6Wk2IEdUHeUU00" target="_blank" rel="noopener noreferrer">Pay $80 for 60 Minutes</a></div>
-        </div>
+        <p>Use the quote calculator to calculate your visit total, then request a secure Square payment link for that exact amount. Fixed test checkout links have been removed.</p>
       </div>
     </div>
   </div>
