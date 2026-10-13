@@ -908,3 +908,86 @@ stripe-buy-button {
 .square-pay-option{display:flex;align-items:center;justify-content:space-between;gap:16px;text-decoration:none;color:var(--purple);background:#fff;border:1px solid #dcd2ea;border-radius:12px;padding:16px;margin:12px 0}
 .square-pay-option strong,.square-pay-option small{display:block}.square-pay-option small{margin-top:4px;color:#626171;line-height:1.4}
 @media(max-width:760px){.about-layout{grid-template-columns:1fr}.about-photo-card{max-width:520px;margin:0 auto;width:100%}.about-photo-card>img{max-height:560px;object-position:center 30%}.about-copy .text-link{margin-left:0;display:block}}
+
+
+/* Reference-inspired mobile app shell */
+:root{--app-ink:#30254a;--app-soft:#f2f5fb;--app-line:#dfe5f1}
+body{background:#f1f4fa;color:var(--app-ink)}
+.navbar{background:linear-gradient(105deg,#6a4c93 0%,#526bb2 53%,#16b7a6 100%);box-shadow:0 4px 16px #30254a22}
+.nav-container{min-height:68px;height:auto;padding:9px 16px;gap:12px}
+.logo{display:flex;align-items:center;min-width:0}
+.logo img{display:block;width:clamp(155px,42vw,260px);max-height:48px;object-fit:contain;object-position:left center;filter:drop-shadow(0 1px 1px #30254a22)}
+.site-menu-toggle{display:inline-flex;align-items:center;justify-content:center;min-width:42px;min-height:42px;padding:7px 12px;border:0;border-radius:50%;background:#4a2c6b;color:#fff;font-weight:800;font-size:1rem;box-shadow:0 3px 10px #30254a25}
+.nav-links a{color:#fff}
+.nav-links a:hover,.nav-links a:focus-visible{background:#ffffff20;color:#fff}
+.welcome-hero{background:linear-gradient(135deg,#f5f0ff 0%,#eefbf9 100%)}
+.welcome-art{background:linear-gradient(140deg,#6a4c93,#526bb2 58%,#2ec4b6);border:0}
+.hero-brand-art{border-radius:12px}
+.services-section{background:#f6f7fb}
+.service-card{border-radius:16px;box-shadow:0 6px 18px #2b2d420c}
+.btn,.btn-primary,.btn-service{border-radius:11px}
+.btn-primary,.btn-service{background:linear-gradient(105deg,#6a4c93,#526bb2);color:#fff}
+.about-photo-card{border-radius:18px}
+.footer{background:linear-gradient(105deg,#6a4c93 0%,#526bb2 50%,#20b9a7 100%);text-align:center}
+.footer p{color:#fff}
+.footer-tagline{color:#fff}
+#calculatorModal .modal-content{border-radius:22px;background:#fff}
+#calculatorModal .modal-calculator h2{color:#4b2b81;font-size:1.65rem;letter-spacing:-.025em}
+#calculatorModal .quote-step-title{font-size:1.25rem}
+#calculatorModal .radio-label{min-height:78px;border:1px solid #d9d3e8;border-radius:13px;box-shadow:0 2px 7px #30254a08}
+#calculatorModal .radio-label:has(input:checked){border:1.5px solid #6a4c93;background:#f6f0ff;box-shadow:0 0 0 2px #6a4c9312}
+#calculatorModal .radio-text strong{display:inline-block;color:#4b2b81;font-size:1.2rem;margin-top:2px}
+#calculatorModal .form-group input:not([type=radio]):not([type=checkbox]),#calculatorModal .form-group select{border-color:#dbe2ef;border-radius:11px;background:#fff}
+#calculatorModal .checkbox-label{border:1px solid #dce4f1;border-radius:12px;background:#fff}
+#calculatorModal .breakdown{background:#fff;border:1px solid #e2e7f1;border-radius:15px;padding:14px}
+#calculatorModal .breakdown-row{border-color:#e9edf5}
+#calculatorModal .grand-total{font-size:1.15rem}
+#calculatorModal .grand-total strong{color:#6a4c93;font-size:1.45rem}
+#calculatorModal .quote-step-actions .btn-primary,#calculatorModal .modal-actions .btn-primary{background:linear-gradient(105deg,#6a4c93,#526bb2)}
+#calculatorModal .checkout-note{border-radius:12px;background:#effaf9;color:#365a60}
+.square-checkout-options{border-radius:14px}
+@media(max-width:760px){
+ .navbar{position:sticky;top:0}
+ .nav-container{min-height:58px;padding:7px 12px}
+ .logo img{width:clamp(145px,58vw,220px);max-height:42px}
+ .site-menu-toggle{font-size:0;width:40px;height:40px;min-width:40px;padding:0;position:relative}
+ .site-menu-toggle::before{content:"☰";font-size:1.25rem;color:#fff}
+ .site-menu-toggle{color:transparent}
+ .site-menu-toggle[aria-expanded="true"]::before{content:"×";font-size:1.6rem;color:#fff}
+ .nav-links{display:none;position:fixed;z-index:1000;top:58px;right:10px;left:10px;flex-direction:column;gap:0;padding:14px;border-radius:18px;background:linear-gradient(160deg,#4a2c6b,#6a4c93 65%,#51408c);box-shadow:0 18px 45px #20133450}
+ .nav-links.is-open{display:flex}
+ .nav-links a{padding:14px 13px;border-bottom:1px solid #ffffff2b;border-radius:9px;font-size:1rem}
+ .nav-links a:last-child{border-bottom:0}
+ .welcome-hero{padding:22px 14px;gap:16px}
+ .welcome-copy h1{font-size:clamp(1.8rem,8vw,2.45rem)}
+ .welcome-art{min-height:0;padding:12px}
+ .hero-brand-art{max-height:108px}
+ .hero-pet-note{padding:10px}
+ .services-section{padding:28px 14px}
+ .services-section h2,.how-it-works h2{font-size:1.65rem}
+ .service-card{padding:18px}
+ .how-it-works{padding:32px 14px}
+ .about-section{padding:34px 14px}
+ .contact-section{padding:32px 14px}
+ .footer{padding:22px 14px}
+ #calculatorModal.modal.show{align-items:flex-end;padding:0}
+ #calculatorModal .modal-content{width:100%;max-width:none;max-height:94dvh;min-height:80dvh;padding:24px 16px 18px;border-radius:22px 22px 0 0;border-bottom:0;overflow-y:auto}
+ #calculatorModal .modal-close{top:12px;right:12px}
+ #calculatorModal .modal-calculator h2{padding-right:34px;font-size:1.45rem}
+ #calculatorModal .radio-group,#calculatorModal .pet-count-grid{grid-template-columns:1fr 1fr;gap:9px}
+ #calculatorModal .radio-label{padding:11px 9px;gap:7px}
+ #calculatorModal .radio-text{font-size:.85rem}
+ #calculatorModal .form-group{margin-bottom:14px}
+ #calculatorModal .quote-stepper{gap:5px;margin:15px 0 20px}
+ #calculatorModal .quote-step-indicator{min-width:0;flex:1}
+ #calculatorModal .quote-step-indicator small{white-space:normal}
+ #calculatorModal .quote-step-actions{margin-top:18px}
+ #calculatorModal .quote-step-actions button{font-size:.9rem}
+ #calculatorModal .quote-step-actions-split{gap:8px}
+ #calculatorModal .breakdown-row{font-size:.9rem;padding:10px 0}
+ #calculatorModal .grand-total strong{font-size:1.35rem}
+}
+@media(max-width:380px){
+ #calculatorModal .radio-group,#calculatorModal .pet-count-grid{grid-template-columns:1fr}
+ .logo img{width:145px}
+}
