@@ -104,9 +104,10 @@ if (copyQuoteBtn) copyQuoteBtn.addEventListener('click', () => {
   navigator.clipboard.writeText(buildQuoteText(q)).then(() => alert('Quote copied.'));
 });
 if (requestCheckoutBtn) requestCheckoutBtn.addEventListener('click', () => {
-  const q = calculateTotal();
-  const details = buildQuoteText(q) + '\n\nPlease send me a Square payment link for exactly ' + formatMoney(q.total) + '.';
-  window.location.href = 'mailto:violetspetcare@yahoo.com?subject=' + encodeURIComponent('Square Checkout Request - ' + formatMoney(q.total)) + '&body=' + encodeURIComponent(details);
+  calculateTotal();
+  // Static GitHub Pages cannot safely create a custom Square payment link.
+  // Open Square booking rather than unexpectedly launching an email draft.
+  window.open('https://app.squareup.com/appointments/book/qh0xuxt3vxzjxz/LAQGSCJHZ6BSX/start', '_blank', 'noopener,noreferrer');
 });
 
 function openCalculator() {
