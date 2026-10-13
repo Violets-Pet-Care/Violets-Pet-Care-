@@ -14,25 +14,23 @@
         <a href="#" class="logo"><img src="assets/violets-pet-care-logo.svg" alt="Violet's Pet Care logo" /></a>
         <button type="button" class="site-menu-toggle" id="siteMenuToggle" aria-expanded="false" aria-controls="siteNavigation">☰ Menu</button>
         <nav class="nav-links" id="siteNavigation">
-          <a href="#services">Services</a>
+          <a href="#home">Home</a>
+          <a href="#services">Book a Visit</a>
+          <a href="#calculator" class="nav-calculator">Get a Quote</a>
           <a href="specialized-grooming.html">Specialized Grooming</a>
-          <a href="#calculator" class="nav-calculator">💰 Quick Quote</a>
+          <a href="#about">About Us</a>
           <a href="#contact">Contact</a>
         </nav>
       </div>
-    </header>
-    <section class="brand-banner" aria-label="Violet's Pet Care branding"><img src="assets/violets-pet-care-logo.svg" alt="Violet's Pet Care — trusted pet care from a professional groomer" /></section>
-
-
-    <section class="welcome-hero">
+    </header>\n\n<section class="welcome-hero" id="home">
       <div class="welcome-copy">
         <span class="eyebrow">Loving, experienced, dependable care</span>
-        <h1>More peace of mind for you. More tail wags for them.</h1>
-        <p>Thoughtful drop-in pet care from a professional groomer, serving Hickory, Granite Falls and Hudson, North Carolina.</p>
+        <h1>Trusted care for the pets who feel like family.</h1>
+        <p>Personalized drop-in visits, thoughtful updates, and dependable routines from an experienced professional groomer serving Hickory, Granite Falls, and Hudson, North Carolina.</p>
         <div class="hero-actions"><a class="btn btn-primary" href="https://app.squareup.com/appointments/book/qh0xuxt3vxzjxz/LAQGSCJHZ6BSX/start" target="_blank" rel="noopener noreferrer">Book with Square</a><a class="btn btn-outline" href="#services">Explore Services</a></div>
-        <div class="hero-trust"><span>✓ 16+ years of hands-on grooming experience</span><span>✓ Personalized care for every pet</span></div>
+        <div class="hero-trust"><span>✓ 16 years of hands-on grooming experience</span><span>✓ Care tailored to your pet’s needs</span></div>
       </div>
-      <div class="welcome-art" aria-label="Pet care illustration"><div class="art-paw">🐾</div><div class="art-pets">🐕 🐈</div><p>Trusted pet care<br/>from a professional groomer</p></div>
+      <div class="welcome-art"><img class="hero-brand-art" src="assets/violets-pet-care-logo.svg" alt="Violet's Pet Care purple-to-teal brand artwork" /><div class="hero-pet-note"><span>🐾</span><div><strong>Care that feels personal</strong><small>Every pet has their own routine, comfort level, and personality.</small></div></div></div>
     </section>
 
     <!-- Services Section -->
@@ -62,13 +60,31 @@
 
 
 
-    <!-- Contact/Booking Section -->
+
+    <section class="how-it-works" aria-labelledby="howTitle">
+      <div class="container">
+        <span class="section-kicker">Simple from start to finish</span>
+        <h2 id="howTitle">Care in a few easy steps</h2>
+        <div class="steps-grid">
+          <article class="step-card"><span class="step-number">01</span><div class="step-icon">📅</div><h3>Book a Visit</h3><p>Choose your appointment through our Square booking page.</p></article>
+          <article class="step-card"><span class="step-number">02</span><div class="step-icon">🐾</div><h3>Tell Us About Your Pets</h3><p>Share the routines, care instructions, and little details that help them feel comfortable.</p></article>
+          <article class="step-card"><span class="step-number">03</span><div class="step-icon">💜</div><h3>Enjoy Peace of Mind</h3><p>Get thoughtful, individualized care while you’re away.</p></article>
+        </div>
+      </div>
+    </section>
+    <section class="about-section" id="about">
+      <div class="container about-layout">
+        <div class="about-brand-card"><img src="assets/violets-pet-care-logo.svg" alt="Violet's Pet Care brand artwork"/><div class="about-paw-row">🐾　🐕　🐈　🐾</div></div>
+        <div class="about-copy"><span class="section-kicker">A little about us</span><h2>Professional experience. A gentle, personal touch.</h2><p>Violet’s Pet Care is built around patience, safety, and the understanding that every animal is different. With years of hands-on grooming experience, Violet brings an experienced eye and a caring approach to every visit.</p><ul><li>Personalized drop-in visits</li><li>Clear pricing and optional care extras</li><li>Specialized grooming support for pets who need extra care</li></ul><a href="specialized-grooming.html" class="text-link">Explore specialized grooming →</a></div>
+      </div>
+    </section>
+\n    <!-- Contact/Booking Section -->
     <section id="contact" class="contact-section">
       <div class="container">
         <h2>Ready to Book?</h2>
         <div class="contact-methods">
           <div class="contact-box">
-            <h3>📅 Schedule a Meet & Greet</h3>
+            <h3>📅 Book a Visit</h3>
             <p>Book a free 15-min call to discuss your pet's needs.</p>
             <a href="https://app.squareup.com/appointments/book/qh0xuxt3vxzjxz/LAQGSCJHZ6BSX/start" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Book with Square</a>
           </div>
@@ -80,9 +96,9 @@
           </div>
 
           <div class="contact-box">
-            <h3>💳 Pay for Services</h3>
-            <p>Build your estimate, then continue to Square booking.</p>
-            <button id="stripeCheckoutBtn" class="btn btn-primary">Get a Quote & Pay</button>
+            <h3>🧾 Get a Quote</h3>
+            <p>Calculate your estimated visit total and review the details before continuing.</p>
+            <button id="stripeCheckoutBtn" class="btn btn-primary">Calculate My Quote</button>
           </div>
         </div>
       </div>
