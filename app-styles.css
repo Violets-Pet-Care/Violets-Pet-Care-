@@ -992,3 +992,16 @@ body{background:#f1f4fa;color:var(--app-ink)}
  #calculatorModal .radio-group,#calculatorModal .pet-count-grid{grid-template-columns:1fr}
  .logo img{width:145px}
 }
+
+
+/* Contrast fix: the contact section uses a light background on the homepage */
+.contact-section h2 { color: #30254a !important; }
+.contact-section .contact-box h3 { color: #30254a; }
+.contact-section .contact-box p { color: #555466; opacity: 1; }
+.contact-section .contact-box .btn,
+.contact-section .contact-box .btn-primary {
+  background: linear-gradient(105deg, #6a4c93, #526bb2);
+  color: #fff;
+}
+.contact-section .contact-box .btn:hover,
+.contact-section .contact-box .btn-primary:hover { filter: brightness(1.08); }
