@@ -16,8 +16,8 @@
       <main class="calculator-card">
         <label for="service">Service</label>
         <select id="service">
-          <option value="45">30-Minute Drop-In — $45</option>
-          <option value="80">60-Minute Drop-In — $80</option>
+          <option value="40">30-Minute Drop-In — $40</option>
+          <option value="70">60-Minute Drop-In — $70</option>
           <option value="10">Add-on-each additional dog — $10</option>
           <option value="5">Add-on-each additional cat — $5</option>
           <option value="2">Add-on-each additional photo(NOTE:only add if you’re needing Photo for more than 1 otherwise you get 1 free photo per visit) — $2</option>
@@ -40,7 +40,7 @@
         <div class="totals">
           <div class="total-row">
             <span>Visit total</span>
-            <strong id="visitTotal">$45.00</strong>
+            <strong id="visitTotal">$40.00</strong>
           </div>
           <div class="total-row">
             <span>Add-ons</span>
@@ -48,7 +48,7 @@
           </div>
           <div class="total-row grand-total">
             <span>Estimated total</span>
-            <strong id="grandTotal">$45.00</strong>
+            <strong id="grandTotal">$40.00</strong>
           </div>
         </div>
 
