@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Client Forms & Appointment Confirmation | Violet's Pet Care</title>
-<meta name="description" content="Easy client intake and reusable appointment confirmation tools for Violet's Pet Care.">
+<title>Client Intake Form | Violet's Pet Care</title>
+<meta name="description" content="Mobile-friendly client intake form for Violet's Pet Care.">
 <link rel="stylesheet" href="app-styles.css">
 <style>
 .tools-hero{padding:32px 16px;background:linear-gradient(135deg,#f5f0ff,#eefbf9)}
 .tools-wrap{max-width:850px;margin:0 auto;padding:26px 14px 52px}
 .tools-hero h1{font-size:clamp(1.8rem,6vw,2.5rem);color:#4b2b81;line-height:1.15}
 .tools-hero p{margin-top:8px;color:#5e5a6c}
-.tools-tabs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 18px}
+.tools-tabs{display:grid;grid-template-columns:1fr;gap:10px;margin:0 0 18px}
 .tools-tab{padding:13px 10px;border:1px solid #ded4ed;background:#fff;color:#4b2b81;border-radius:12px;font:inherit;font-weight:800;cursor:pointer}
 .tools-tab[aria-selected=true]{background:linear-gradient(105deg,#6a4c93,#526bb2);color:#fff;border-color:transparent}
 .tool-panel{display:none;background:#fff;border:1px solid #e6e0ef;border-radius:18px;padding:clamp(16px,4vw,26px);box-shadow:0 10px 30px #30254a0b}
@@ -50,14 +50,11 @@
 <a href="#intake">Client Intake</a>
 </nav></div></header>
 <section class="tools-hero"><div class="tools-wrap" style="padding-top:4px;padding-bottom:0">
-<span class="section-kicker">Simple, friendly, mobile-ready</span><h1>Client Forms & Appointment Details</h1>
-<p>Share your pet-care needs or prepare a clear appointment confirmation. Both tools are easy to use on your phone.</p>
+<span class="section-kicker">Simple, friendly, mobile-ready</span><h1>Client Intake Form</h1>
+<p>Tell Violet about your pets and the care you need. Appointment details are confirmed separately after availability and pricing are agreed.</p>
 </div></section>
 <main class="tools-wrap">
-<div class="tools-tabs" role="tablist" aria-label="Client tools">
-<button class="tools-tab" id="intakeTab" role="tab" aria-selected="true" aria-controls="intake">🐾 Client Intake</button>
-<button class="tools-tab" id="confirmTab" role="tab" aria-selected="false" aria-controls="confirmation">✓ Appointment Confirmation</button>
-</div>
+
 <section class="tool-panel active" id="intake" role="tabpanel" aria-labelledby="intakeTab">
 <h2>Tell us about you and your pets</h2><p class="tool-intro">Fill in what you can. We’ll confirm availability, care details, and pricing together.</p>
 <form id="intakeForm">
@@ -95,24 +92,7 @@
 </form>
 <div id="intakeResult" hidden style="margin-top:22px"><h2>Your intake message is ready</h2><p class="tool-intro">Review it, then copy it and send it to Violet using your preferred contact method.</p><textarea id="intakeOutput" class="output-box" readonly></textarea><div class="tool-actions"><button type="button" id="copyIntake" class="action-main">Copy Intake Message</button><a class="btn" href="mailto:violetspetcare@yahoo.com?subject=Violet%27s%20Pet%20Care%20Intake" style="display:flex;align-items:center;justify-content:center;flex:1;min-height:46px;background:#f0eafa;color:#4b2b81;font-weight:800;border-radius:11px;text-decoration:none">Email Violet</a></div><p class="small-print">Your answers are prepared in this page; they are not saved to a database. Emailing opens your email app and will not send anything until you review and press Send.</p></div>
 </section>
-<section class="tool-panel" id="confirmation" role="tabpanel" aria-labelledby="confirmTab">
-<h2>Prepare an appointment confirmation</h2><p class="tool-intro">Complete the agreed details below. The message updates as you type and can be copied to text or email.</p>
-<div class="field-grid">
-<div class="tool-field"><label for="confirmName">Customer name *</label><input id="confirmName" placeholder="Customer name"></div>
-<div class="tool-field"><label for="confirmService">Agreed service and duration *</label><input id="confirmService" placeholder="30-minute drop-in"></div>
-<div class="tool-field"><label for="confirmDate">Date *</label><input id="confirmDate" type="date"></div>
-<div class="tool-field"><label for="confirmTime">Start time and time zone *</label><input id="confirmTime" placeholder="10:00 AM Eastern Time"></div>
-<div class="tool-field full"><label for="confirmLocation">Location / meeting format *</label><input id="confirmLocation" placeholder="Agreed address, phone, or meeting details"></div>
-<div class="tool-field full"><label for="confirmCare">Agreed care tasks and approved extras *</label><textarea id="confirmCare" placeholder="Feeding, photos, medication, litter-box cleaning, etc."></textarea></div>
-<div class="tool-field"><label for="confirmPrice">Total price *</label><input id="confirmPrice" placeholder="$45.00, including approved extras/tax if applicable"></div>
-<div class="tool-field"><label for="confirmCancel">Cancellation terms *</label><textarea id="confirmCancel" placeholder="Agreed deadline, notice, and any fee"></textarea></div>
-</div>
-<div class="tool-note">Use this only after the appointment details and cancellation terms are agreed. Replace every field; nothing is sent automatically.</div>
-<div class="tool-actions"><button type="button" class="action-main" id="copyConfirm">Copy Confirmation Message</button><button type="button" class="action-secondary" id="resetConfirm">Clear Details</button></div>
-<label for="confirmOutput" style="display:block;font-weight:800;margin:20px 0 8px">Message preview</label>
-<textarea id="confirmOutput" class="output-box" readonly></textarea>
-<p class="small-print">The preview includes placeholders for any required details you leave blank. Review the message carefully before sending it.</p>
-</section>
+
 </main>
 <footer class="footer"><p><strong>Violet’s Pet Care</strong></p><p class="footer-tagline">Trusted Pet Care from a Professional Groomer</p></footer>
 </div>
@@ -120,8 +100,6 @@
 const menuButton=document.getElementById('siteMenuToggle'),nav=document.getElementById('siteNavigation');
 menuButton?.addEventListener('click',()=>{const open=nav.classList.toggle('is-open');menuButton.setAttribute('aria-expanded',String(open));});
 nav?.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('is-open');menuButton?.setAttribute('aria-expanded','false');}));
-const tabs=[document.getElementById('intakeTab'),document.getElementById('confirmTab')];
-tabs.forEach((tab,i)=>tab.addEventListener('click',()=>{tabs.forEach((t,j)=>t.setAttribute('aria-selected',String(i===j)));document.querySelectorAll('.tool-panel').forEach((p,j)=>p.classList.toggle('active',i===j));}));
 const val=id=>document.getElementById(id)?.value.trim()||'';
 const dateText=id=>{const v=val(id);if(!v)return '';const d=new Date(v+'T12:00:00');return d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});};
 document.getElementById('intakeForm').addEventListener('submit',e=>{
@@ -143,25 +121,6 @@ document.getElementById('intakeForm').addEventListener('submit',e=>{
  document.getElementById('intakeOutput').value=lines.join('\n');document.getElementById('intakeResult').hidden=false;document.getElementById('intakeResult').scrollIntoView({behavior:'smooth',block:'start'});
 });
 document.getElementById('copyIntake').addEventListener('click',async()=>{const t=document.getElementById('intakeOutput');try{await navigator.clipboard.writeText(t.value);document.getElementById('copyIntake').textContent='Copied!';}catch(e){t.focus();t.select();document.execCommand('copy');document.getElementById('copyIntake').textContent='Select and copy if needed';}});
-const confirmationFields=['confirmName','confirmService','confirmDate','confirmTime','confirmLocation','confirmCare','confirmPrice','confirmCancel'];
-function makeConfirmation(){
- const d=dateText('confirmDate')||'[Day, month, date, year]';
- return 'Hi '+(val('confirmName')||'[Customer name]')+'! Your appointment with Violet’s Pet Care is confirmed:\n\n'+
- '- Service: '+(val('confirmService')||'[Agreed service and duration]')+'\n'+
- '- Date: '+d+'\n'+
- '- Time: '+(val('confirmTime')||'[Start time and time zone]')+'\n'+
- '- Location / meeting format: '+(val('confirmLocation')||'[Agreed address, phone, or other meeting details]')+'\n'+
- '- Care and extras: '+(val('confirmCare')||'[Agreed care tasks and approved extras]')+'\n'+
- '- Total price: '+(val('confirmPrice')||'[Agreed total, including extras and any applicable tax]')+'\n'+
- '- Cancellation terms: '+(val('confirmCancel')||'[Agreed cancellation/rescheduling terms, deadline, and any fee]')+'\n\n'+
- 'Please check these details and let us know if anything needs correcting. For in-person visits, we’ll arrange access separately—please don’t include access codes or key locations in your reply.\n\n'+
- 'We look forward to caring for your pets!\nViolet’s Pet Care';
-}
-const confirmOutput=document.getElementById('confirmOutput');
-confirmationFields.forEach(id=>document.getElementById(id).addEventListener('input',()=>confirmOutput.value=makeConfirmation()));
-confirmOutput.value=makeConfirmation();
-document.getElementById('copyConfirm').addEventListener('click',async()=>{confirmOutput.value=makeConfirmation();try{await navigator.clipboard.writeText(confirmOutput.value);document.getElementById('copyConfirm').textContent='Copied!';}catch(e){confirmOutput.focus();confirmOutput.select();document.execCommand('copy');document.getElementById('copyConfirm').textContent='Select and copy if needed';}});
-document.getElementById('resetConfirm').addEventListener('click',()=>{confirmationFields.forEach(id=>document.getElementById(id).value='');confirmOutput.value=makeConfirmation();document.getElementById('copyConfirm').textContent='Copy Confirmation Message';});
 document.getElementById('intakeForm').addEventListener('reset',()=>{document.getElementById('intakeResult').hidden=true;});
 </script>
 </body></html>
