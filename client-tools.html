@@ -89,6 +89,8 @@
 <div class="tool-field full"><label for="anythingElse">Anything else we should know?</label><textarea id="anythingElse" name="anythingElse" placeholder="Optional"></textarea></div>
 </div>
 <div class="tool-note"><strong>Privacy & booking:</strong> Please do not enter door or alarm codes, passwords, or key locations. We’ll arrange access separately. This form is a request only; your appointment, requested care, and extras are not confirmed until we agree on the details.</div>
+<div class="tool-note"><strong>Cancellation & rescheduling policy:</strong> Please give at least 24 hours’ notice to cancel or reschedule. Cancellations made 24 hours or more before the visit have no cancellation fee. For cancellations with less than 24 hours’ notice, a fee of 50% of the scheduled visit price may apply. If Violet arrives at the agreed time but cannot access the home or pets because access arrangements have not been made, the full scheduled visit fee may apply. Rescheduling is subject to availability. Genuine emergencies may be considered for a fee waiver at Violet’s discretion. Severe weather or unsafe travel conditions may require rescheduling.</div>
+<div class="tool-field full" style="margin:14px 0"><label style="display:flex;align-items:flex-start;gap:10px;font-weight:600"><input type="checkbox" id="policyAcknowledgment" required style="margin-top:4px;min-width:17px;width:17px;height:17px"><span>I have read the cancellation and rescheduling policy. I understand this intake is a request, not a confirmed appointment.</span></label></div>
 <div class="tool-actions"><button type="submit" class="action-main">Prepare My Intake Message</button><button type="reset" class="action-secondary">Clear Form</button></div>
 </form>
 <div id="intakeResult" hidden style="margin-top:22px"><h2>Your intake message is ready</h2><p class="tool-intro">Review it, then copy it and send it to Violet using your preferred contact method.</p><textarea id="intakeOutput" class="output-box" readonly></textarea><div class="tool-actions"><button type="button" id="copyIntake" class="action-main">Copy Intake Message</button><a class="btn" href="mailto:violetspetcare@yahoo.com?subject=Violet%27s%20Pet%20Care%20Intake" style="display:flex;align-items:center;justify-content:center;flex:1;min-height:46px;background:#f0eafa;color:#4b2b81;font-weight:800;border-radius:11px;text-decoration:none">Email Violet</a></div><p class="small-print">Your answers are prepared in this page; they are not saved to a database. Emailing opens your email app and will not send anything until you review and press Send.</p></div>
@@ -136,7 +138,7 @@ document.getElementById('intakeForm').addEventListener('submit',e=>{
  "Extra details: "+(val('extraDetails')||'None provided'),"Backup contact: "+([val('backupName'),val('backupPhone')].filter(Boolean).join(' — ')||'Not provided'),
  "Veterinarian: "+([val('vetName'),val('vetPhone')].filter(Boolean).join(' — ')||'Not provided'),
  "If customer unreachable: "+(val('unreachable')||'To be discussed'),"Other: "+(val('anythingElse')||'None provided'),
- "Please confirm availability, agreed details, and price. No access codes or key locations are included."
+ "I have been shown the cancellation and rescheduling policy. Please confirm availability, agreed details, and price. No access codes or key locations are included."
  ];
  document.getElementById('intakeOutput').value=lines.join('\n');document.getElementById('intakeResult').hidden=false;document.getElementById('intakeResult').scrollIntoView({behavior:'smooth',block:'start'});
 });
