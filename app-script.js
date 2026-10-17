@@ -22,9 +22,9 @@ const totalCostEl = document.getElementById('totalCost');
 const requestCheckoutBtn = document.getElementById('requestCheckout');
 const saveQuoteBtn = document.getElementById('saveQuote');
 const copyQuoteBtn = document.getElementById('copyQuote');
-const stripeCheckoutBtn = document.getElementById('stripeCheckoutBtn');
+const squareQuoteBtn = document.getElementById('squareQuoteBtn');
 const calculatorModal = document.getElementById('calculatorModal');
-const stripeModal = document.getElementById('stripeModal');
+
 const btnServices = document.querySelectorAll('.btn-service');
 const navCalculator = document.querySelector('.nav-calculator');
 
@@ -106,43 +106,18 @@ if (copyQuoteBtn) copyQuoteBtn.addEventListener('click', () => {
   const q = calculateTotal();
   navigator.clipboard.writeText(buildQuoteText(q)).then(() => alert('Quote copied.'));
 });
-async function createSquareCheckout(q) {
+function createSquareCheckout(q) {
   const panel = document.getElementById('squareCheckoutOptions');
   const error = document.getElementById('checkoutError');
   if (!panel || !requestCheckoutBtn) return;
   if (error) { error.classList.add('hidden'); error.textContent = ''; }
   panel.classList.remove('hidden');
-  panel.innerHTML = '<p role="status">Preparing your secure Square checkout…</p>';
-  requestCheckoutBtn.disabled = true;
-  requestCheckoutBtn.textContent = 'Preparing checkout…';
-  try {
-    const response = await fetch('/.netlify/functions/create-square-payment-link', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        service: getSelectedService(),
-        visits: q.visits,
-        dogs: q.dogs,
-        cats: q.cats,
-        boxes: q.boxes,
-        photoUpdates: photoUpdateInput.checked,
-        medicationPets: q.medicationPets,
-        tipPercent: Number(tipPercentSelect.value) || 0
-      })
-    });
-    const data = await response.json();
-    if (!response.ok || !data.url) throw new Error(data.error || 'Secure checkout could not be created.');
-    panel.innerHTML = '<h3>Secure Square checkout is ready</h3><p>Your full quote total is <strong>' + formatMoney(q.total) + '</strong>. Square will show the amount before payment.</p><a class="square-pay-option" href="' + data.url + '" target="_blank" rel="noopener noreferrer"><span><strong>Pay full quote with Square</strong><small>One checkout for the selected visit and extras</small></span><span aria-hidden="true">↗</span></a>';
-  } catch (err) {
-    panel.classList.add('hidden');
-    if (error) {
-      error.textContent = 'One-payment checkout is not connected yet. This site must be deployed through Netlify with SQUARE_ACCESS_TOKEN and SQUARE_LOCATION_ID set in Site configuration → Environment variables. No payment was taken.';
-      error.classList.remove('hidden');
-    }
-  } finally {
-    requestCheckoutBtn.disabled = false;
-    requestCheckoutBtn.textContent = 'Create Secure Checkout for Full Total →';
-  }
+  panel.innerHTML = '<h3>Continue securely with Square</h3>' +
+    '<p>Your estimated quote is <strong>' + formatMoney(q.total) + '</strong>. This GitHub Pages website cannot create a unique Square checkout for a custom total by itself. Please confirm the final amount with Violet before paying.</p>' +
+    '<a class="square-pay-option" href="https://app.squareup.com/appointments/book/qh0xuxt3vxzjxz/LAQGSCJHZ6BSX/start" target="_blank" rel="noopener noreferrer"><span><strong>Book or arrange your visit</strong><small>Open Violet’s Square booking page</small></span><span aria-hidden="true">↗</span></a>' +
+    '<a class="square-pay-option" href="https://square.link/u/1e4jo5bK" target="_blank" rel="noopener noreferrer"><span><strong>Meet &amp; Greet Payment</strong><small>Use only for the meet-and-greet service</small></span><span aria-hidden="true">↗</span></a>';
+  requestCheckoutBtn.disabled = false;
+  requestCheckoutBtn.textContent = 'Continue with Square →';
 }
 if (requestCheckoutBtn) requestCheckoutBtn.addEventListener('click', () => {
   createSquareCheckout(calculateTotal());
@@ -154,22 +129,15 @@ function openCalculator() {
   if (typeof showQuoteStep === 'function') showQuoteStep(1);
 }
 function closeCalculator() { calculatorModal.classList.remove('show'); }
-function openStripeModal() { stripeModal.classList.add('show'); }
-function closeStripeModal() { stripeModal.classList.remove('show'); }
 document.querySelectorAll('.modal-close').forEach(btn => btn.addEventListener('click', e => {
   if (e.target.closest('#calculatorModal')) closeCalculator();
-  if (e.target.closest('#stripeModal')) closeStripeModal();
 }));
 window.addEventListener('click', e => {
   if (e.target === calculatorModal) closeCalculator();
-  if (e.target === stripeModal) closeStripeModal();
 });
 btnServices.forEach(btn => btn.addEventListener('click', openCalculator));
 if (navCalculator) navCalculator.addEventListener('click', e => { e.preventDefault(); openCalculator(); });
-if (stripeCheckoutBtn) stripeCheckoutBtn.addEventListener('click', () => {
-  closeStripeModal();
-  openCalculator();
-});
+if (squareQuoteBtn) squareQuoteBtn.addEventListener('click', openCalculator);
 calculateTotal();
 
 let currentQuoteStep = 1;
