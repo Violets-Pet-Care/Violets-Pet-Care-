@@ -108,24 +108,18 @@ if (copyQuoteBtn) copyQuoteBtn.addEventListener('click', () => {
 });
 function createSquareCheckout(q) {
   const panel = document.getElementById('squareCheckoutOptions');
-  const error = document.getElementById('checkoutError');
-  if (!panel || !requestCheckoutBtn) return;
-  if (error) { error.classList.add('hidden'); error.textContent = ''; }
+  if (!panel) return;
   panel.classList.remove('hidden');
-  panel.innerHTML =
-    '<h3>Pay with Square</h3>' +
-    '<p>Your estimated quote is <strong>' + formatMoney(q.total) + '</strong>. These Square links charge their preset amounts and do not automatically include all quote extras or multiple visits. Please confirm the final amount with Violet before paying.</p>' +
-    '<a class="square-pay-option" href="https://square.link/u/ldikVBKy" target="_blank" rel="noopener noreferrer"><span><strong>30-Minute Drop-In</strong><small>Square payment link</small></span><span aria-hidden="true">↗</span></a>' +
-    '<a class="square-pay-option" href="https://square.link/u/HLLmiCnS" target="_blank" rel="noopener noreferrer"><span><strong>60-Minute Drop-In</strong><small>Square payment link</small></span><span aria-hidden="true">↗</span></a>' +
-    '<a class="square-pay-option" href="https://square.link/u/A9UN0EOD" target="_blank" rel="noopener noreferrer"><span><strong>Additional Dog</strong><small>Square add-on payment link</small></span><span aria-hidden="true">↗</span></a>' +
-    '<a class="square-pay-option" href="https://square.link/u/3tbEasUn" target="_blank" rel="noopener noreferrer"><span><strong>Additional Cat</strong><small>Square add-on payment link</small></span><span aria-hidden="true">↗</span></a>' +
-    '<a class="square-pay-option" href="https://square.link/u/zGAtKBOu" target="_blank" rel="noopener noreferrer"><span><strong>Litter Box Cleaning</strong><small>Square add-on payment link</small></span><span aria-hidden="true">↗</span></a>' +
-    '<a class="square-pay-option" href="https://square.link/u/8ZiTmEZr" target="_blank" rel="noopener noreferrer"><span><strong>Medication Administration</strong><small>Square add-on payment link</small></span><span aria-hidden="true">↗</span></a>' +
-    '<a class="square-pay-option" href="https://square.link/u/YMzJncy4" target="_blank" rel="noopener noreferrer"><span><strong>Additional Pictures</strong><small>Square add-on payment link</small></span><span aria-hidden="true">↗</span></a>' +
-    '<a class="square-pay-option" href="https://square.link/u/1e4jo5bK" target="_blank" rel="noopener noreferrer"><span><strong>Meet &amp; Greet</strong><small>Square payment link</small></span><span aria-hidden="true">↗</span></a>' +
-    '<a class="square-pay-option" href="https://app.squareup.com/appointments/book/qh0xuxt3vxzjxz/LAQGSCJHZ6BSX/start" target="_blank" rel="noopener noreferrer"><span><strong>Book or Arrange a Visit</strong><small>Open Square appointments</small></span><span aria-hidden="true">↗</span></a>';
-  requestCheckoutBtn.disabled = false;
-  requestCheckoutBtn.textContent = 'Continue with Square →';
+  const quoteText = buildQuoteText(q);
+  panel.innerHTML = '<h3>Request This Visit</h3>' + '<p>Your estimate is <strong>' + formatMoney(q.total) + '</strong>. This is not a confirmed booking or a payment request. Violet must confirm availability and the final price. Please do not pay until Violet sends you the approved Square payment link.</p>' + '<a class="square-pay-option" href="client-tools.html#intake"><span><strong>Continue to Client Intake</strong><small>Request availability and final pricing</small></span><span aria-hidden="true">→</span></a>' + '<button type="button" class="square-pay-option" id="copyQuoteForRequest"><span><strong>Copy Estimate Details</strong><small>Copy these details to share with Violet</small></span><span aria-hidden="true">⧉</span></button>';
+  const copyButton = document.getElementById('copyQuoteForRequest');
+  if (copyButton) copyButton.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(quoteText); } catch (_) {
+      const textArea = document.createElement('textarea'); textArea.value = quoteText; document.body.appendChild(textArea); textArea.select(); document.execCommand('copy'); textArea.remove();
+    }
+    copyButton.querySelector('small').textContent = 'Copied — paste into your request or email';
+  });
+  if (requestCheckoutBtn) { requestCheckoutBtn.disabled = false; requestCheckoutBtn.textContent = 'Request a Visit →'; }
 }
 if (requestCheckoutBtn) requestCheckoutBtn.addEventListener('click', () => {
   createSquareCheckout(calculateTotal());
