@@ -13,7 +13,7 @@ const defaultData = {
       pet: "Milo",
       client: "Sam Thompson",
       service: "30-Min Drop-In",
-      price: 45,
+      price: 40,
       status: "Confirmed"
     },
     {
@@ -21,7 +21,7 @@ const defaultData = {
       pet: "Luna",
       client: "Kelly Martin",
       service: "60-Min Drop-In",
-      price: 80,
+      price: 70,
       status: "Pending"
     },
     {
@@ -82,12 +82,12 @@ const defaultData = {
   services: [
     {
       name: "30-Min Drop-In",
-      price: "$45",
+      price: "$40",
       description: "Potty break, food/water, and a quick update."
     },
     {
       name: "60-Min Drop-In",
-      price: "$80",
+      price: "$70",
       description: "Extended visit with enrichment and walking."
     },
     {
