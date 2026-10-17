@@ -632,7 +632,7 @@ input[type="checkbox"] {
   background: #d0d4db;
 }
 
-/* Stripe Payment Container */
+/* Payment container styles */
 .stripe-payment-container {
   padding: 30px;
 }
