@@ -148,7 +148,7 @@
           <div class="contact-box">
             <h3>🧾 Get a Quote</h3>
             <p>Calculate your estimated visit total and review the details before continuing.</p>
-            <button id="stripeCheckoutBtn" class="btn btn-primary">Calculate My Quote</button>
+            <button id="squareQuoteBtn" class="btn btn-primary">Calculate My Quote</button>
           </div>
         </div>
       </div>
@@ -257,20 +257,7 @@
           </div>
         </div>
 
-        <div class="quote-step-actions quote-step-actions-split"><button type="button" class="btn btn-copy" data-prev-step="2">← Edit Extras</button><button id="saveQuote" class="btn btn-save">Save Quote</button><button id="copyQuote" class="btn btn-copy">Copy</button></div><div class="modal-actions"><button id="requestCheckout" class="btn btn-primary">Create Secure Checkout for Full Total →</button></div><p class="checkout-note">Your selected services and extras will be combined into one Square checkout. The payment page will show the full amount before you pay.</p><p class="checkout-note">Ready to request care? <a href="client-tools.html#intake">Complete the mobile-friendly Client Intake Form →</a></p><div id="squareCheckoutOptions" class="square-checkout-options hidden" aria-live="polite"></div><p id="checkoutError" class="checkout-note hidden" role="alert"></p></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Stripe Checkout Modal -->
-  <div id="stripeModal" class="modal">
-    <div class="modal-content">
-      <button class="modal-close" onclick="closeStripeModal()">&times;</button>
-      <div class="stripe-payment-container">
-        <h2>💳 Secure Payment</h2>
-        <p>Choose your visit and complete payment below.</p>
-        
-        <p>Use the quote calculator to estimate your visit, then continue to Square to book. Custom quote totals are not automatically added to Square checkout yet.</p>
+        <div class="quote-step-actions quote-step-actions-split"><button type="button" class="btn btn-copy" data-prev-step="2">← Edit Extras</button><button id="saveQuote" class="btn btn-save">Save Quote</button><button id="copyQuote" class="btn btn-copy">Copy</button></div><div class="modal-actions"><button id="requestCheckout" class="btn btn-primary">Continue with Square →</button></div><p class="checkout-note">Square booking and payment links open securely outside this website. Your custom quote total is not automatically transferred, so confirm the final amount with Violet before paying.</p><p class="checkout-note">Ready to request care? <a href="client-tools.html#intake">Complete the mobile-friendly Client Intake Form →</a></p><div id="squareCheckoutOptions" class="square-checkout-options hidden" aria-live="polite"></div><p id="checkoutError" class="checkout-note hidden" role="alert"></p></div>
       </div>
     </div>
   </div>
