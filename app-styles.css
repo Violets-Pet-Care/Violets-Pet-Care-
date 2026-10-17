@@ -632,44 +632,6 @@ input[type="checkbox"] {
   background: #d0d4db;
 }
 
-/* Payment container styles */
-.stripe-payment-container {
-  padding: 30px;
-}
-
-.stripe-payment-container h2 {
-  color: var(--purple);
-  margin-bottom: 10px;
-}
-
-.stripe-payment-container p {
-  color: #666;
-  margin-bottom: 30px;
-}
-
-.stripe-buttons-wrapper {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 25px;
-}
-
-.stripe-button-section {
-  padding: 20px;
-  border: 1px solid var(--gray);
-  border-radius: 10px;
-  background: #f9fafb;
-}
-
-.stripe-button-section h3 {
-  color: var(--purple);
-  margin-bottom: 15px;
-  font-size: 1.1rem;
-}
-
-stripe-buy-button {
-  width: 100%;
-}
-
 /* Footer */
 .footer {
   background: var(--dark);
@@ -728,9 +690,6 @@ stripe-buy-button {
     grid-template-columns: 1fr;
   }
 
-  .stripe-buttons-wrapper {
-    grid-template-columns: 1fr;
-  }
 }
 
 .specialized-grooming-section{padding:64px 20px;background:#fff}.grooming-content{text-align:center}.grooming-eyebrow{color:var(--teal-dark);text-transform:uppercase;letter-spacing:.08em;font-weight:700;font-size:.82rem;margin-bottom:10px}.specialized-grooming-section h2{color:var(--purple);font-size:clamp(1.7rem,4vw,2.3rem);margin-bottom:16px}.grooming-lead{max-width:820px;margin:0 auto 30px;color:#555;font-size:1.08rem}.grooming-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;text-align:left}.grooming-card{padding:22px;background:#f8f5fc;border:1px solid #e5dced;border-radius:12px}.grooming-card h3{color:var(--purple);margin-bottom:8px}.grooming-card p{color:#555}.grooming-contact{display:inline-block;margin-top:28px;width:auto}.pet-count-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.pet-count-grid .hint{display:block;margin-top:5px}@media(max-width:520px){.pet-count-grid{grid-template-columns:1fr}}
@@ -755,10 +714,7 @@ stripe-buy-button {
 .service-card { display:flex; flex-direction:column; gap:8px; }
 .service-card p:last-of-type { flex:1; }
 .service-card .btn-service { min-height:46px; }
-.stripe-buttons-wrapper { grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr)); gap:16px; }
-.stripe-button-section { display:flex; flex-direction:column; align-items:stretch; gap:10px; }
-.stripe-button-section p { margin-bottom:8px; }
-.stripe-button-section .btn { width:100%; min-height:48px; margin-top:auto; }
+
 @media(max-width:600px) {
  .container { padding-inline:16px; }
  .services-section, .specialized-grooming-section { padding:38px 14px; }
@@ -772,7 +728,7 @@ stripe-buy-button {
 /* Clear pet-fee and secure-checkout request layout */
 #requestCheckout { grid-column:1 / -1; min-height:48px; width:100%; }
 .breakdown-row strong { text-align:right; }
-@media(max-width:600px){ .modal-actions { display:grid; grid-template-columns:1fr; gap:10px; } #requestCheckout { grid-column:auto; } .stripe-buttons-wrapper { grid-template-columns:1fr; } }
+@media(max-width:600px){ .modal-actions { display:grid; grid-template-columns:1fr; gap:10px; } #requestCheckout { grid-column:auto; } }
 
 /* Show/hide optional quote fields on all screen sizes */
 .hidden { display: none !important; }
