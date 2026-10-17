@@ -35,8 +35,8 @@ Cloudflare Workers Free currently includes 100,000 requests/day; D1 has a free t
 All monetary values are integer cents. The browser's submitted total is ignored; the server calculates from service selection and quantities.
 
 ## 3. Pricing currently encoded
-- 30-minute visit: $45
-- 60-minute visit: $80
+- 30-minute visit: $40
+- 60-minute visit: $70
 - Additional dog: $10; additional cat: $5
 - Litter box: $15 per box per visit
 - Photo updates: $5 per pet per visit
