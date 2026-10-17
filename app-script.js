@@ -33,7 +33,7 @@ function formatMoney(value) {
 }
 function getSelectedService() {
   const selected = document.querySelector('input[name="service"]:checked');
-  return selected ? Number(selected.value) : 45;
+  return selected ? Number(selected.value) : 40;
 }
 function calculateTotal() {
   const dogs = Math.max(0, Number(numDogsInput.value) || 0);
@@ -73,7 +73,7 @@ function calculateTotal() {
 }
 
 function buildQuoteText(q) {
-  const service = getSelectedService() === 45 ? '30-minute drop-in ($45 each)' : '60-minute drop-in ($80 each)';
+  const service = getSelectedService() === 40 ? '30-minute drop-in ($40 each)' : '60-minute drop-in ($70 each)';
   return [
     "Violet's Pet Care Quote",
     'Service: ' + service,
