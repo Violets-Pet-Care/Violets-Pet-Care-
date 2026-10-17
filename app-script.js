@@ -112,10 +112,18 @@ function createSquareCheckout(q) {
   if (!panel || !requestCheckoutBtn) return;
   if (error) { error.classList.add('hidden'); error.textContent = ''; }
   panel.classList.remove('hidden');
-  panel.innerHTML = '<h3>Continue securely with Square</h3>' +
-    '<p>Your estimated quote is <strong>' + formatMoney(q.total) + '</strong>. This GitHub Pages website cannot create a unique Square checkout for a custom total by itself. Please confirm the final amount with Violet before paying.</p>' +
-    '<a class="square-pay-option" href="https://app.squareup.com/appointments/book/qh0xuxt3vxzjxz/LAQGSCJHZ6BSX/start" target="_blank" rel="noopener noreferrer"><span><strong>Book or arrange your visit</strong><small>Open Violet’s Square booking page</small></span><span aria-hidden="true">↗</span></a>' +
-    '<a class="square-pay-option" href="https://square.link/u/1e4jo5bK" target="_blank" rel="noopener noreferrer"><span><strong>Meet &amp; Greet Payment</strong><small>Use only for the meet-and-greet service</small></span><span aria-hidden="true">↗</span></a>';
+  panel.innerHTML =
+    '<h3>Pay with Square</h3>' +
+    '<p>Your estimated quote is <strong>' + formatMoney(q.total) + '</strong>. These Square links charge their preset amounts and do not automatically include all quote extras or multiple visits. Please confirm the final amount with Violet before paying.</p>' +
+    '<a class="square-pay-option" href="https://square.link/u/ldikVBKy" target="_blank" rel="noopener noreferrer"><span><strong>30-Minute Drop-In</strong><small>Square payment link</small></span><span aria-hidden="true">↗</span></a>' +
+    '<a class="square-pay-option" href="https://square.link/u/HLLmiCnS" target="_blank" rel="noopener noreferrer"><span><strong>60-Minute Drop-In</strong><small>Square payment link</small></span><span aria-hidden="true">↗</span></a>' +
+    '<a class="square-pay-option" href="https://square.link/u/A9UN0EOD" target="_blank" rel="noopener noreferrer"><span><strong>Additional Dog</strong><small>Square add-on payment link</small></span><span aria-hidden="true">↗</span></a>' +
+    '<a class="square-pay-option" href="https://square.link/u/3tbEasUn" target="_blank" rel="noopener noreferrer"><span><strong>Additional Cat</strong><small>Square add-on payment link</small></span><span aria-hidden="true">↗</span></a>' +
+    '<a class="square-pay-option" href="https://square.link/u/zGAtKBOu" target="_blank" rel="noopener noreferrer"><span><strong>Litter Box Cleaning</strong><small>Square add-on payment link</small></span><span aria-hidden="true">↗</span></a>' +
+    '<a class="square-pay-option" href="https://square.link/u/8ZiTmEZr" target="_blank" rel="noopener noreferrer"><span><strong>Medication Administration</strong><small>Square add-on payment link</small></span><span aria-hidden="true">↗</span></a>' +
+    '<a class="square-pay-option" href="https://square.link/u/YMzJncy4" target="_blank" rel="noopener noreferrer"><span><strong>Additional Pictures</strong><small>Square add-on payment link</small></span><span aria-hidden="true">↗</span></a>' +
+    '<a class="square-pay-option" href="https://square.link/u/1e4jo5bK" target="_blank" rel="noopener noreferrer"><span><strong>Meet &amp; Greet</strong><small>Square payment link</small></span><span aria-hidden="true">↗</span></a>' +
+    '<a class="square-pay-option" href="https://app.squareup.com/appointments/book/qh0xuxt3vxzjxz/LAQGSCJHZ6BSX/start" target="_blank" rel="noopener noreferrer"><span><strong>Book or Arrange a Visit</strong><small>Open Square appointments</small></span><span aria-hidden="true">↗</span></a>';
   requestCheckoutBtn.disabled = false;
   requestCheckoutBtn.textContent = 'Continue with Square →';
 }
