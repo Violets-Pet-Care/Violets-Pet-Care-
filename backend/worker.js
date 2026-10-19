@@ -46,7 +46,7 @@ function calculateQuote(input) {
 function escapeHtml(value) {
   return String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
 }
-async function sendResendEmail(env, {to, subject, text, html}) {
+async function sendResendEmail(env, {to, subject, text, https://violets-pet-care.github.io/Violets-Pet-Care-/admin.html}) {
   if (!env.RESEND_API_KEY || !env.RESEND_FROM_EMAIL || !to) {
     console.warn("Resend email skipped: configure RESEND_API_KEY, RESEND_FROM_EMAIL, and recipient.");
     return false;
