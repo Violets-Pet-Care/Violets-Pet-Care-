@@ -20,6 +20,9 @@ This backend is separate from GitHub Pages and does not use Netlify. It is desig
    - `SQUARE_ACCESS_TOKEN` — use a Square Sandbox access token for testing
    - `SQUARE_LOCATION_ID` — the matching Square Sandbox location ID
    - `ADMIN_API_KEY` — a long random secret (at least 32 random bytes)
+   - `RESEND_API_KEY` — Resend API key, stored as a Cloudflare Worker secret (never in GitHub or browser code)
+   - `RESEND_FROM_EMAIL` — verified sender, e.g. `Violet's Pet Care <bookings@send.yourdomain.com>` (use a sender on a domain verified in Resend)
+   - `ADMIN_NOTIFICATION_EMAIL` — the inbox that should receive new visit-request notifications
    - `SQUARE_ENVIRONMENT` — text variable `sandbox` for testing; change to `production` only after successful tests
 7. Deploy and copy the Worker URL, e.g. `https://violets-pet-care-api.<your-subdomain>.workers.dev`.
 
@@ -61,4 +64,4 @@ Use Square's Sandbox Developer Dashboard. Test:
 - Update the intake/quote form to POST its fields to `/api/requests` and `/api/quote`.
 - Build a secure admin approval screen with proper authentication. Do not reuse the current demo-login screen for real customer records.
 - Configure Square payment webhooks or reconcile payments in Square Dashboard before automatically marking requests as paid.
-- Send customers the link by email/SMS after approval; link creation alone does not send it.
+- Resend email notifications are wired into `worker.js`: new requests notify `ADMIN_NOTIFICATION_EMAIL`, customers with an email receive a pending-request acknowledgement, and approved requests receive their Square payment link. Configure the three Resend variables above and verify the sender domain before expecting delivery. Email delivery failures are logged and do not cancel the saved request or Square approval.
