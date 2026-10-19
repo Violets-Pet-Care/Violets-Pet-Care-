@@ -42,6 +42,74 @@ function calculateQuote(input) {
   const tip = Math.round(subtotal * tipPercent);
   return {serviceCents:service,dogs,cats,visits,litterBoxes:boxes,photoPets,medicationPets,baseCents:base,petFeesCents:petFees,dogDiscountCents:dogDiscount,catDiscountCents:catDiscount,litterCents:litter,photosCents:photos,medicationCents:medication,tipCents:tip,totalCents:subtotal+tip};
 }
+
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+}
+async function sendResendEmail(env, {to, subject, text, html}) {
+  if (!env.RESEND_API_KEY || !env.RESEND_FROM_EMAIL || !to) {
+    console.warn("Resend email skipped: configure RESEND_API_KEY, RESEND_FROM_EMAIL, and recipient.");
+    return false;
+  }
+  try {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {"Authorization": "Bearer " + env.RESEND_API_KEY, "Content-Type": "application/json"},
+      body: JSON.stringify({from: env.RESEND_FROM_EMAIL, to: [to], subject, text, html})
+    });
+    if (!response.ok) {
+      console.error("Resend email failed:", response.status, (await response.text()).slice(0, 1000));
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.error("Resend request failed:", error instanceof Error ? error.message : "Network error");
+    return false;
+  }
+}
+async function sendRequestNotifications(env, {id, input, quote, createdAt}) {
+  const name = String(input.name).trim();
+  const total = usd(quote.totalCents);
+  const details = [
+    "New pet-care request #" + id,
+    "Name: " + name,
+    "Phone: " + String(input.phone).trim(),
+    "Email: " + String(input.email || "").trim(),
+    "Requested date/time: " + input.serviceDate + " " + input.serviceTime,
+    "Address: " + String(input.address || "Not provided"),
+    "Pets: " + String(input.petDetails).trim(),
+    "Estimated quote: " + total,
+    "Notes: " + String(input.notes || "None"),
+    "Received: " + createdAt,
+    "This request is pending and is not a confirmed appointment."
+  ].join("\n");
+  if (env.ADMIN_NOTIFICATION_EMAIL) {
+    await sendResendEmail(env, {
+      to: env.ADMIN_NOTIFICATION_EMAIL,
+      subject: "New Violet's Pet Care visit request",
+      text: details,
+      html: "<h2>New visit request</h2><pre style=\"white-space:pre-wrap;font-family:Arial,sans-serif\">" + escapeHtml(details) + "</pre>"
+    });
+  }
+  if (String(input.email || "").trim()) {
+    await sendResendEmail(env, {
+      to: String(input.email).trim(),
+      subject: "We received your Violet's Pet Care request",
+      text: "Hi " + name + ",\n\nThanks for contacting Violet's Pet Care. Your request has been received and is pending review. This is not a confirmed appointment and no payment has been taken. Violet will follow up to confirm availability, care details, and the final price. Please wait for an approved Square payment link before paying.\n\nRequest reference: " + id,
+      html: "<p>Hi " + escapeHtml(name) + ",</p><p>Thanks for contacting Violet's Pet Care. Your request has been received and is pending review.</p><p><strong>This is not a confirmed appointment, and no payment has been taken.</strong> Violet will follow up to confirm availability, care details, and the final price. Please wait for an approved Square payment link before paying.</p><p>Request reference: " + escapeHtml(id) + "</p>"
+    });
+  }
+}
+async function sendApprovalEmail(env, {email, name, id, amountCents, paymentUrl}) {
+  if (!email) return;
+  await sendResendEmail(env, {
+    to: email,
+    subject: "Your Violet's Pet Care request is approved",
+    text: "Hi " + (name || "there") + ",\n\nViolet has approved your pet-care request. Approved total: " + usd(amountCents) + ". Complete payment using this secure Square checkout link: " + paymentUrl + "\n\nYour appointment is not confirmed until payment and final scheduling are acknowledged by Violet. Request reference: " + id,
+    html: "<p>Hi " + escapeHtml(name || "there") + ",</p><p>Violet has approved your pet-care request.</p><p><strong>Approved total: " + usd(amountCents) + "</strong></p><p><a href=\"" + escapeHtml(paymentUrl) + "\">Continue to secure Square checkout</a></p><p>Your appointment is not confirmed until payment and final scheduling are acknowledged by Violet.</p><p>Request reference: " + escapeHtml(id) + "</p>"
+  });
+}
+
 async function adminAuth(request, env) {
   const token = request.headers.get("Authorization") || "";
   return Boolean(env.ADMIN_API_KEY && token === "Bearer " + env.ADMIN_API_KEY);
@@ -91,6 +159,7 @@ export default {
         const createdAt = new Date().toISOString();
         await env.DB.prepare("INSERT INTO visit_requests (id, created_at, status, customer_name, phone, email, service_date, service_time, address, pet_details, notes, quote_json, quote_cents) VALUES (?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
           .bind(id,createdAt,String(input.name).trim(),String(input.phone).trim(),String(input.email||"").trim().slice(0,254),String(input.serviceDate),String(input.serviceTime),String(input.address||"").slice(0,500),String(input.petDetails).trim(),String(input.notes||"").slice(0,3000),JSON.stringify(quote),quote.totalCents).run();
+        await sendRequestNotifications(env, {id, input, quote, createdAt});
         return json({id,status:"pending",quoteCents:quote.totalCents,message:"Request received. This is not a confirmed appointment. Wait for Violet to approve the visit and send a payment link."},201);
       }
       if (url.pathname === "/api/admin/requests" && request.method === "GET") {
@@ -103,7 +172,7 @@ export default {
         if (!await adminAuth(request,env)) return json({error:"Unauthorized"},401);
         const body = await request.json();
         const requestId = approveMatch[1];
-        const row = await env.DB.prepare("SELECT id,status,quote_cents FROM visit_requests WHERE id=?").bind(requestId).first();
+        const row = await env.DB.prepare("SELECT id,status,quote_cents,customer_name,email FROM visit_requests WHERE id=?").bind(requestId).first();
         if (!row) return json({error:"Request not found"},404);
         if (row.status !== "pending") return json({error:"Only pending requests can be approved."},409);
         const amountCents = Number.isInteger(body.approvedCents) ? body.approvedCents : row.quote_cents;
@@ -111,6 +180,7 @@ export default {
         const link = await createSquareLink(env,amountCents,requestId);
         await env.DB.prepare("UPDATE visit_requests SET status='approved_awaiting_payment', approved_cents=?, payment_url=?, square_payment_link_id=? WHERE id=? AND status='pending'")
           .bind(amountCents,link.url,link.id,requestId).run();
+        await sendApprovalEmail(env, {email:row.email, name:row.customer_name, id:requestId, amountCents, paymentUrl:link.url});
         return json({id:requestId,status:"approved_awaiting_payment",approvedCents:amountCents,approvedTotal:usd(amountCents),paymentUrl:link.url});
       }
       if (url.pathname === "/api/admin/requests" && request.method === "PATCH") {
