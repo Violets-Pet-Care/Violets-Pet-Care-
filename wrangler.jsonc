@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "violets-pet-care-api",
+  "main": "backend/worker.js",
+  "compatibility_date": "2026-10-19",
+  "observability": {
+    "enabled": true
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "violets-pet-care",
+      "database_id": "9ccb92f5-8e66-429e-b50f-4d6808346139"
+    }
+  ]
+}
