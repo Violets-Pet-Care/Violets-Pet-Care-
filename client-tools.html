@@ -112,41 +112,44 @@ intakeForm.addEventListener('submit',async e=>{
  if(val('_honey'))return;
  const extras=[...document.querySelectorAll('input[name="extras"]:checked')].map(x=>x.value);
  const data={
-  _subject:"New Violet's Pet Care Client Intake",
-  _template:"table",
-  _honey:"",
-  "Customer name":val('clientName'),
-  "Phone number":val('clientPhone'),
-  "Email":val('clientEmail')||'Not provided',
-  "Requested service":val('requestedService'),
-  "Preferred date":dateText('preferredDate')||'Flexible / not specified',
-  "Preferred start time":val('preferredTime')||'Flexible / not specified',
-  "Meet-and-greet format":val('meetingFormat')||'Not specified',
-  "Visit address / meeting location":val('visitAddress')||'To be discussed',
-  "Arrival notes":val('arrivalNotes')||'None provided',
-  "Pet names / species / count":val('petDetails'),
-  "Health / behavior / handling":val('healthNeeds')||'None provided',
-  "Care tasks / instructions":val('careTasks')||'To be discussed',
-  "Requested extras":extras.join(', ')||'None selected',
-  "Extra details":val('extraDetails')||'None provided',
-  "Backup contact name":val('backupName')||'Not provided',
-  "Backup contact phone":val('backupPhone')||'Not provided',
-  "Veterinarian / clinic":val('vetName')||'Not provided',
-  "Veterinarian phone":val('vetPhone')||'Not provided',
-  "If customer unreachable":val('unreachable')||'To be discussed',
-  "Other notes":val('anythingElse')||'None provided',
-  "Policy acknowledgment":"Customer checked the required policy acknowledgment. Intake is a request, not a confirmed appointment."
+  name:val('clientName'),
+  phone:val('clientPhone'),
+  email:val('clientEmail'),
+  service:val('requestedService'),
+  serviceDate:val('preferredDate'),
+  serviceTime:val('preferredTime'),
+  address:val('visitAddress'),
+  petDetails:val('petDetails'),
+  notes:[
+   'Meet-and-greet format: '+(val('meetingFormat')||'Not specified'),
+   'Arrival notes: '+(val('arrivalNotes')||'None provided'),
+   'Health / behavior / handling: '+(val('healthNeeds')||'None provided'),
+   'Care tasks / instructions: '+(val('careTasks')||'To be discussed'),
+   'Requested extras: '+(extras.join(', ')||'None selected'),
+   'Extra details: '+(val('extraDetails')||'None provided'),
+   'Backup contact name: '+(val('backupName')||'Not provided'),
+   'Backup contact phone: '+(val('backupPhone')||'Not provided'),
+   'Veterinarian / clinic: '+(val('vetName')||'Not provided'),
+   'Veterinarian phone: '+(val('vetPhone')||'Not provided'),
+   'If customer unreachable: '+(val('unreachable')||'To be discussed'),
+   'Other notes: '+(val('anythingElse')||'None provided'),
+   'Policy acknowledgment: Customer acknowledged the cancellation policy and understands this is a request, not a confirmed appointment.'
+  ].join('\\n')
  };
  sendButton.disabled=true;sendButton.textContent='Sending…';
  submissionStatus.hidden=false;submissionStatus.textContent='Sending your intake to Violet. Please keep this page open until you see confirmation.';
  try{
-  const response=await fetch('https://formsubmit.co/ajax/violetspetcare@yahoo.com',{
+  const response=await fetch('https://violets-pet-care-api.violetspetcare.workers.dev/api/intake',{
    method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)
   });
-  const result=await response.json();
-  if(!response.ok||result.success!==true)throw new Error(result.message||'The form service did not confirm delivery.');
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok||result.saved!==true)throw new Error(result.error||result.message||'The server did not confirm that your intake was saved.');
   intakeForm.reset();
-  submissionStatus.textContent='Thank you! Your intake was submitted to Violet’s Pet Care. Your answers have been cleared from this form on this device. This is a request, not a confirmed appointment.';
+  if(result.emailStatus && result.emailStatus.adminEmailSent===true){
+   submissionStatus.textContent='Thank you! Your intake was saved and the email service accepted Violet’s notification. This is a request, not a confirmed appointment. Reference: '+result.id+'.';
+  }else{
+   submissionStatus.textContent='Your intake was saved (reference '+result.id+'), but the notification email could not be confirmed. Please also email violetspetcare@yahoo.com and include this reference. Do not submit this form again for the same request. This is not a confirmed appointment.';
+  }
   submissionStatus.scrollIntoView({behavior:'smooth',block:'center'});
  }catch(error){
   submissionStatus.textContent='We could not confirm that your intake was sent, so your answers have been kept on this page to prevent data loss. Please try again, or email violetspetcare@yahoo.com directly. If this is your first submission, Violet may need to verify the form service’s activation email before messages can arrive.';
