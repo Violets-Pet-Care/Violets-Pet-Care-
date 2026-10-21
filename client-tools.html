@@ -134,7 +134,7 @@ intakeForm.addEventListener('submit',async e=>{
    'If customer unreachable: '+(val('unreachable')||'To be discussed'),
    'Other notes: '+(val('anythingElse')||'None provided'),
    'Policy acknowledgment: Customer acknowledged the cancellation policy and understands this is a request, not a confirmed appointment.'
-  ].join('\\n')
+  ].join('\n')
  };
  sendButton.disabled=true;sendButton.textContent='Sending…';
  submissionStatus.hidden=false;submissionStatus.textContent='Sending your intake to Violet. Please keep this page open until you see confirmation.';
@@ -153,7 +153,7 @@ intakeForm.addEventListener('submit',async e=>{
   }
   submissionStatus.scrollIntoView({behavior:'smooth',block:'center'});
  }catch(error){
-  submissionStatus.textContent='We could not confirm that your intake was sent, so your answers have been kept on this page to prevent data loss. Please try again, or email violetspetcare@yahoo.com directly. If this is your first submission, Violet may need to verify the form service’s activation email before messages can arrive.';
+  submissionStatus.textContent='We could not confirm that your intake was sent, so your answers have been kept on this page to prevent data loss. Please try again after checking your internet connection, or email violetspetcare@yahoo.com directly. If the server saved the request but the response was interrupted, avoid submitting it again until you have checked with Violet.';
  }finally{
   sendButton.disabled=false;sendButton.textContent='Send Intake Securely';
  }
