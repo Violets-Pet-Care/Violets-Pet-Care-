@@ -3,7 +3,7 @@
 This backend is separate from GitHub Pages and does not use Netlify. It is designed for Cloudflare Workers + D1.
 
 ## Important before production
-- This is an API scaffold. It is not deployed and has not been connected to your Cloudflare or Square accounts.
+- The Worker and D1 resources are managed in Cloudflare, separately from GitHub Pages. A GitHub commit does not automatically deploy `backend/worker.js` unless you configured a deployment pipeline. After code changes, confirm the deployed Worker contains the same code before testing.
 - Start in Square Sandbox. Never paste access tokens into GitHub, HTML/JS, or chat.
 - The public request endpoint is intentionally request-only. It cannot create a payment link.
 - Only an admin request authenticated with ADMIN_API_KEY can approve a pending request and create a Square link.
@@ -29,7 +29,9 @@ This backend is separate from GitHub Pages and does not use Netlify. It is desig
 Cloudflare Workers Free currently includes 100,000 requests/day; D1 has a free tier. Check current limits before relying on it for business-critical traffic.
 
 ## 2. API routes
+- `GET /` or `GET /health`: returns a simple API health check.
 - `POST /api/quote`: calculates a server-side estimate.
+- `POST /api/intake`: saves the general client intake as a pending request with pricing to be confirmed; returns whether Resend accepted the notification.
 - `POST /api/requests`: saves a pending request and server-calculated estimate. Never charges.
 - `GET /api/admin/requests`: lists requests; requires `Authorization: Bearer ADMIN_API_KEY`.
 - `POST /api/admin/requests/{id}/approve`: approves a pending request and creates a Square payment link for the approved cents. Optional body: `{"approvedCents":7000}`. If omitted, uses the server-calculated quote. This route is admin-secret protected.
@@ -38,8 +40,8 @@ Cloudflare Workers Free currently includes 100,000 requests/day; D1 has a free t
 All monetary values are integer cents. The browser's submitted total is ignored; the server calculates from service selection and quantities.
 
 ## 3. Pricing currently encoded
-- 30-minute visit: $40
-- 60-minute visit: $70
+- 30-minute visit: $45
+- 60-minute visit: $80
 - Additional dog: $10; additional cat: $5
 - Litter box: $15 per box per visit
 - Photo updates: $5 per pet per visit
@@ -61,7 +63,7 @@ Use Square's Sandbox Developer Dashboard. Test:
 
 ## 5. Still needed for full integration
 - Add the Worker URL to the website as a public API base URL (not a secret).
-- Update the intake/quote form to POST its fields to `/api/requests` and `/api/quote`.
+- The client intake form now POSTs to `/api/intake`. The quote calculator still needs to be connected to `/api/quote` and the visit-request workflow.
 - Build a secure admin approval screen with proper authentication. Do not reuse the current demo-login screen for real customer records.
 - Configure Square payment webhooks or reconcile payments in Square Dashboard before automatically marking requests as paid.
 - Resend email notifications are wired into `worker.js`: new requests notify `ADMIN_NOTIFICATION_EMAIL`, customers with an email receive a pending-request acknowledgement, and approved requests receive their Square payment link. Configure the three Resend variables above and verify the sender domain before expecting delivery. Email delivery failures are logged and do not cancel the saved request or Square approval.
