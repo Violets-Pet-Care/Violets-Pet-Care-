@@ -65,3 +65,12 @@ Use Square's Sandbox Developer Dashboard. Test:
 - Build a secure admin approval screen with proper authentication. Do not reuse the current demo-login screen for real customer records.
 - Configure Square payment webhooks or reconcile payments in Square Dashboard before automatically marking requests as paid.
 - Resend email notifications are wired into `worker.js`: new requests notify `ADMIN_NOTIFICATION_EMAIL`, customers with an email receive a pending-request acknowledgement, and approved requests receive their Square payment link. Configure the three Resend variables above and verify the sender domain before expecting delivery. Email delivery failures are logged and do not cancel the saved request or Square approval.
+
+## 6. Resend email configuration (current testing setup)
+Set these under Cloudflare Workers & Pages > `violets-pet-care-api` > Settings > Runtime variables and secrets > Production:
+
+- `RESEND_API_KEY` — **Secret**; keep the API key in Cloudflare only. Never commit it to GitHub or put it in browser code.
+- `ADMIN_NOTIFICATION_EMAIL` — **Text**; `violetspetcare@yahoo.com`.
+- `RESEND_FROM_EMAIL` — **Text**; `onboarding@resend.dev` may be used only for Resend's limited testing flow if the account permits it. It is not a verified production sender for customer emails. For production, verify a domain in Resend and use a sender address on that domain.
+
+These are Cloudflare Worker runtime settings; adding them to this README does not configure Cloudflare automatically. Save the settings in Cloudflare and redeploy if prompted. Do not add the API key to this repository.
