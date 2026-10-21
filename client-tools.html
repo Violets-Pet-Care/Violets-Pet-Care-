@@ -145,6 +145,7 @@ intakeForm.addEventListener('submit',async e=>{
   const result=await response.json().catch(()=>({}));
   if(!response.ok||result.saved!==true)throw new Error(result.error||result.message||'The server did not confirm that your intake was saved.');
   intakeForm.reset();
+  submissionStatus.hidden=false;
   if(result.emailStatus && result.emailStatus.adminEmailSent===true){
    submissionStatus.textContent='Thank you! Your intake was saved and the email service accepted Violet’s notification. This is a request, not a confirmed appointment. Reference: '+result.id+'.';
   }else{
