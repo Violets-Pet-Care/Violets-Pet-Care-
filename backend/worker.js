@@ -7,7 +7,7 @@
 const ORIGIN = "https://violets-pet-care.github.io";
 const CORS = {
   "Access-Control-Allow-Origin": ORIGIN,
-  "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
+  "Access-Control-Allow-Methods": "GET,POST,PATCH,OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type,Authorization",
   "Vary": "Origin"
 };
@@ -25,7 +25,7 @@ function calculateQuote(input) {
   const boxes = Math.max(0, Math.min(30, Math.floor(Number(input.litterBoxes)||0)));
   const photoPets = input.photoUpdates ? dogs + cats : 0;
   const medicationPets = input.medication ? Math.max(1, Math.min(30, Math.floor(Number(input.medicationPets)||1))) : 0;
-  if (![4000,7000].includes(service)) throw new Error("Invalid service price. Select $40 for 30 minutes or $70 for 60 minutes.");
+  if (![4500,8000].includes(service)) throw new Error("Invalid service price. Select $45 for 30 minutes or $80 for 60 minutes.");
   const base = service * visits;
   // First pet is included in the base visit; additional pets are charged by species.
   const includedDog = dogs > 0 ? 1 : 0;
@@ -69,7 +69,7 @@ async function sendResendEmail(env, {to, subject, text, html}) {
 }
 async function sendRequestNotifications(env, {id, input, quote, createdAt}) {
   const name = String(input.name).trim();
-  const total = usd(quote.totalCents);
+  const total = Number.isInteger(quote.totalCents) ? usd(quote.totalCents) : "To be confirmed";
   const details = [
     "New pet-care request #" + id,
     "Name: " + name,
@@ -83,8 +83,10 @@ async function sendRequestNotifications(env, {id, input, quote, createdAt}) {
     "Received: " + createdAt,
     "This request is pending and is not a confirmed appointment."
   ].join("\n");
+  let adminEmailSent = false;
+  let customerEmailSent = null;
   if (env.ADMIN_NOTIFICATION_EMAIL) {
-    await sendResendEmail(env, {
+    adminEmailSent = await sendResendEmail(env, {
       to: env.ADMIN_NOTIFICATION_EMAIL,
       subject: "New Violet's Pet Care visit request",
       text: details,
@@ -92,13 +94,14 @@ async function sendRequestNotifications(env, {id, input, quote, createdAt}) {
     });
   }
   if (String(input.email || "").trim()) {
-    await sendResendEmail(env, {
+    customerEmailSent = await sendResendEmail(env, {
       to: String(input.email).trim(),
       subject: "We received your Violet's Pet Care request",
       text: "Hi " + name + ",\n\nThanks for contacting Violet's Pet Care. Your request has been received and is pending review. This is not a confirmed appointment and no payment has been taken. Violet will follow up to confirm availability, care details, and the final price. Please wait for an approved Square payment link before paying.\n\nRequest reference: " + id,
       html: "<p>Hi " + escapeHtml(name) + ",</p><p>Thanks for contacting Violet's Pet Care. Your request has been received and is pending review.</p><p><strong>This is not a confirmed appointment, and no payment has been taken.</strong> Violet will follow up to confirm availability, care details, and the final price. Please wait for an approved Square payment link before paying.</p><p>Request reference: " + escapeHtml(id) + "</p>"
     });
   }
+  return {adminEmailSent, customerEmailSent};
 }
 async function sendApprovalEmail(env, {email, name, id, amountCents, paymentUrl}) {
   if (!email) return;
@@ -145,9 +148,29 @@ export default {
     if (request.method === "OPTIONS") return new Response(null,{status:204,headers:CORS});
     const url = new URL(request.url);
     try {
+      if ((url.pathname === "/" || url.pathname === "/health") && request.method === "GET") {
+        return json({service:"Violet's Pet Care API",status:"ok",routes:["POST /api/quote","POST /api/intake","POST /api/requests","GET /api/admin/requests","POST /api/admin/requests/{id}/approve","PATCH /api/admin/requests"]});
+      }
       if (url.pathname === "/api/quote" && request.method === "POST") {
         const input = await request.json();
         return json({quote:calculateQuote(input)});
+      }
+      if (url.pathname === "/api/intake" && request.method === "POST") {
+        const input = await request.json();
+        const required = ["name","phone","service","petDetails"];
+        for (const field of required) if (!String(input[field] || "").trim()) return json({error:"Missing required field: "+field},400);
+        if (String(input.name).length>120 || String(input.phone).length>40 || String(input.petDetails).length>3000) return json({error:"A field is too long."},400);
+        const id = crypto.randomUUID();
+        const createdAt = new Date().toISOString();
+        const serviceDate = String(input.serviceDate || "Flexible / not specified").slice(0,80);
+        const serviceTime = String(input.serviceTime || "Flexible / not specified").slice(0,80);
+        const petDetails = "Requested service: " + String(input.service).trim().slice(0,160) + "\nPets: " + String(input.petDetails).trim();
+        const notes = String(input.notes || "").slice(0,5000);
+        const quote = {kind:"intake",totalCents:null};
+        await env.DB.prepare("INSERT INTO visit_requests (id, created_at, status, customer_name, phone, email, service_date, service_time, address, pet_details, notes, quote_json, quote_cents) VALUES (?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+          .bind(id,createdAt,String(input.name).trim(),String(input.phone).trim(),String(input.email||"").trim().slice(0,254),serviceDate,serviceTime,String(input.address||"").slice(0,500),petDetails,notes,JSON.stringify(quote),0).run();
+        const emailStatus = await sendRequestNotifications(env, {id,input:{...input,name:String(input.name).trim(),phone:String(input.phone).trim(),email:String(input.email||"").trim(),serviceDate,serviceTime,address:String(input.address||""),petDetails,notes},quote,createdAt});
+        return json({id,status:"pending",saved:true,emailStatus,message:"Your intake was saved. This is a request, not a confirmed appointment."},201);
       }
       if (url.pathname === "/api/requests" && request.method === "POST") {
         const input = await request.json();
@@ -159,8 +182,8 @@ export default {
         const createdAt = new Date().toISOString();
         await env.DB.prepare("INSERT INTO visit_requests (id, created_at, status, customer_name, phone, email, service_date, service_time, address, pet_details, notes, quote_json, quote_cents) VALUES (?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
           .bind(id,createdAt,String(input.name).trim(),String(input.phone).trim(),String(input.email||"").trim().slice(0,254),String(input.serviceDate),String(input.serviceTime),String(input.address||"").slice(0,500),String(input.petDetails).trim(),String(input.notes||"").slice(0,3000),JSON.stringify(quote),quote.totalCents).run();
-        await sendRequestNotifications(env, {id, input, quote, createdAt});
-        return json({id,status:"pending",quoteCents:quote.totalCents,message:"Request received. This is not a confirmed appointment. Wait for Violet to approve the visit and send a payment link."},201);
+        const emailStatus = await sendRequestNotifications(env, {id, input, quote, createdAt});
+        return json({id,status:"pending",quoteCents:quote.totalCents,emailStatus,message:"Request received. This is not a confirmed appointment. Wait for Violet to approve the visit and send a payment link."},201);
       }
       if (url.pathname === "/api/admin/requests" && request.method === "GET") {
         if (!await adminAuth(request,env)) return json({error:"Unauthorized"},401);
