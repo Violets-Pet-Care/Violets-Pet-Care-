@@ -1,3 +1,5 @@
+// wrangler.jsonc
+"name": "violets-pet-care",
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "violets-pet-care-api",
