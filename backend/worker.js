@@ -25,7 +25,7 @@ function calculateQuote(input) {
   const boxes = Math.max(0, Math.min(30, Math.floor(Number(input.litterBoxes)||0)));
   const photoPets = input.photoUpdates ? dogs + cats : 0;
   const medicationPets = input.medication ? Math.max(1, Math.min(30, Math.floor(Number(input.medicationPets)||1))) : 0;
-  if (![4500,8000].includes(service)) throw new Error("Invalid service price. Select $45 for 30 minutes or $80 for 60 minutes.");
+  if (![4000,7000].includes(service)) throw new Error("Invalid service price. Select $40 for 30 minutes or $70 for 60 minutes.");
   const base = service * visits;
   // First pet is included in the base visit; additional pets are charged by species.
   const includedDog = dogs > 0 ? 1 : 0;
