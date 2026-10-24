@@ -1,4 +1,7 @@
 const STORAGE_KEY = "violetsPetCareAdminData";
+const API_BASE = "https://violets-pet-care-api.violetspetcare.workers.dev";
+const ADMIN_SESSION_KEY = "violetsPetCareAdminSession";
+let inboxEmails = [];
 
 // Default sample data
 const defaultData = {
@@ -113,28 +116,23 @@ function saveData() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
 }
 
-function handleLogin(e) {
+async function handleLogin(e) {
   e.preventDefault();
-
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
-
-  const validEmail = "admin@violetspetcare.com";
-  const validPassword = "password123";
-
-  if (email === validEmail && password === validPassword) {
+  const password = document.getElementById("password").value;
+  const submit = document.querySelector('#loginForm button[type="submit"]');
+  submit.disabled = true;
+  try {
+    const response = await fetch(API_BASE + "/api/admin/login", {
+      method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({password})
+    });
+    const result = await response.json();
+    if (!response.ok || !result.token) throw new Error(result.error || "Sign-in failed.");
+    sessionStorage.setItem(ADMIN_SESSION_KEY,result.token);
     appData.isLoggedIn = true;
-    saveData();
     showDashboard();
-  } else {
-    alert("Invalid email or password. Try the demo credentials.");
-  }
-}
-
-function handleDemoLogin() {
-  document.getElementById("email").value = "admin@violetspetcare.com";
-  document.getElementById("password").value = "password123";
-  handleLogin({ preventDefault: () => {} });
+  } catch (error) {
+    alert(error.message || "Could not sign in. Check your connection and try again.");
+  } finally { submit.disabled = false; }
 }
 
 function showDashboard() {
@@ -150,12 +148,14 @@ function showDashboard() {
   renderCustomers();
   renderRoutes();
   renderQuotes();
+  renderInbox();
   renderServices();
   renderEarnings();
 }
 
 function logout() {
   appData.isLoggedIn = false;
+  sessionStorage.removeItem(ADMIN_SESSION_KEY);
   saveData();
   document.getElementById("loginSection").style.display = "block";
   document.getElementById("dashboardContent").style.display = "none";
@@ -164,10 +164,10 @@ function logout() {
 
 function switchPage(pageName) {
   document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-  document.getElementById(`page-${pageName}`).classList.add("active");
-
+  document.getElementById("page-" + pageName).classList.add("active");
   document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
-  document.querySelector(`[data-page="${pageName}"]`).classList.add("active");
+  document.querySelector('[data-page="' + pageName + '"]').classList.add("active");
+  if (pageName === "inbox") loadInbox();
 }
 
 function renderOverview() {
@@ -409,9 +409,52 @@ function initRoutePlanner(){
  drawDailyRoute();
 }
 
+async function loadInbox() {
+  const status = document.getElementById("inboxStatus");
+  const list = document.getElementById("inboxList");
+  const token = sessionStorage.getItem(ADMIN_SESSION_KEY);
+  if (!token) { status.textContent = "Please sign in again to view your inbox."; list.textContent = ""; return; }
+  status.textContent = "Loading messages…";
+  try {
+    const response = await fetch(API_BASE + "/api/admin/emails", {headers:{Authorization:"Bearer "+token}});
+    const result = await response.json();
+    if (response.status === 401) { logout(); throw new Error("Your session expired. Please sign in again."); }
+    if (!response.ok) throw new Error(result.error || "Inbox could not be loaded.");
+    inboxEmails = result.emails || [];
+    renderInbox();
+    status.textContent = inboxEmails.length ? inboxEmails.length + " message(s)" : "No emails received yet.";
+  } catch (error) { status.textContent = error.message || "Unable to load inbox."; }
+}
+function renderInbox() {
+  const list = document.getElementById("inboxList");
+  if (!list) return;
+  const unread = inboxEmails.filter(email => !email.is_read).length;
+  const counter = document.getElementById("inboxUnreadCount");
+  if (counter) counter.textContent = unread ? "(" + unread + " new)" : "";
+  if (!inboxEmails.length) { list.innerHTML = '<p>No messages loaded. Tap “Refresh Inbox”.</p>'; return; }
+  list.innerHTML = inboxEmails.map(email => {
+    const sender = escapeInbox(email.sender);
+    const subject = escapeInbox(email.subject || "(No subject)");
+    const body = escapeInbox(email.text_body || "(This message has no plain-text body.)");
+    const date = escapeInbox(new Date(email.received_at).toLocaleString());
+    return '<article class="booking-card" style="margin-bottom:12px"><h3>'+(email.is_read?'':'🟣 ')+subject+'</h3><p><strong>From:</strong> '+sender+'</p><p><strong>Received:</strong> '+date+'</p><details><summary>Read message</summary><pre style="white-space:pre-wrap;overflow-wrap:anywhere;font:inherit">'+body+'</pre><button type="button" class="btn btn-secondary" data-mark-read="'+escapeInbox(email.id)+'">'+(email.is_read?'Mark unread':'Mark read')+'</button></details></article>';
+  }).join("");
+}
+function escapeInbox(value) { return String(value ?? "").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch])); }
+document.getElementById("refreshInboxBtn")?.addEventListener("click",loadInbox);
+document.getElementById("inboxList")?.addEventListener("click",async e=>{
+  const button=e.target.closest("[data-mark-read]"); if(!button)return;
+  const email=inboxEmails.find(item=>item.id===button.dataset.markRead); if(!email)return;
+  const token=sessionStorage.getItem(ADMIN_SESSION_KEY);
+  try {
+    const response=await fetch(API_BASE+"/api/admin/emails/"+encodeURIComponent(email.id),{method:"PATCH",headers:{"Content-Type":"application/json",Authorization:"Bearer "+token},body:JSON.stringify({isRead:!email.is_read})});
+    const result=await response.json(); if(!response.ok)throw new Error(result.error||"Could not update message.");
+    email.is_read=result.isRead?1:0; renderInbox();
+  } catch(error){alert(error.message||"Could not update message.");}
+});
+
 // Event Listeners
 document.getElementById("loginForm").addEventListener("submit", handleLogin);
-document.getElementById("demoLoginBtn").addEventListener("click", handleDemoLogin);
 document.getElementById("logoutBtn").addEventListener("click", logout);
 document.getElementById("saveSettingsBtn").addEventListener("click", saveSettings);
 
@@ -425,6 +468,9 @@ document.querySelectorAll(".nav-link").forEach(link => {
 
 // Initialize
 initRoutePlanner();
-if (appData.isLoggedIn) {
+if (appData.isLoggedIn && sessionStorage.getItem(ADMIN_SESSION_KEY)) {
   showDashboard();
+} else {
+  appData.isLoggedIn = false;
+  saveData();
 }
