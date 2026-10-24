@@ -113,9 +113,71 @@ async function sendApprovalEmail(env, {email, name, id, amountCents, paymentUrl}
   });
 }
 
+
+function b64urlEncode(text) {
+  const bytes = new TextEncoder().encode(text);
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary).replace(/=/g,"").replace(/\+/g,"-").replace(/\//g,"_");
+}
+function b64urlDecode(text) {
+  const base = text.replace(/-/g,"+").replace(/_/g,"/");
+  const binary = atob(base + "=".repeat((4 - base.length % 4) % 4));
+  const bytes = Uint8Array.from(binary, ch => ch.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
+async function hmac(secret, message) {
+  const key = await crypto.subtle.importKey("raw",new TextEncoder().encode(secret),{name:"HMAC",hash:"SHA-256"},false,["sign"]);
+  return new Uint8Array(await crypto.subtle.sign("HMAC",key,new TextEncoder().encode(message)));
+}
+function bytesToBase64(bytes) {
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary);
+}
+async function makeAdminSession(env) {
+  const payload = b64urlEncode(JSON.stringify({exp:Math.floor(Date.now()/1000)+8*60*60,sub:"admin"}));
+  const sig = bytesToBase64(await hmac(env.ADMIN_SESSION_SECRET,payload)).replace(/=/g,"").replace(/\+/g,"-").replace(/\//g,"_");
+  return payload + "." + sig;
+}
+async function validAdminSession(request,env) {
+  const auth = request.headers.get("Authorization") || "";
+  const token = auth.startsWith("Bearer ") ? auth.slice(7) : "";
+  if (!token || !env.ADMIN_SESSION_SECRET) return false;
+  const parts = token.split(".");
+  if (parts.length !== 2) return false;
+  try {
+    const expected = await hmac(env.ADMIN_SESSION_SECRET,parts[0]);
+    const actualText = parts[1].replace(/-/g,"+").replace(/_/g,"/");
+    const actual = Uint8Array.from(atob(actualText + "=".repeat((4-actualText.length%4)%4)),c=>c.charCodeAt(0));
+    if (actual.length !== expected.length || !actual.every((v,i)=>v===expected[i])) return false;
+    const payload = JSON.parse(b64urlDecode(parts[0]));
+    return payload.sub === "admin" && payload.exp > Math.floor(Date.now()/1000);
+  } catch { return false; }
+}
+async function verifyResendWebhook(request,env,rawBody) {
+  const secret = env.RESEND_WEBHOOK_SECRET || "";
+  if (!secret) return false;
+  const id = request.headers.get("svix-id") || "";
+  const timestamp = request.headers.get("svix-timestamp") || "";
+  const signatures = request.headers.get("svix-signature") || "";
+  if (!id || !timestamp || !signatures || !/^\d+$/.test(timestamp)) return false;
+  if (Math.abs(Math.floor(Date.now()/1000)-Number(timestamp)) > 5*60) return false;
+  const encoded = secret.startsWith("whsec_") ? secret.slice(6) : secret;
+  let secretBytes;
+  try { secretBytes = Uint8Array.from(atob(encoded),c=>c.charCodeAt(0)); } catch { return false; }
+  const key = await crypto.subtle.importKey("raw",secretBytes,{name:"HMAC",hash:"SHA-256"},false,["sign"]);
+  const digest = new Uint8Array(await crypto.subtle.sign("HMAC",key,new TextEncoder().encode(id+"."+timestamp+"."+rawBody)));
+  const expected = bytesToBase64(digest);
+  return signatures.split(" ").some(item => {
+    const parts = item.split(",");
+    return parts.length===2 && parts[0]==="v1" && parts[1]===expected;
+  });
+}
 async function adminAuth(request, env) {
   const token = request.headers.get("Authorization") || "";
-  return Boolean(env.ADMIN_API_KEY && token === "Bearer " + env.ADMIN_API_KEY);
+  if (env.ADMIN_API_KEY && token === "Bearer " + env.ADMIN_API_KEY) return true;
+  return validAdminSession(request,env);
 }
 async function createSquareLink(env, amountCents, requestId) {
   const sandbox = env.SQUARE_ENVIRONMENT === "sandbox";
@@ -149,7 +211,56 @@ export default {
     const url = new URL(request.url);
     try {
       if ((url.pathname === "/" || url.pathname === "/health") && request.method === "GET") {
-        return json({service:"Violet's Pet Care API",status:"ok",routes:["POST /api/quote","POST /api/intake","POST /api/requests","GET /api/admin/requests","POST /api/admin/requests/{id}/approve","PATCH /api/admin/requests"]});
+        return json({service:"Violet's Pet Care API",status:"ok",routes:["POST /api/admin/login","POST /api/resend/webhook","GET /api/admin/emails","PATCH /api/admin/emails/{id}","POST /api/quote","POST /api/intake","POST /api/requests","GET /api/admin/requests","POST /api/admin/requests/{id}/approve","PATCH /api/admin/requests"]});
+      }
+
+      if (url.pathname === "/api/admin/login" && request.method === "POST") {
+        if (!env.ADMIN_PASSWORD || !env.ADMIN_SESSION_SECRET) return json({error:"Admin login is not configured yet. Add ADMIN_PASSWORD and ADMIN_SESSION_SECRET as Worker secrets."},503);
+        const body = await request.json();
+        if (typeof body.password !== "string" || body.password.length < 1 || body.password.length > 200) return json({error:"Enter your admin password."},400);
+        if (body.password !== env.ADMIN_PASSWORD) return json({error:"Incorrect password."},401);
+        return json({token:await makeAdminSession(env),expiresIn:28800});
+      }
+      if (url.pathname === "/api/resend/webhook" && request.method === "POST") {
+        const rawBody = await request.text();
+        if (!await verifyResendWebhook(request,env,rawBody)) return json({error:"Invalid webhook signature."},401);
+        const event = JSON.parse(rawBody);
+        if (event.type !== "email.received") return json({received:true,ignored:true});
+        const emailId = String(event.data?.email_id || event.data?.email?.id || "");
+        if (!emailId) return json({error:"Webhook event is missing email_id."},400);
+        const exists = await env.DB.prepare("SELECT id FROM inbound_emails WHERE resend_email_id=?").bind(emailId).first();
+        if (exists) return json({received:true,duplicate:true});
+        const detailsResponse = await fetch("https://api.resend.com/emails/receiving/" + encodeURIComponent(emailId), {
+          headers: {"Authorization":"Bearer " + env.RESEND_API_KEY}
+        });
+        if (!detailsResponse.ok) {
+          console.error("Could not fetch received email content:",detailsResponse.status);
+          return json({error:"Could not retrieve email content from Resend."},502);
+        }
+        const details = await detailsResponse.json();
+        const from = String(details.from || event.data?.from || "").slice(0,320);
+        const to = JSON.stringify(Array.isArray(details.to) ? details.to : (details.to ? [details.to] : (event.data?.to || [])));
+        const subject = String(details.subject || event.data?.subject || "(No subject)").slice(0,500);
+        const textBody = String(details.text || "").slice(0,50000);
+        const htmlBody = String(details.html || "").slice(0,100000);
+        const receivedAt = String(details.created_at || event.created_at || new Date().toISOString());
+        await env.DB.prepare("INSERT INTO inbound_emails (id,resend_email_id,received_at,sender,recipients,subject,text_body,html_body,is_read) VALUES (?,?,?,?,?,?,?,?,0)")
+          .bind(crypto.randomUUID(),emailId,receivedAt,from,to,subject,textBody,htmlBody).run();
+        return json({received:true,saved:true});
+      }
+      if (url.pathname === "/api/admin/emails" && request.method === "GET") {
+        if (!await adminAuth(request,env)) return json({error:"Unauthorized"},401);
+        const {results} = await env.DB.prepare("SELECT id,resend_email_id,received_at,sender,recipients,subject,text_body,html_body,is_read FROM inbound_emails ORDER BY received_at DESC LIMIT 100").all();
+        return json({emails:results});
+      }
+      if (url.pathname.startsWith("/api/admin/emails/") && request.method === "PATCH") {
+        if (!await adminAuth(request,env)) return json({error:"Unauthorized"},401);
+        const emailId = decodeURIComponent(url.pathname.slice("/api/admin/emails/".length));
+        const body = await request.json();
+        if (body.isRead !== true && body.isRead !== false) return json({error:"Provide isRead true or false."},400);
+        const result = await env.DB.prepare("UPDATE inbound_emails SET is_read=? WHERE id=?").bind(body.isRead?1:0,emailId).run();
+        if (!result.meta.changes) return json({error:"Email not found."},404);
+        return json({id:emailId,isRead:body.isRead});
       }
       if (url.pathname === "/api/quote" && request.method === "POST") {
         const input = await request.json();
