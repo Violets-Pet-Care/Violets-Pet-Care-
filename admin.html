@@ -22,6 +22,7 @@
         <a href="#" class="nav-link" data-page="customers">👥 Customers</a>
         <a href="#" class="nav-link" data-page="routes">🗺️ Routes</a>
         <a href="#" class="nav-link" data-page="quotes">💬 Quotes</a>
+        <a href="#" class="nav-link" data-page="inbox">📥 Inbox <span id="inboxUnreadCount"></span></a>
         <a href="#" class="nav-link" data-page="services">💼 Services</a>
         <a href="#" class="nav-link" data-page="earnings">💰 Earnings</a>
         <a href="#" class="nav-link" data-page="settings">⚙️ Settings</a>
@@ -50,10 +51,9 @@
             </div>
 
             <button type="submit" class="btn btn-primary">Sign In</button>
-            <button type="button" id="demoLoginBtn" class="btn btn-secondary">Demo Login</button>
           </form>
 
-          <p class="demo-hint">Demo: admin@violetspetcare.com / password123</p>
+          <p class="demo-hint">Sign in with your private admin password.</p>
         </div>
       </div>
 
@@ -213,6 +213,12 @@
               <p class="stat-value" id="netProfit">$0.00</p>
             </div>
           </div>
+        </section>
+
+        <!-- Private email inbox -->
+        <section id="page-inbox" class="page">
+          <div class="page-header"><h1>📥 Email Inbox</h1><p>Messages received through your Resend receiving address.</p></div>
+          <div class="panel"><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><button class="btn btn-primary" id="refreshInboxBtn" type="button">Refresh Inbox</button><span id="inboxStatus" role="status">Sign in to load messages.</span></div><div id="inboxList" class="bookings-list" style="margin-top:16px"></div></div>
         </section>
 
         <!-- Settings Page -->
